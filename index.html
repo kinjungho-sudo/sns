@@ -9,11 +9,15 @@
     /* ---- 뷰어 전용 UI (카드 디자인과 무관, PNG에는 포함 안 됨) ---- */
     body { background: #050606; min-height: 100vh; display: flex; flex-direction: column;
            align-items: center; font-family: var(--font); color: #cfd4d2; }
-    .viewer-top { padding: 26px 16px 6px; text-align: center; }
+    .viewer-top { padding: 22px 16px 4px; text-align: center; }
     .viewer-top h1 { font-size: 20px; font-weight: 700; color: #eaeeec; }
-    .viewer-top p  { font-size: 13px; color: #6f7674; margin-top: 4px; }
-    .stage { display: flex; align-items: center; gap: 18px; margin-top: 8px; }
-    /* 미리보기 축소 래퍼: 실제 1080×1350 카드를 scale 로 줄여 보여줌 */
+    .picker { margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+    .picker button { border: 1px solid #2a302e; background: #10120f; color: #aeb4b2;
+                     border-radius: 999px; padding: 7px 16px; font-size: 13px; font-family: var(--font);
+                     cursor: pointer; transition: .15s; }
+    .picker button:hover { border-color: var(--accent); color: var(--accent); }
+    .picker button.on { background: var(--accent); color: #06201d; border-color: var(--accent); font-weight: 700; }
+    .stage { display: flex; align-items: center; gap: 18px; margin-top: 14px; }
     .frame { border-radius: 18px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,.6);
              width: calc(1080px * var(--s)); height: calc(1350px * var(--s)); }
     .frame .card { transform: scale(var(--s)); transform-origin: top left; }
@@ -21,25 +25,24 @@
            background: #10120f; color: #cfd4d2; font-size: 26px; cursor: pointer; flex: 0 0 auto;
            display: flex; align-items: center; justify-content: center; transition: .15s; }
     .nav:hover { background: #171a17; border-color: var(--accent); color: var(--accent); }
-    .counter { margin-top: 16px; font-size: 13px; color: #7c8280; letter-spacing: 1px; }
-    .hint { margin: 14px 0 30px; font-size: 12px; color: #565c5a; }
-    .hint code { background: #14171500; border: 1px solid #2a302e; border-radius: 5px;
-                 padding: 2px 7px; color: #8b928f; }
+    .counter { margin-top: 14px; font-size: 13px; color: #7c8280; letter-spacing: 1px; }
+    .hint { margin: 12px 0 26px; font-size: 12px; color: #565c5a; }
+    .hint code { border: 1px solid #2a302e; border-radius: 5px; padding: 2px 7px; color: #8b928f; }
   </style>
 </head>
 <body>
   <div class="viewer-top">
     <h1>SNS 캐러셀 카드 미리보기</h1>
-    <p>← → 방향키로 이동 · 실제 저장 규격 1080 × 1350</p>
+    <div class="picker" id="picker"></div>
   </div>
 
   <div class="stage">
     <button class="nav" id="prev" aria-label="이전">‹</button>
-    <div class="frame" id="frame"><!-- 활성 카드 삽입 --></div>
+    <div class="frame" id="frame"></div>
     <button class="nav" id="next" aria-label="다음">›</button>
   </div>
   <div class="counter" id="counter"></div>
-  <div class="hint">PNG로 저장: <code>npm run export</code> → <code>out/</code> 폴더</div>
+  <div class="hint">← → 슬라이드 이동 · PNG 저장: <code>npm run export</code> → <code>out/</code></div>
 
   <script src="slides.js"></script>
   <script src="app.js"></script>
