@@ -1,0 +1,210 @@
+/* =========================================================================
+   SNS 캐러셀 카드 — 디자인 시스템
+   다크 배경 + 청록(teal) 포인트, 세로형 1080×1350 (4:5, 인스타 캐러셀 규격)
+   ========================================================================= */
+
+/* ---- Pretendard 폰트 (repo 내 fonts/ 에 포함, 오프라인 동작) ---- */
+@font-face { font-family: "Pretendard"; font-weight: 400; font-display: block;
+  src: url("fonts/Pretendard-Regular.woff2") format("woff2"); }
+@font-face { font-family: "Pretendard"; font-weight: 500; font-display: block;
+  src: url("fonts/Pretendard-Medium.woff2") format("woff2"); }
+@font-face { font-family: "Pretendard"; font-weight: 600; font-display: block;
+  src: url("fonts/Pretendard-SemiBold.woff2") format("woff2"); }
+@font-face { font-family: "Pretendard"; font-weight: 700; font-display: block;
+  src: url("fonts/Pretendard-Bold.woff2") format("woff2"); }
+@font-face { font-family: "Pretendard"; font-weight: 800; font-display: block;
+  src: url("fonts/Pretendard-ExtraBold.woff2") format("woff2"); }
+@font-face { font-family: "Pretendard"; font-weight: 900; font-display: block;
+  src: url("fonts/Pretendard-Black.woff2") format("woff2"); }
+
+/* ---- 디자인 토큰 ---- */
+:root {
+  --bg:        #0a0b0b;
+  --bg-2:      #0d0f0f;
+  --accent:    #17d0bb;   /* 민트/청록 포인트 */
+  --accent-dim:#0f7d72;
+  --ink:       #f4f6f5;   /* 기본 텍스트(밝음) */
+  --ink-soft:  #d6dad9;
+  --muted:     #8b9290;   /* 보조 텍스트 */
+  --muted-2:   #5f6664;
+  --card:      #161918;
+  --card-2:    #1b1f1e;
+  --line:      #2a2f2d;
+  --font: "Pretendard", -apple-system, BlinkMacSystemFont, "Malgun Gothic", sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* =========================================================================
+   카드 컨테이너 — 항상 실제 1080×1350 px. 미리보기는 부모에서 scale() 로 축소.
+   ========================================================================= */
+.card {
+  position: relative;
+  width: 1080px;
+  height: 1350px;
+  flex: 0 0 auto;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 84% 12%, rgba(23,208,187,0.13), transparent 42%),
+    radial-gradient(circle at 16% 96%, rgba(23,208,187,0.10), transparent 44%),
+    var(--bg);
+  color: var(--ink);
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+  padding: 84px 84px 124px;
+  display: flex;
+  flex-direction: column;
+}
+/* 목업/카드는 절대 눌리지 않게 (콘텐츠 클리핑 방지) */
+.mail-window, .chat-window, .io-card, .timeline, .sec-head { flex-shrink: 0; }
+
+/* 공통 조각 --------------------------------------------------------------- */
+.badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 92px; height: 62px; padding: 0 22px;
+  border: 3px solid var(--accent);
+  border-radius: 16px;
+  color: var(--accent);
+  font-weight: 800; font-size: 34px; letter-spacing: 1px;
+}
+.rule { width: 96px; height: 5px; border-radius: 5px; background: var(--accent); }
+.tl { color: var(--accent); }               /* teal 하이라이트 텍스트 */
+.mac-dots { display: flex; gap: 14px; align-items: center; }
+.mac-dots i { width: 20px; height: 20px; border-radius: 50%; display: inline-block; }
+.mac-dots i:nth-child(1){ background:#ff5f57; }
+.mac-dots i:nth-child(2){ background:#febc2e; }
+.mac-dots i:nth-child(3){ background:#28c840; }
+
+/* 페이지 도트 (하단 중앙) -------------------------------------------------- */
+.dots {
+  position: absolute; left: 0; right: 0; bottom: 58px;
+  display: flex; gap: 18px; justify-content: center; align-items: center;
+}
+.dots .dot { width: 15px; height: 15px; border-radius: 50%; background: #3a403e; transition: all .2s; }
+.dots .dot.active { width: 46px; border-radius: 8px; background: var(--ink); }
+
+/* =========================================================================
+   1) QUOTE 템플릿
+   ========================================================================= */
+.t-quote { justify-content: center; padding-top: 0; padding-bottom: 0; }
+.t-quote .qmark {
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 700; font-size: 240px; line-height: .8; color: var(--accent);
+  margin-bottom: 6px; margin-left: -6px;
+}
+.t-quote .headline {
+  font-weight: 800; font-size: 82px; line-height: 1.32; letter-spacing: -1px;
+}
+.t-quote .rule { margin: 46px 0 40px; }
+.t-quote .caption { color: var(--muted); font-weight: 500; font-size: 38px; letter-spacing: .5px; }
+
+/* =========================================================================
+   2) HOOK 템플릿 (이메일 목업 + 큰 헤드라인)
+   ========================================================================= */
+.t-hook { justify-content: flex-start; }
+.mockup-wrap { position: relative; margin: 40px 0 70px; }
+.mail-window {
+  background: #1a1d1c; border: 1px solid var(--line); border-radius: 26px;
+  overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,.5);
+}
+.mail-window .win-head {
+  display: flex; align-items: center; gap: 26px;
+  padding: 30px 34px; border-bottom: 1px solid var(--line);
+}
+.mail-window .win-head .win-title { color: var(--muted); font-weight: 500; font-size: 32px; }
+.mail-window .win-body { padding: 40px 44px 52px; }
+.mail-window .win-body .l1 { font-weight: 700; font-size: 44px; color: var(--ink-soft); margin-bottom: 20px; }
+.mail-window .win-body .l2 { font-weight: 700; font-size: 44px; color: var(--ink-soft); margin-bottom: 26px; }
+.mail-window .win-body .l2 .cursor { color: var(--accent); font-weight: 400; }
+.mail-window .win-body .l3 { font-weight: 500; font-size: 36px; color: var(--muted-2); }
+.sticker {
+  position: absolute; top: -26px; right: -10px; transform: rotate(7deg);
+  background: #ff5b6e; color: #fff; font-weight: 800; font-size: 32px;
+  padding: 16px 26px; border-radius: 16px; box-shadow: 0 12px 30px rgba(255,91,110,.35);
+}
+.t-hook .headline { font-weight: 800; font-size: 90px; line-height: 1.28; letter-spacing: -1.5px; }
+.t-hook .headline .big { font-size: 108px; }
+
+/* =========================================================================
+   섹션 공통 헤더 (badge + 제목 + rule) — 템플릿 3/4/5
+   ========================================================================= */
+.sec-head { margin-bottom: 20px; }
+.sec-head .badge { margin-bottom: 34px; }
+.sec-head .title { font-weight: 800; font-size: 74px; line-height: 1.24; letter-spacing: -1px; }
+.sec-head .rule { margin-top: 34px; }
+
+/* =========================================================================
+   3) SECTION 01 — before / after 카드
+   ========================================================================= */
+.io-card {
+  border-radius: 24px; padding: 38px 44px;
+  background: var(--card); border: 1px solid var(--line);
+}
+.io-card.after {
+  background: rgba(23,208,187,.06);
+  border: 2px solid var(--accent);
+  box-shadow: 0 0 60px rgba(23,208,187,.12);
+}
+.io-card .io-label { font-weight: 600; font-size: 32px; color: var(--muted); margin-bottom: 16px; }
+.io-card.after .io-label { color: var(--accent); }
+.io-card .io-body { font-weight: 700; font-size: 39px; line-height: 1.36; color: var(--ink-soft); }
+.io-arrow { text-align: center; color: var(--accent); font-size: 52px; line-height: 1; margin: 22px 0; }
+.sec-foot {
+  margin-top: auto; font-weight: 700; font-size: 46px; line-height: 1.42; color: var(--ink-soft);
+}
+
+/* =========================================================================
+   4) SECTION 02 — 타임라인
+   ========================================================================= */
+.timeline { margin-top: 60px; display: flex; flex-direction: column; gap: 0; }
+.tl-row { display: flex; gap: 40px; position: relative; padding-bottom: 66px; }
+.tl-row:last-child { padding-bottom: 0; }
+.tl-row .tl-icon {
+  flex: 0 0 auto; width: 96px; height: 96px; border-radius: 50%;
+  background: var(--accent); display: flex; align-items: center; justify-content: center;
+  position: relative; z-index: 1;
+}
+.tl-row .tl-icon svg { width: 48px; height: 48px; }
+.tl-row:not(:last-child)::before {
+  content: ""; position: absolute; left: 47px; top: 96px; bottom: 12px;
+  width: 3px; background: var(--line);
+}
+.tl-row .tl-text { padding-top: 8px; }
+.tl-row .tl-text h3 { font-weight: 800; font-size: 52px; margin-bottom: 14px; letter-spacing: -.5px; }
+.tl-row .tl-text p { font-weight: 500; font-size: 33px; line-height: 1.4; color: var(--muted); }
+.pill {
+  margin: auto auto 0; display: inline-flex; align-self: center; align-items: center; gap: 8px;
+  background: var(--card); border: 1px solid var(--line); border-radius: 999px;
+  padding: 30px 54px; font-weight: 800; font-size: 44px; color: var(--ink-soft);
+}
+
+/* =========================================================================
+   5) SECTION 03 — 채팅 목업
+   ========================================================================= */
+.chat-window {
+  margin-top: 28px; background: #141716; border: 1px solid var(--line);
+  border-radius: 28px; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,.5);
+}
+.chat-window .win-head {
+  display: flex; align-items: center; gap: 26px; padding: 26px 34px; border-bottom: 1px solid var(--line);
+}
+.chat-window .win-head .win-title { color: var(--muted); font-weight: 600; font-size: 30px; }
+.chat-window .win-body { padding: 38px 40px 42px; }
+.bubble {
+  background: var(--accent); color: #06201d; border-radius: 26px; border-bottom-right-radius: 8px;
+  padding: 30px 36px; margin-left: 110px; margin-bottom: 30px;
+  font-weight: 700; font-size: 33px; line-height: 1.42;
+}
+.resp-card { background: var(--card); border-radius: 22px; padding: 28px 34px; }
+.resp-card .resp-title { display: flex; align-items: center; gap: 16px; font-weight: 800; font-size: 36px; margin-bottom: 22px; }
+.resp-card .resp-title svg { width: 40px; height: 40px; color: var(--accent); }
+.resp-card .skel { height: 22px; border-radius: 999px; background: #2c322f; margin-bottom: 16px; }
+.resp-card .skel:nth-child(2){ width: 100%; }
+.resp-card .skel:nth-child(3){ width: 86%; }
+.resp-card .skel:nth-child(4){ width: 74%; margin-bottom: 0; }
+.chat-foot {
+  margin-top: 32px; display: flex; align-items: center; gap: 16px; justify-content: center;
+  font-weight: 700; font-size: 38px; color: var(--ink-soft); text-align: center;
+}
+.chat-foot svg { width: 36px; height: 36px; color: var(--accent); flex: 0 0 auto; }

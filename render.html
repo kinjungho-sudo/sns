@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>render</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* 내보내기 전용: 스크롤/여백 없이 카드 하나만 자연 크기(1080×1350)로 표시 */
+    html, body { margin: 0; padding: 0; background: #0a0b0b; }
+  </style>
+</head>
+<body>
+  <script src="slides.js"></script>
+  <script>
+    // ?i=<index> 로 지정한 슬라이드 한 장을 실제 크기로 렌더
+    const params = new URLSearchParams(location.search);
+    const i = Math.max(0, Math.min(window.SLIDES.length - 1, parseInt(params.get("i") || "0", 10)));
+    document.body.appendChild(window.buildCard(window.SLIDES[i], i, window.SLIDES.length));
+    // 폰트 로드 완료 신호 (Playwright 가 대기)
+    document.fonts.ready.then(() => { document.body.dataset.ready = "1"; });
+  </script>
+</body>
+</html>

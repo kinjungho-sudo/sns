@@ -1,0 +1,14 @@
+{
+  "name": "sns-carousel-card",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "다크+청록 스타일 SNS 캐러셀 카드 생성기 (1080×1350 PNG 내보내기)",
+  "scripts": {
+    "serve": "node server.mjs",
+    "export": "node export.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.49.0"
+  }
+}
