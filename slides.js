@@ -299,6 +299,291 @@ const CAROUSELS = [
       },
     ],
   },
+
+  /* ===================================================================== *
+   * 6) 거절의 기술                                                         *
+   * ===================================================================== */
+  {
+    slug: "6-refuse",
+    title: "⑥ 거절의 기술",
+    slides: [
+      {
+        type: "quote",
+        headline: '거절을 못 하는 건\n마음이 약해서가 아니라\n<span class="tl">문장</span>이 없어서다.',
+        caption: "실전 AI 활용 가이드 — 2026",
+      },
+      {
+        type: "hook",
+        mail: {
+          to: "메시지 — 팀장님",
+          line1: "네, 제가 하겠습니다…",
+          line2: '(또 야근 확정)…&nbsp;<span class="cursor">|</span>',
+          line3: "거절 문장 5번 지웠다 씀",
+          sticker: "결국 또 수락",
+        },
+        headline: '하기 싫은 부탁에\n<span class="tl big">5번째</span>\n"네"라고 썼다면',
+      },
+      {
+        type: "section",
+        badge: "01",
+        title: "미안해하지 말고,\n대안을 건네라",
+        before: { label: "죄송하다고만 하기", body: "거절인지 수락인지 모호하고\n괜히 관계만 불편해짐" },
+        after: { label: "이유보다 대안 제시", body: '"이번 주는 어렵고,\n다음 주 화요일은 가능" → 협조로 들린다' },
+        footer: 'AI에게 필요한 건 변명이 아니라\n<span class="tl">인정·한계·대안</span>입니다.',
+      },
+      {
+        type: "timeline",
+        badge: "02",
+        title: "담을 3가지",
+        items: [
+          { icon: "people", title: "인정", desc: "부탁을 이해했다는 신호 — 먼저 건넨다" },
+          { icon: "target", title: "한계", desc: "왜 지금은 어려운지 — 짧게 한 줄" },
+          { icon: "pencil", title: "대안", desc: "대신 가능한 것 — 공을 다시 넘긴다" },
+        ],
+        pill: '3가지만 담으면&nbsp;&nbsp;<span class="tl">거절 → 신뢰</span>',
+      },
+      {
+        type: "chat",
+        badge: "03",
+        title: "복붙용 프롬프트",
+        window: "AI 어시스턴트",
+        prompt:
+          "추가 업무 요청, 정중히 거절하는\n메시지 써줘.\n" +
+          "상황: 이미 마감 2개 진행 중\n한계: 이번 주는 불가\n" +
+          "대안: 다음 주 월요일부터 가능\n사과는 한 번만, 담백하게.",
+        respTitle: "거절 + 대안 메시지",
+        footer: '<span class="tl">"사과는 한 번만"</span>이 핵심이다',
+      },
+    ],
+  },
+
+  /* ===================================================================== *
+   * 7) 협상 리허설                                                         *
+   * ===================================================================== */
+  {
+    slug: "7-rehearsal",
+    title: "⑦ 협상 리허설",
+    slides: [
+      {
+        type: "quote",
+        headline: '중요한 대화에서 지는 건\n말주변이 아니라\n<span class="tl">리허설</span> 부족이다.',
+        caption: "실전 AI 활용 가이드 — 2026",
+      },
+      {
+        type: "hook",
+        mail: {
+          to: "메모 — 연봉협상 대본",
+          line1: "제 생각에는 좀…",
+          line2: '아니 그게 아니라…&nbsp;<span class="cursor">|</span>',
+          line3: "머릿속으로만 20번째",
+          sticker: "실전은 늘 버벅",
+        },
+        headline: '중요한 대화를\n<span class="tl big">머릿속</span>으로만\n돌려봤다면',
+      },
+      {
+        type: "section",
+        badge: "01",
+        title: "외우지 말고,\n미리 맞아봐라",
+        before: { label: "할 말을 혼자 암기", body: "준비한 말은 완벽한데\n상대가 되물으면 무너짐" },
+        after: { label: "AI를 상대로 롤플레이", body: '"당신은 깐깐한 팀장"이라 시키고\n→ 예상 질문에 미리 맞아본다' },
+        footer: 'AI에게 필요한 건 정답이 아니라\n<span class="tl">역할·목표·반론</span>입니다.',
+      },
+      {
+        type: "timeline",
+        badge: "02",
+        title: "설정할 3가지",
+        items: [
+          { icon: "people", title: "역할", desc: "상대가 누구인지 — AI에게 배역을 준다" },
+          { icon: "target", title: "목표", desc: "물러설 수 없는 최소선 — 미리 정한다" },
+          { icon: "pencil", title: "반론", desc: "상대가 찌를 지점 — 답을 만들어 둔다" },
+        ],
+        pill: '3가지만 주면&nbsp;&nbsp;<span class="tl">즉흥 → 리허설</span>',
+      },
+      {
+        type: "chat",
+        badge: "03",
+        title: "복붙용 프롬프트",
+        window: "AI 어시스턴트",
+        prompt:
+          "연봉협상 롤플레이 하자.\n너는 예산에 민감한 내 팀장 역할.\n" +
+          "목표: 인상 근거를 논리로 방어\n내 말에 계속 반론해줘.\n" +
+          "끝나면 약했던 답변을 짚어줘.",
+        respTitle: "롤플레이 + 피드백",
+        footer: '<span class="tl">"반론해줘"</span> 한마디면 실전이 는다',
+      },
+    ],
+  },
+
+  /* ===================================================================== *
+   * 8) 악마의 변호인                                                       *
+   * ===================================================================== */
+  {
+    slug: "8-devil",
+    title: "⑧ 악마의 변호인",
+    slides: [
+      {
+        type: "quote",
+        headline: '나쁜 결정을 막는 건\n신중함이 아니라\n<span class="tl">반대 의견</span>이다.',
+        caption: "실전 AI 활용 가이드 — 2026",
+      },
+      {
+        type: "hook",
+        mail: {
+          to: "메모 — 이직 결심",
+          line1: "장점: 연봉, 새로운 기회…",
+          line2: '단점: (안 적힘)…&nbsp;<span class="cursor">|</span>',
+          line3: "다 좋아 보이는 게 함정",
+          sticker: "확신 100%",
+        },
+        headline: '내 결정이\n<span class="tl big">완벽</span>해 보일 때\n오히려 위험하다면',
+      },
+      {
+        type: "section",
+        badge: "01",
+        title: "동의받지 말고,\n공격받아라",
+        before: { label: "찬성 근거만 모으기", body: "검색해도 내 생각과 같은\n글만 골라 보게 됨 (확증편향)" },
+        after: { label: "일부러 반대편에 세우기", body: '"이 결정의 최악 시나리오는?"\n→ 안 보이던 구멍이 드러난다' },
+        footer: 'AI에게 필요한 건 응원이 아니라\n<span class="tl">전제·허점·최악</span>입니다.',
+      },
+      {
+        type: "timeline",
+        badge: "02",
+        title: "따질 3가지",
+        items: [
+          { icon: "target", title: "전제", desc: "무엇을 당연하게 믿고 있나 — 흔들어본다" },
+          { icon: "pencil", title: "허점", desc: "이 논리에서 가장 약한 고리" },
+          { icon: "people", title: "최악", desc: "틀렸을 때 치를 대가 — 감당 가능한가" },
+        ],
+        pill: '3가지만 물으면&nbsp;&nbsp;<span class="tl">확신 → 검증</span>',
+      },
+      {
+        type: "chat",
+        badge: "03",
+        title: "복붙용 프롬프트",
+        window: "AI 어시스턴트",
+        prompt:
+          "내 결정을 반박해줘.\n결정: 지금 회사 그만두고 창업\n" +
+          "너는 냉정한 투자자 입장.\n① 내가 놓친 전제\n" +
+          "② 가장 큰 허점\n③ 최악의 시나리오\n듣기 좋은 말은 빼고.",
+        respTitle: "반대 논거 3가지",
+        footer: '<span class="tl">"반박해줘"</span>가 값비싼 실수를 막는다',
+      },
+    ],
+  },
+
+  /* ===================================================================== *
+   * 9) 눈높이 번역기                                                       *
+   * ===================================================================== */
+  {
+    slug: "9-explain",
+    title: "⑨ 눈높이 번역기",
+    slides: [
+      {
+        type: "quote",
+        headline: '못 알아듣는 건\n머리가 나빠서가 아니라\n<span class="tl">눈높이</span>가 안 맞아서다.',
+        caption: "실전 AI 활용 가이드 — 2026",
+      },
+      {
+        type: "hook",
+        mail: {
+          to: "브라우저 — 계약서 제3조",
+          line1: "제3조 (손해배상의 예정)",
+          line2: '…귀책사유로 인하여…&nbsp;<span class="cursor">|</span>',
+          line3: "세 번 읽어도 모름",
+          sticker: "법률 용어 지옥",
+        },
+        headline: '읽어도 모르는 문장에\n<span class="tl big">세 번째</span>\n같은 줄이라면',
+      },
+      {
+        type: "section",
+        badge: "01",
+        title: "다시 읽지 말고,\n다시 설명받아라",
+        before: { label: "어려운 그대로 붙들기", body: "용어 하나 검색하면\n그 설명에 또 모르는 말" },
+        after: { label: "눈높이를 지정해 요청", body: '"중학생도 알게, 예시 들어서"\n→ 갑자기 이해되는 순간' },
+        footer: 'AI에게 필요한 건 요약이 아니라\n<span class="tl">대상·비유·확인</span>입니다.',
+      },
+      {
+        type: "timeline",
+        badge: "02",
+        title: "요청할 3가지",
+        items: [
+          { icon: "people", title: "대상", desc: "누구 눈높이로 — 중학생? 신입?" },
+          { icon: "pencil", title: "비유", desc: "아는 것에 빗대서 — 일상 예시로" },
+          { icon: "target", title: "확인", desc: "이해했는지 되물어줘 — 퀴즈 3개" },
+        ],
+        pill: '3가지만 주면&nbsp;&nbsp;<span class="tl">암호 → 이해</span>',
+      },
+      {
+        type: "chat",
+        badge: "03",
+        title: "복붙용 프롬프트",
+        window: "AI 어시스턴트",
+        prompt:
+          "이 계약 조항 쉽게 설명해줘.\n대상: 계약 처음 하는 사회초년생\n" +
+          "비유: 일상 상황에 빗대서\n확인: 끝에 점검 질문 3개\n" +
+          "원문 그대로가 아니라 뜻 중심으로.",
+        respTitle: "쉬운 설명 + 점검 질문",
+        footer: '<span class="tl">"질문 3개"</span>로 진짜 이해했는지 확인된다',
+      },
+    ],
+  },
+
+  /* ===================================================================== *
+   * 10) 감정 쿨다운                                                        *
+   * ===================================================================== */
+  {
+    slug: "10-cooldown",
+    title: "⑩ 감정 쿨다운",
+    slides: [
+      {
+        type: "quote",
+        headline: '보내고 후회하는 건\n감정이 아니라\n<span class="tl">타이밍</span> 때문이다.',
+        caption: "실전 AI 활용 가이드 — 2026",
+      },
+      {
+        type: "hook",
+        mail: {
+          to: "메시지 — 입력 중…",
+          line1: "님 진짜 너무하신 거…",
+          line2: '이게 말이 됩니까?…&nbsp;<span class="cursor">|</span>',
+          line3: "전송 직전 손 떨림",
+          sticker: "감정 100%",
+        },
+        headline: '욱해서 쓴 메시지에\n<span class="tl big">엄지</span>가\n전송 위에 있다면',
+      },
+      {
+        type: "section",
+        badge: "01",
+        title: "보내지 말고,\n한 번 통과시켜라",
+        before: { label: "감정 그대로 전송", body: "5분은 시원한데\n관계는 오래 남아 후회" },
+        after: { label: "AI에 한 번 걸러내기", body: '"내용은 살리되 톤만 낮춰줘"\n→ 할 말은 하되 적이 안 된다' },
+        footer: 'AI에게 필요한 건 참으라는 말이 아니라\n<span class="tl">사실·요구·톤</span>입니다.',
+      },
+      {
+        type: "timeline",
+        badge: "02",
+        title: "걸러낼 3가지",
+        items: [
+          { icon: "pencil", title: "사실", desc: "실제로 일어난 일 — 감정은 빼고" },
+          { icon: "target", title: "요구", desc: "내가 진짜 원하는 것 — 비난 말고" },
+          { icon: "people", title: "톤", desc: "상대가 방어 안 하게 — 공격을 제거" },
+        ],
+        pill: '한 번만 걸러도&nbsp;&nbsp;<span class="tl">후회 → 해결</span>',
+      },
+      {
+        type: "chat",
+        badge: "03",
+        title: "복붙용 프롬프트",
+        window: "AI 어시스턴트",
+        prompt:
+          "이 메시지 톤만 다듬어줘.\n상황: 동료가 마감을 또 어김\n" +
+          "사실: 이번이 3번째\n요구: 다음부터 미리 공유\n" +
+          "감정적 표현은 빼고, 할 말은 유지.",
+        respTitle: "톤 정리된 메시지",
+        footer: '<span class="tl">"톤만"</span>이면 할 말은 그대로 남는다',
+      },
+    ],
+  },
 ];
 
 /* ---- 아이콘 (인라인 SVG) ------------------------------------------------ */
