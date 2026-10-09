@@ -3,10 +3,12 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "다크+청록 스타일 SNS 캐러셀 카드 생성기 (1080×1350 PNG 내보내기)",
+  "description": "Teal Noir 스타일 SNS 캐러셀 카드(1080×1350 PNG) + 쇼츠 쇼릴(1080×1920 MP4) 생성기",
   "scripts": {
     "serve": "node server.mjs",
-    "export": "node export.mjs"
+    "export": "node export.mjs",
+    "reel": "node export-reel.mjs",
+    "reel:stills": "STILLS=1 node export-reel.mjs"
   },
   "devDependencies": {
     "playwright": "^1.49.0"

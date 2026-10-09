@@ -1,7 +1,10 @@
-# SNS 캐러셀 카드 생성기
+# SNS 캐러셀 카드 + 쇼츠 쇼릴 생성기
 
-다크 배경 + 청록(teal) 포인트의 **세로형 1080×1350 (4:5)** 인스타그램 캐러셀 카드를
-HTML/CSS 로 만들고, 사전 설치된 Chromium 으로 **고해상도 PNG** 를 자동 추출합니다.
+**Teal Noir · 단언체** (→ [DESIGN.md](DESIGN.md)) 룩으로
+- **세로형 1080×1350 (4:5)** 인스타그램 캐러셀 카드를 HTML/CSS 로 만들어 **고해상도 PNG** 로 추출하고,
+- 같은 디자인의 **40초 쇼츠 쇼릴(1080×1920, 9:16)** 을 캔버스 코드로 그려 **MP4** 로 뽑습니다.
+
+둘 다 사전 설치된 Chromium 을 쓰며, 영상 생성 AI·외부 API 없이 모든 프레임을 코드로 그립니다.
 
 빌드 도구·프레임워크 없이 순수 HTML/CSS/JS 이며, Pretendard 폰트를 저장소에 포함해
 **오프라인**에서도 화면·PNG 모두 동일하게 나옵니다.
@@ -28,6 +31,10 @@ HTML/CSS 로 만들고, 사전 설치된 Chromium 으로 **고해상도 PNG** �
 | `render.html` | PNG 추출용 렌더 페이지 (직접 열 필요 없음) |
 | `export.mjs`  | 각 슬라이드를 `out/<slug>/slide-NN.png` 로 저장 |
 | `server.mjs`  | 로컬 미리보기 서버 |
+| `reel.js`     | **쇼츠 쇼릴** — 장면·문구(`COPY`)·타임라인(`SCENES`). 모든 프레임을 캔버스에 그림 |
+| `reel.html`   | 쇼릴 실시간 미리보기 (Space 정지, ← → 1초 이동, R 처음) |
+| `export-reel.mjs` | 프레임을 ffmpeg 로 흘려 `out/reel/reel.mp4` + 씬별 스틸 PNG 생성 |
+| `DESIGN.md`   | Teal Noir(디자인) · 단언체(톤) 규칙 |
 | `fonts/`      | Pretendard woff2 (오프라인용) |
 | `out/`        | 추출된 PNG 결과물 (캐러셀별 폴더) |
 
@@ -44,6 +51,24 @@ npm run export       # 모든 캐러셀을 out/<slug>/ 에 PNG 저장 (기본 21
 - 특정 캐러셀만: `SLUG=2-meeting npm run export`
 - 이 저장소 환경에서는 사전 설치된 Chromium 을 사용합니다. 다른 경로면:
   `CHROMIUM_PATH=/path/to/chrome npm run export`
+
+## 쇼츠 쇼릴 (MP4)
+
+```bash
+npm run serve        # http://localhost:8080/reel.html 에서 실시간 재생
+npm run reel         # out/reel/reel.mp4 (1080×1920, 30fps, 40초) + out/reel/still-NN.png
+npm run reel:stills  # 씬별 스틸만 (빠른 검수용)
+```
+
+- 구간만 뽑기: `START=9 END=18 npm run reel`
+- ffmpeg 가 필요합니다 (`FFMPEG=/path/to/ffmpeg` 로 경로 지정 가능). 프레임은 디스크를 거치지 않고 바로 인코딩됩니다.
+- 장면 구성: 훅(빠른 컷) → 터미널 → 키네틱 타이포 + 바우하우스 그리드 → 3D 파티클 → 대시보드 → 터널·글리치 → 타이틀.
+  문구는 `reel.js` 상단 `COPY`, 색은 `C`, 각 씬 길이는 `SCENES` 에서 바꿉니다.
+- 오디오는 포함되지 않습니다. 업로드 시 편집 앱에서 BGM 을 얹으세요 (128 BPM 전자음 계열 권장).
+
+| 훅 | 터미널 | 타이포 | 파티클 | 대시보드 | 글리치 | 타이틀 |
+|---|---|---|---|---|---|---|
+| ![](out/reel/still-01.png) | ![](out/reel/still-02.png) | ![](out/reel/still-03.png) | ![](out/reel/still-04.png) | ![](out/reel/still-05.png) | ![](out/reel/still-06.png) | ![](out/reel/still-07.png) |
 
 ## 새 캐러셀 만들기
 

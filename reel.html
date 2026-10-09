@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>쇼츠 쇼릴 미리보기 — 실전 AI 활용 가이드</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* 1080×1920 캔버스를 화면에 맞춰 축소해 실시간 재생. 스페이스: 일시정지, ← →: ±1초, R: 처음부터 */
+    html, body { height: 100%; background: #050606; overflow: hidden; }
+    body { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; font-family: var(--font); color: var(--muted); }
+    #stage { height: calc(100vh - 70px); aspect-ratio: 9 / 16; box-shadow: 0 30px 90px rgba(0,0,0,.6); border-radius: 18px; overflow: hidden; }
+    #reel { width: 100%; height: 100%; display: block; }
+    #bar { width: min(92vw, 420px); display: flex; align-items: center; gap: 14px; font-size: 13px; }
+    #bar input { flex: 1; accent-color: var(--accent); }
+    #bar b { color: var(--ink); font-variant-numeric: tabular-nums; min-width: 86px; }
+    body[data-export] #bar { display: none; }
+    body[data-export] #stage { height: auto; box-shadow: none; border-radius: 0; }
+    body[data-export] #reel { width: 1080px; height: 1920px; }
+  </style>
+</head>
+<body>
+  <div id="stage"><canvas id="reel"></canvas></div>
+  <div id="bar">
+    <b id="time">0.00 / 40.00</b>
+    <input id="scrub" type="range" min="0" max="40" step="0.033" value="0" />
+    <span id="hint">Space 정지 · ←→ 1초 · R 처음</span>
+  </div>
+  <script>
+    if (new URLSearchParams(location.search).has("export")) document.body.dataset.export = "1";
+  </script>
+  <script src="reel.js"></script>
+  <script>
+    // 미리보기 재생 루프 (export 모드에서는 동작하지 않음 — export-reel.mjs 가 __frame 으로 프레임을 뽑음)
+    (() => {
+      if (document.body.dataset.export) return;
+      const p = new URLSearchParams(location.search);
+      let t = Number(p.get("t") || 0), playing = !p.has("pause"), last = 0;
+      const timeEl = document.getElementById("time"), scrub = document.getElementById("scrub");
+      const draw = () => { window.__seek(t); timeEl.textContent = `${t.toFixed(2)} / ${REEL.DURATION.toFixed(2)}`; scrub.value = t; };
+      const loop = (now) => {
+        if (playing) { if (last) t = (t + (now - last) / 1000) % REEL.DURATION; draw(); }
+        last = now; requestAnimationFrame(loop);
+      };
+      window.addEventListener("reel-ready", () => { draw(); requestAnimationFrame(loop); });
+      scrub.addEventListener("input", () => { t = Number(scrub.value); playing = false; draw(); });
+      addEventListener("keydown", (e) => {
+        if (e.code === "Space") { e.preventDefault(); playing = !playing; }
+        if (e.key === "ArrowRight") { t = Math.min(REEL.DURATION - 0.01, t + 1); draw(); }
+        if (e.key === "ArrowLeft") { t = Math.max(0, t - 1); draw(); }
+        if (e.key.toLowerCase() === "r") { t = 0; draw(); }
+      });
+    })();
+  </script>
+</body>
+</html>
