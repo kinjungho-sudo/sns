@@ -62,4 +62,4 @@
 | 산출물 | 파일 | 바꾸는 곳 |
 |---|---|---|
 | 캐러셀 카드 | `slides.js` · `styles.css` | `CAROUSELS` 내용, `:root` 토큰 |
-| 쇼츠 쇼릴 | `reel.js` | 상단 `COPY` 객체(문구) · `C`(색) · `SCENES`(타임라인) |
+| 쇼츠 쇼릴 | `reel.js` | 상단 `VARIANTS`(버전별 문구: `ai-guide`, `claude-class`) · `C`(색) · `SCENES`(타임라인) |

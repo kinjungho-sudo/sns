@@ -9,7 +9,7 @@
    구조 (레퍼런스 쇼츠와 같은 리듬):
      S0 훅(빠른 컷)  → S1 터미널  → S2 키네틱 타이포 + 바우하우스 그리드
      → S3 3D 파티클 → S4 대시보드 → S5 터널 + 글리치 텍스트 → S6 타이틀
-   내용·톤만 바꾸려면 아래 COPY 만 수정하면 됩니다.
+   내용·톤만 바꾸려면 아래 VARIANTS 에서 버전을 고르거나 추가하면 됩니다.
    ========================================================================= */
 (() => {
   const W = 1080, H = 1920;
@@ -24,31 +24,85 @@
   const SANS = "Pretendard, sans-serif";
   const MONO = '"DejaVu Sans Mono", "Liberation Mono", Pretendard, monospace';
 
-  /* ---- 카피 (여기만 바꾸면 "우리 것"이 됩니다) ---- */
-  const COPY = {
-    brand: "실전 AI 활용 가이드", year: "2026",
-    hook: [
-      { dur: 0.9, bg: "bg", lines: ["AI한테", "시키는 건"] },
-      { dur: 0.8, bg: "accent", lines: ["다들", "합니다."] },
-      { dur: 0.9, bg: "paper", lines: ["문제는"] },
-      { dur: 1.2, bg: "bg", lines: ["뭘,", "어떻게", "시키느냐."], hi: 1 },
-      { dur: 0.9, bg: "bg", lines: ["10편 · 50장"], small: true },
-      { dur: 0.9, bg: "accent", lines: ["전부", "코드로."] },
-    ],
-    cmd: "> ai-guide --render series_2026",
-    topics: ["영어 이메일", "회의록 정리", "보고서 초안", "엑셀 · 데이터", "자기소개서",
-             "거절의 기술", "협상 리허설", "악마의 변호인", "눈높이 번역기", "감정 쿨다운"],
-    done: "▶ 10 topics · 50 slides · 1 html file",
-    pairs: [["번역하지 말고", "설명하라"], ["받아쓰지 말고", "뽑아내라"],
-            ["묻지 말고", "지시하라"], ["쓰지 말고", "구조화하라"]],
-    mantra: ["나는 문장을 쓰지 않는다.", "나는 구조를 지시한다."],
-    keys: ["관계", "목적", "톤"],
-    dashTitle: "구조가 전부다.",
-    layers: ["관계", "목적", "톤", "형식"],
-    title: "실전 AI 활용 가이드",
-    sub: "2026 · 10편 · 50장",
-    outro: "모든 장면을 코드로 그렸습니다.",
+  /* ---- 카피 버전 (여기만 바꾸면 "우리 것"이 됩니다) ----
+     reel.html?v=<이름> 또는 REEL=<이름> npm run reel 로 고릅니다. 기본값은 "ai-guide".
+     모든 문구는 단언체 규칙을 따릅니다 (DESIGN.md). */
+  const VARIANTS = {
+    /* 실전 AI 활용 가이드 — 캐러셀 10편 홍보용 */
+    "ai-guide": {
+      brand: "실전 AI 활용 가이드", year: "2026",
+      hook: [
+        { dur: 0.9, bg: "bg", lines: ["AI한테", "시키는 건"] },
+        { dur: 0.8, bg: "accent", lines: ["다들", "합니다."] },
+        { dur: 0.9, bg: "paper", lines: ["문제는"] },
+        { dur: 1.2, bg: "bg", lines: ["뭘,", "어떻게", "시키느냐."], hi: 1 },
+        { dur: 0.9, bg: "bg", lines: ["10편 · 50장"], small: true },
+        { dur: 0.9, bg: "accent", lines: ["전부", "코드로."] },
+      ],
+      termTitle: "terminal — ai-guide",
+      cmd: "> ai-guide --render series_2026",
+      topics: ["영어 이메일", "회의록 정리", "보고서 초안", "엑셀 · 데이터", "자기소개서",
+               "거절의 기술", "협상 리허설", "악마의 변호인", "눈높이 번역기", "감정 쿨다운"],
+      done: "▶ 10 topics · 50 slides · 1 html file",
+      termFoot: ["MCP ✕   외부 API ✕   영상 생성 AI ✕", "JUST CODE."],
+      pairs: [["번역하지 말고", "설명하라"], ["받아쓰지 말고", "뽑아내라"],
+              ["묻지 말고", "지시하라"], ["쓰지 말고", "구조화하라"]],
+      mantra: ["나는 문장을 쓰지 않는다.", "나는 구조를 지시한다."],
+      keys: ["관계", "목적", "톤"],
+      dash: {
+        timeLabel: "작업 시간", from: 30, to: 3, unit: "분",
+        barsLabel: "프롬프트 3요소",
+        counters: [["SLIDES", 50], ["TOPICS", 10], ["PROMPTS", 10]],
+        curveLabel: "STRUCTURE CURVE", curveTitle: "구조가 전부다.",
+        foot: "1 HTML FILE  ·  0 PLUGINS",
+      },
+      layers: ["관계", "목적", "톤", "형식"],
+      title: "실전 AI 활용 가이드",
+      sub: "2026 · 10편 · 50장",
+      outro: "모든 장면을 코드로 그렸습니다.",
+      tag: "JUST CODE.",
+    },
+
+    /* 클로드 실전 강의 — 강의 모집용 샘플.
+       ⚑ 주차·강 수·시간 수치는 예시입니다. 실제 커리큘럼에 맞게 바꾸세요. */
+    "claude-class": {
+      brand: "클로드 실전 강의", year: "CLASS 01",
+      hook: [
+        { dur: 1.0, bg: "bg", lines: ["클로드,", "써보셨죠?"] },
+        { dur: 0.9, bg: "accent", lines: ["대부분", "채팅만 한다."] },
+        { dur: 0.8, bg: "paper", lines: ["문제는"] },
+        { dur: 1.2, bg: "bg", lines: ["어디까지", "맡기느냐."], hi: 1 },
+        { dur: 0.8, bg: "bg", lines: ["4주 · 8강"], small: true },
+        { dur: 0.9, bg: "accent", lines: ["전부", "실습으로."] },
+      ],
+      termTitle: "terminal — claude-class",
+      cmd: "> claude-class --start week_01",
+      topics: ["프롬프트 구조", "프로젝트 · 지식", "아티팩트", "문서 · 데이터 분석",
+               "스킬 만들기", "MCP 연결", "클로드 코드", "업무 자동화"],
+      done: "▶ 8 lessons · 4 weeks · hands-on",
+      termFoot: ["채팅  →  프로젝트  →  스킬  →  자동화", "BEYOND CHAT."],
+      pairs: [["묻지 말고", "맡겨라"], ["복붙하지 말고", "연결하라"],
+              ["반복하지 말고", "스킬로 만들라"], ["혼자 쓰지 말고", "팀에 깔아라"]],
+      mantra: ["나는 클로드에게 묻지 않는다.", "나는 일을 맡긴다."],
+      keys: ["맥락", "도구", "반복"],
+      dash: {
+        timeLabel: "주간 반복 업무", from: 300, to: 30, unit: "분",
+        barsLabel: "맡기는 3단계",
+        counters: [["LESSONS", 8], ["WEEKS", 4], ["PROJECTS", 3]],
+        curveLabel: "LEARNING CURVE", curveTitle: "맡기는 만큼 빨라진다.",
+        foot: "CHAT  ·  PROJECT  ·  SKILL  ·  AUTOMATION",
+      },
+      layers: ["프롬프트", "프로젝트", "스킬", "자동화"],
+      title: "클로드 실전 강의",
+      sub: "4주 · 8강 · 실습 중심",
+      outro: "이 영상도 클로드와 코드로 만들었습니다.",
+      tag: "BEYOND CHAT.",
+    },
   };
+  const VARIANT = (typeof location !== "undefined" && new URLSearchParams(location.search).get("v")) || "ai-guide";
+  if (!VARIANTS[VARIANT]) throw new Error(`알 수 없는 쇼릴 버전: ${VARIANT} (가능: ${Object.keys(VARIANTS).join(", ")})`);
+  const COPY = VARIANTS[VARIANT];
+
 
   /* ---- 유틸 ---- */
   const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
@@ -87,6 +141,12 @@
   function text(str, x, y, o = {}) {
     ctx.save();
     ctx.font = `${o.weight || 800} ${o.size || 80}px ${o.mono ? MONO : SANS}`;
+    if (o.maxW) {                            // 폭을 넘으면 비율대로 축소 (긴 문구 안전장치)
+      ctx.letterSpacing = `${o.ls ?? -(o.size || 80) * 0.02}px`;
+      const mw = ctx.measureText(str).width;
+      if (mw > o.maxW) { const k = o.maxW / mw; o = { ...o, size: (o.size || 80) * k, ls: (o.ls ?? -(o.size || 80) * 0.02) * k, maxW: 0 };
+        ctx.font = `${o.weight || 800} ${o.size}px ${o.mono ? MONO : SANS}`; }
+    }
     ctx.fillStyle = o.color || C.ink;
     ctx.textAlign = o.align || "center";
     ctx.textBaseline = o.baseline || "middle";
@@ -151,7 +211,7 @@
     ctx.scale(lerp(1.18, 1, p), lerp(1.18, 1, p));
     ctx.globalAlpha = p;
     const colors = cut.lines.map((_, i) => (cut.hi === i ? C.accent : fg));
-    lines(cut.lines, 0, 0, size, { weight: 900, colors, ls: -size * 0.035 });
+    lines(cut.lines, 0, 0, size, { weight: 900, colors, ls: -size * 0.035, maxW: W - 144 });
     ctx.restore();
 
     // 컷 번호 (좌하단, 레퍼런스의 러닝 캡션 역할)
@@ -176,7 +236,7 @@
     [["#ff5f57", 0], ["#febc2e", 1], ["#28c840", 2]].forEach(([c, i]) => {
       ctx.beginPath(); ctx.arc(x + 44 + i * 34, y + 46, 10, 0, Math.PI * 2); ctx.fillStyle = c; ctx.fill();
     });
-    text("terminal — ai-guide", x + w / 2, y + 46, { size: 28, weight: 500, mono: true, color: C.muted, ls: 0 });
+    text(COPY.termTitle, x + w / 2, y + 46, { size: 28, weight: 500, mono: true, color: C.muted, ls: 0 });
 
     // 명령어 타이핑
     const typed = Math.floor(seg(t, 0.1, 1.2) * COPY.cmd.length);
@@ -214,8 +274,8 @@
         { size: 34, weight: 700, mono: true, color: C.ink, align: "left" });
     }
     // 하단 캡션
-    text("MCP ✕   외부 API ✕   영상 생성 AI ✕", W / 2, H - 150, { size: 30, weight: 600, color: C.muted, ls: 1 });
-    text("JUST CODE.", W / 2, H - 92, { size: 34, weight: 900, color: C.accent, ls: 6 });
+    text(COPY.termFoot[0], W / 2, H - 150, { size: 30, weight: 600, color: C.muted, ls: 1, maxW: W - 144 });
+    text(COPY.termFoot[1], W / 2, H - 92, { size: 34, weight: 900, color: C.accent, ls: 6 });
     scanlines(0.06);
   }
 
@@ -227,14 +287,14 @@
       brandBg(); header();
       const p = E.out(seg(lt, 0, 0.25));
       ctx.save(); ctx.globalAlpha = p; ctx.translate(0, (1 - p) * 60);
-      text(pair[0], W / 2, H / 2, { size: 132, weight: 900, color: C.ink, ls: -5 });
+      text(pair[0], W / 2, H / 2, { size: 132, weight: 900, color: C.ink, ls: -5, maxW: W - 144 });
       ctx.restore();
     } else {
       const l2 = lt - 0.6;
       fill(C.accent); header("rgba(10,11,11,.55)");
       const p = E.expo(seg(l2, 0, 0.18));
       ctx.save(); ctx.translate(W / 2, H / 2); ctx.scale(lerp(1.5, 1, p), lerp(1.5, 1, p));
-      text(pair[1], 0, 0, { size: pair[1].length > 4 ? 168 : 210, weight: 900, color: C.bg, ls: -9 });
+      text(pair[1], 0, 0, { size: pair[1].length > 4 ? 168 : 210, weight: 900, color: C.bg, ls: -9, maxW: W - 144 });
       ctx.restore();
       glitch(l2 < 0.12 ? (0.12 - l2) * 7 : 0, seed + Math.floor(l2 * FPS));
     }
@@ -272,7 +332,7 @@
     COPY.mantra.forEach((s, i) => {
       const p = E.out(seg(l, i * 0.18, i * 0.18 + 0.35));
       ctx.save(); ctx.globalAlpha = p; ctx.translate(0, (1 - p) * 40);
-      text(s, W / 2, H / 2 - 60 + i * 120, { size: 72, weight: i ? 900 : 600, color: i ? C.accent : C.soft, ls: -2 });
+      text(s, W / 2, H / 2 - 60 + i * 120, { size: 72, weight: i ? 900 : 600, color: i ? C.accent : C.soft, ls: -2, maxW: W - 144 });
       ctx.restore();
     });
   }
@@ -331,7 +391,7 @@
       const on = Math.floor(t / 0.7) % 3 === i;
       text(k, W - 72, H - 190 + i * 40, { size: 28, weight: on ? 800 : 500, color: on ? C.accent : C.muted2, align: "right", ls: 0 });
     });
-    text("3 KEYS", W - 72, H - 230, { size: 22, weight: 500, mono: true, color: C.muted2, align: "right", ls: 4 });
+    text(`${COPY.keys.length} KEYS`, W - 72, H - 230, { size: 22, weight: 500, mono: true, color: C.muted2, align: "right", ls: 4 });
     vignette(0.45);
   }
 
@@ -350,21 +410,22 @@
   function s4(t) {
     brandBg(); header();
     const M = 72, G = 28, cw = (W - M * 2 - G) / 2;
-    // A: 작업 시간 30분 → 3분
-    card(M, 200, W - M * 2, 330, "작업 시간", 0, t, (w, h, p) => {
-      const v = lerp(30, 3, E.inOut(p));
-      text(`${Math.round(v)}분`, 36, 170, { size: 150, weight: 900, color: v <= 3.5 ? C.accent : C.ink, align: "left", ls: -6 });
-      const sa = seg(p, 0.55, 1);                                 // 끝나갈수록 "30분" 에 취소선
-      text("30분", w - 36, 178, { size: 64, weight: 800, color: C.muted, align: "right", ls: -2 });
+    const D = COPY.dash;
+    // A: 작업 시간 from → to (카운트다운 + BEFORE 취소선)
+    card(M, 200, W - M * 2, 330, D.timeLabel, 0, t, (w, h, p) => {
+      const v = lerp(D.from, D.to, E.inOut(p)), before = `${D.from}${D.unit}`;
+      text(`${Math.round(v)}${D.unit}`, 36, 170, { size: 150, weight: 900, color: v <= D.to * 1.1 + 0.4 ? C.accent : C.ink, align: "left", ls: -6 });
+      const sa = seg(p, 0.55, 1);                                 // 끝나갈수록 BEFORE 값에 취소선
+      text(before, w - 36, 178, { size: 64, weight: 800, color: C.muted, align: "right", ls: -2 });
       ctx.font = `800 64px ${SANS}`; ctx.letterSpacing = "-2px";
-      const tw = ctx.measureText("30분").width;
+      const tw = ctx.measureText(before).width;
       ctx.fillStyle = C.accent; ctx.fillRect(w - 36 - tw, 174, tw * sa, 8);
       text("BEFORE", w - 36, 118, { size: 22, weight: 500, mono: true, color: C.muted2, align: "right", ls: 3 });
       ctx.fillStyle = C.line; ctx.fillRect(36, 262, w - 72, 10);
-      ctx.fillStyle = C.accent; ctx.fillRect(36, 262, (w - 72) * (v / 30), 10);
+      ctx.fillStyle = C.accent; ctx.fillRect(36, 262, (w - 72) * (v / D.from), 10);
     });
     // B: 프롬프트 3요소 바
-    card(M, 558, cw, 470, "프롬프트 3요소", 0.25, t, (w, h, p) => {
+    card(M, 558, cw, 470, D.barsLabel, 0.25, t, (w, h, p) => {
       COPY.keys.forEach((k, i) => {
         const y = 110 + i * 112, f = E.out(seg(p, i * 0.2, i * 0.2 + 0.6));
         text(k, 36, y, { size: 38, weight: 800, color: C.soft, align: "left", ls: -1 });
@@ -375,14 +436,14 @@
     });
     // C: 카운터
     card(M + cw + G, 558, cw, 470, "OUTPUT", 0.4, t, (w, h, p) => {
-      [["SLIDES", 50], ["TOPICS", 10], ["PROMPTS", 10]].forEach(([k, n], i) => {
+      D.counters.forEach(([k, n], i) => {
         const y = 118 + i * 118, v = Math.round(n * E.out(seg(p, i * 0.15, i * 0.15 + 0.7)));
         text(k, 36, y - 34, { size: 22, weight: 500, mono: true, color: C.muted2, align: "left", ls: 3 });
         text(String(v).padStart(2, "0"), 36, y + 18, { size: 76, weight: 900, color: i === 0 ? C.accent : C.ink, align: "left", ls: -3 });
       });
     });
     // D: 이징 곡선 + 핵심 카피
-    card(M, 1056, W - M * 2, 430, "STRUCTURE CURVE", 0.6, t, (w, h, p) => {
+    card(M, 1056, W - M * 2, 430, D.curveLabel, 0.6, t, (w, h, p) => {
       const gx = 36, gy = 90, gw = w - 72, gh = 240;
       ctx.strokeStyle = C.line; ctx.lineWidth = 2;
       for (let i = 0; i <= 4; i++) { ctx.beginPath(); ctx.moveTo(gx, gy + gh * i / 4); ctx.lineTo(gx + gw, gy + gh * i / 4); ctx.stroke(); }
@@ -393,7 +454,7 @@
       ctx.stroke();
       const dx = gx + gw * upTo, dy = gy + gh - gh * E.inOut(upTo);
       ctx.beginPath(); ctx.arc(dx, dy, 12, 0, Math.PI * 2); ctx.fillStyle = C.ink; ctx.fill();
-      text(COPY.dashTitle, w / 2, 388, { size: 44, weight: 900, color: C.ink, ls: -1, alpha: seg(p, 0.7, 1) });
+      text(D.curveTitle, w / 2, 388, { size: 44, weight: 900, color: C.ink, ls: -1, alpha: seg(p, 0.7, 1), maxW: w - 72 });
     });
     // E: 에너지 파형
     card(M, 1514, W - M * 2, 260, "ENERGY", 0.8, t, (w, h, p) => {
@@ -406,7 +467,7 @@
       ctx.stroke();
       text(`${(128 + Math.sin(t * 2) * 1.5).toFixed(0)} BPM`, w - 36, 46, { size: 24, weight: 600, mono: true, color: C.accent, align: "right", ls: 3 });
     });
-    text("1 HTML FILE  ·  0 PLUGINS", W / 2, H - 92, { size: 26, weight: 500, mono: true, color: C.muted2, ls: 4 });
+    text(D.foot, W / 2, H - 92, { size: 26, weight: 500, mono: true, color: C.muted2, ls: 4 });
   }
 
   /* =====================================================================
@@ -445,13 +506,13 @@
     const p = E.expo(seg(lt, 0, 0.16)), off = (1 - p) * 60;
     const size = 230;
     ctx.save(); ctx.globalCompositeOperation = idx === 0 || idx === 3 ? "screen" : "multiply";
-    text(COPY.layers[idx], W / 2 - off, H / 2, { size, weight: 900, color: C.accent, ls: -10, alpha: 0.85 });
-    text(COPY.layers[idx], W / 2 + off, H / 2, { size, weight: 900, color: idx === 1 ? C.ink : C.dim, ls: -10, alpha: 0.6 });
+    text(COPY.layers[idx], W / 2 - off, H / 2, { size, weight: 900, color: C.accent, ls: -10, alpha: 0.85, maxW: W - 144 });
+    text(COPY.layers[idx], W / 2 + off, H / 2, { size, weight: 900, color: idx === 1 ? C.ink : C.dim, ls: -10, alpha: 0.6, maxW: W - 144 });
     ctx.restore();
-    text(COPY.layers[idx], W / 2, H / 2, { size, weight: 900, color: fg, ls: -10 });
+    text(COPY.layers[idx], W / 2, H / 2, { size, weight: 900, color: fg, ls: -10, maxW: W - 144 });
     // 이전 레이어들을 위로 쌓기
     for (let k = 0; k < idx; k++)
-      text(COPY.layers[k], W / 2, H / 2 - 300 - (idx - 1 - k) * 110, { size: 90, weight: 800, color: fg, ls: -3, alpha: 0.35 });
+      text(COPY.layers[k], W / 2, H / 2 - 300 - (idx - 1 - k) * 110, { size: 90, weight: 800, color: fg, ls: -3, alpha: 0.35, maxW: W - 144 });
     text(`LAYER ${idx + 1}/${COPY.layers.length}`, W / 2, H - 92, { size: 26, weight: 500, mono: true, color: idx === 1 || idx === 2 ? "rgba(10,11,11,.5)" : C.muted2, ls: 6 });
     scanlines(0.1);
     glitch(lt < 0.14 ? (0.14 - lt) * 6 : 0, 500 + idx * 31 + Math.floor(lt * FPS));
@@ -465,12 +526,12 @@
     const p1 = E.out(seg(t, 0.1, 0.6)), p2 = E.out(seg(t, 0.45, 0.9)), p3 = E.out(seg(t, 0.8, 1.3)), p4 = E.out(seg(t, 1.4, 2.0));
     ctx.save(); ctx.globalAlpha = p1; ctx.translate(0, (1 - p1) * 30);
     text("“", W / 2 - 400, H / 2 - 250, { size: 220, weight: 700, color: C.accent, align: "left" });
-    text(COPY.title, W / 2, H / 2 - 60, { size: 96, weight: 900, color: C.ink, ls: -4 });
+    text(COPY.title, W / 2, H / 2 - 60, { size: 96, weight: 900, color: C.ink, ls: -4, maxW: W - 144 });
     ctx.restore();
     ctx.fillStyle = C.accent; ctx.fillRect(W / 2 - 48 * p2, H / 2 + 40, 96 * p2, 6);
     text(COPY.sub, W / 2, H / 2 + 120, { size: 40, weight: 500, color: C.muted, ls: 1, alpha: p3 });
-    text(COPY.outro, W / 2, H - 200, { size: 34, weight: 600, color: C.soft, ls: 0, alpha: p4 });
-    text("JUST CODE.", W / 2, H - 140, { size: 26, weight: 800, color: C.accent, ls: 6, alpha: p4 });
+    text(COPY.outro, W / 2, H - 200, { size: 34, weight: 600, color: C.soft, ls: 0, alpha: p4, maxW: W - 144 });
+    text(COPY.tag, W / 2, H - 140, { size: 26, weight: 800, color: C.accent, ls: 6, alpha: p4 });
     // 페이드 아웃
     const fade = seg(t, 2.9, 3.6);
     if (fade > 0) { ctx.fillStyle = `rgba(10,11,11,${fade})`; ctx.fillRect(0, 0, W, H); }
@@ -491,7 +552,7 @@
   }
 
   /* ---- 외부 인터페이스 ---- */
-  window.REEL = { W, H, FPS, DURATION, SCENES: SCENES.map(([a, b]) => [a, b]) };
+  window.REEL = { W, H, FPS, DURATION, VARIANT, VARIANTS: Object.keys(VARIANTS), SCENES: SCENES.map(([a, b]) => [a, b]) };
   window.__seek = (t) => { render(t); return true; };
   window.__frame = (t, type = "image/png", q) => { render(t); return canvas.toDataURL(type, q); };
 

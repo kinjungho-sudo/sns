@@ -8,7 +8,8 @@
     "serve": "node server.mjs",
     "export": "node export.mjs",
     "reel": "node export-reel.mjs",
-    "reel:stills": "STILLS=1 node export-reel.mjs"
+    "reel:stills": "STILLS=1 node export-reel.mjs",
+    "reel:claude": "REEL=claude-class node export-reel.mjs"
   },
   "devDependencies": {
     "playwright": "^1.49.0"

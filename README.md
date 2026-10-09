@@ -60,10 +60,13 @@ npm run reel         # out/reel/reel.mp4 (1080×1920, 30fps, 40초) + out/reel/s
 npm run reel:stills  # 씬별 스틸만 (빠른 검수용)
 ```
 
+- 다른 버전 뽑기: `REEL=claude-class npm run reel` (또는 `npm run reel:claude`) → `out/reel-claude-class/`
+  미리보기는 `reel.html?v=claude-class`. 버전 목록과 문구는 `reel.js` 상단 `VARIANTS` 에 있습니다.
 - 구간만 뽑기: `START=9 END=18 npm run reel`
 - ffmpeg 가 필요합니다 (`FFMPEG=/path/to/ffmpeg` 로 경로 지정 가능). 프레임은 디스크를 거치지 않고 바로 인코딩됩니다.
 - 장면 구성: 훅(빠른 컷) → 터미널 → 키네틱 타이포 + 바우하우스 그리드 → 3D 파티클 → 대시보드 → 터널·글리치 → 타이틀.
-  문구는 `reel.js` 상단 `COPY`, 색은 `C`, 각 씬 길이는 `SCENES` 에서 바꿉니다.
+  문구는 `reel.js` 상단 `VARIANTS` 의 각 버전, 색은 `C`, 각 씬 길이는 `SCENES` 에서 바꿉니다.
+  새 버전은 기존 항목 하나를 복사해 이름만 바꿔 추가하면 됩니다. 긴 문구는 화면 폭에 맞춰 자동으로 줄어듭니다.
 - 오디오는 포함되지 않습니다. 업로드 시 편집 앱에서 BGM 을 얹으세요 (128 BPM 전자음 계열 권장).
 
 | 훅 | 터미널 | 타이포 | 파티클 | 대시보드 | 글리치 | 타이틀 |
@@ -96,3 +99,11 @@ npm run reel:stills  # 씬별 스틸만 (빠른 검수용)
 ## 규격
 - 캔버스: **1080 × 1350 px (4:5)** — 인스타그램 세로 캐러셀 권장 규격
 - 폰트: Pretendard (OFL, 저장소 포함)
+
+### 버전 2 — 클로드 실전 강의 (샘플)
+
+강의 모집용 샘플입니다. 주차·강 수·시간 같은 수치는 예시이니 실제 커리큘럼에 맞게 고쳐 쓰세요.
+
+| 훅 | 터미널 | 타이포 | 파티클 | 대시보드 | 글리치 | 타이틀 |
+|---|---|---|---|---|---|---|
+| ![](out/reel-claude-class/still-01.png) | ![](out/reel-claude-class/still-02.png) | ![](out/reel-claude-class/still-03.png) | ![](out/reel-claude-class/still-04.png) | ![](out/reel-claude-class/still-05.png) | ![](out/reel-claude-class/still-06.png) | ![](out/reel-claude-class/still-07.png) |
