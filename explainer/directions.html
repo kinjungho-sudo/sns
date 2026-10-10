@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Film Directions</title>
+  <style>
+    :root { --ground: #F4F1EA; --surface: #FFFDF8; --ink: #1E1D1A; --muted: #5E5A52; --line: #D6CFC2; --accent: #0B6B62; }
+    @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --ground: #161513; --surface: #1F1E1B; --ink: #F1EEE7; --muted: #B3AEA4; --line: #3A3731; --accent: #5FC4B6; } }
+    :root[data-theme="dark"] { --ground: #161513; --surface: #1F1E1B; --ink: #F1EEE7; --muted: #B3AEA4; --line: #3A3731; --accent: #5FC4B6; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--ground); color: var(--ink); font: 16px/1.55 Pretendard, -apple-system, "Malgun Gothic", sans-serif; padding: 40px 16px 64px; }
+    main { max-width: 1240px; margin: 0 auto; }
+    h1 { font-size: 28px; margin: 0 0 6px; letter-spacing: -0.02em; }
+    .lede { color: var(--muted); margin: 0 0 28px; max-width: 70ch; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+    figure { margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+    figure.win { border: 2px solid var(--accent); }
+    figure img { display: block; width: 100%; height: auto; border-bottom: 1px solid var(--line); }
+    figcaption { padding: 14px 16px 18px; }
+    figcaption b { display: block; font-size: 17px; }
+    .tag { display: inline-block; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 99px; border: 1px solid var(--line); color: var(--muted); margin-left: 6px; vertical-align: 2px; }
+    .win .tag { border-color: var(--accent); color: var(--accent); }
+    figcaption p { margin: 6px 0 0; color: var(--muted); font-size: 14.5px; }
+    h2 { font-size: 20px; margin: 40px 0 10px; }
+    table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; font-size: 14.5px; }
+    th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    th { color: var(--muted); font-weight: 600; }
+    tr:last-child td { border-bottom: 0; }
+    .scroll { overflow-x: auto; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>설명 영상 — 디자인 방향 3안</h1>
+  <p class="lede">같은 장면(증명 파트, 41.6초: 적어 넣은 세 줄이 답의 세 부분과 이어진 순간)을 세 가지 토큰으로 그렸습니다. 레이아웃·움직임·문구는 같고, 색과 바탕만 다릅니다.</p>
+
+  <div class="grid">
+    <figure class="win">
+      <img src="out/directions/paper.png" alt="따뜻한 종이색 바탕에 채팅 창. 요청 네 줄과 답 세 줄이 짙은 청록 선으로 이어져 있다." />
+      <figcaption><b>A. Paper <span class="tag">채택</span></b>
+        <p>따뜻한 종이색 바탕, 청록 한 색. 실제 채팅 창처럼 보여 "내 일"로 읽히고, 대비가 모든 글자에서 5:1 이상입니다.</p></figcaption>
+    </figure>
+    <figure>
+      <img src="out/directions/noir.png" alt="거의 검은 바탕에 같은 채팅 창. 청록 선이 밝게 보인다." />
+      <figcaption><b>B. Noir <span class="tag">탈락</span></b>
+        <p>저장소의 Teal Noir 룩. 쇼릴에는 맞지만, 설명 영상에서는 "AI 홍보" 분위기가 앞서고 따뜻한 바탕 원칙과 어긋납니다.</p></figcaption>
+    </figure>
+    <figure>
+      <img src="out/directions/blueprint.png" alt="차가운 회청색 바탕에 같은 채팅 창. 파란 선으로 이어져 있다." />
+      <figcaption><b>C. Blueprint <span class="tag">탈락</span></b>
+        <p>도면 같은 차가운 톤. 원리 설명에는 어울리지만 메일을 쓰는 일상 장면과 거리가 멀고, 브랜드 청록과도 이어지지 않습니다.</p></figcaption>
+    </figure>
+  </div>
+
+  <h2>결정 기록</h2>
+  <div class="scroll">
+  <table>
+    <tr><th>질문</th><th>답</th></tr>
+    <tr><td>누구를 위한가</td><td>AI 어시스턴트를 이미 쓰지만 "짧게 물어도 알아서 맞춰 쓴다"고 믿는 직장인.</td></tr>
+    <tr><td>무엇을 전하나</td><td>AI는 창에 적힌 글만 읽는다. 사정을 적지 않으면 빈칸으로 남는다.</td></tr>
+    <tr><td>이름이 필요한가</td><td>하나만. 창에 "AI가 읽는 창"이라는 이름을 붙이고 끝까지 같은 이름을 씁니다. 나머지(관계·목적·톤)는 사용자가 이미 쓰는 말이라 새 이름을 만들지 않았습니다.</td></tr>
+    <tr><td>왜 A인가</td><td>실제 화면에 가장 가깝고, 바탕이 조용해서 움직이는 한 가지에 시선이 갑니다. 청록은 저장소 브랜드 색을 어둡게 내려 글자 대비를 맞췄습니다.</td></tr>
+    <tr><td>뺀 것</td><td>네온 글로, 파티클, 그라데이션 타이틀, 지표 숫자, 마스코트, 은유 일러스트. 쇼릴에서 쓴 장식은 이 영상의 목적에 쓸모가 없어 모두 뺐습니다.</td></tr>
+  </table>
+  </div>
+</main>
+</body>
+</html>

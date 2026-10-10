@@ -9,7 +9,9 @@
     "export": "node export.mjs",
     "reel": "node export-reel.mjs",
     "reel:stills": "STILLS=1 node export-reel.mjs",
-    "reel:claude": "REEL=claude-class node export-reel.mjs"
+    "reel:claude": "REEL=claude-class node export-reel.mjs",
+    "film": "bash explainer/build.sh",
+    "film:check": "node explainer/render.mjs contrast && node explainer/render.mjs timing && node explainer/render.mjs fit && node explainer/render.mjs determinism"
   },
   "devDependencies": {
     "playwright": "^1.49.0"
