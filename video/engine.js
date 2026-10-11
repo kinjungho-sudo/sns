@@ -13,7 +13,7 @@
    ========================================================================= */
 (function () {
   // base = 원고 기준 길이(초), pace = 전체 속도 배율(1.3 이면 30% 느리게), duration = 실제 영상 길이
-  const TL = { duration: 0, base: 0, pace: 1, anims: [], ticks: [], cues: [], voice: [] };
+  const TL = { duration: 0, base: 0, pace: 1, anims: [], ticks: [], cues: [], voice: [], scenes: [] };
 
   const EASE = {
     out: "cubic-bezier(.16,1,.3,1)",       // 부드럽게 멈춤 (기본)

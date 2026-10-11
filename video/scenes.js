@@ -391,6 +391,7 @@
         window.TL.voice.push({ scene: i, t: +(t * pace + LEAD).toFixed(3), dur: +voDur.toFixed(3), file: item ? item.file : null, text: s.vo });
       }
       T[s.type](stage, s, t, ep);
+      window.TL.scenes.push({ i, type: s.type, t0: +(t * pace).toFixed(3), t1: +((t + s.dur) * pace).toFixed(3) });
       t += s.dur;
     });
     const TL = window.TL;

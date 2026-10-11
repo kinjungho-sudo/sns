@@ -50,6 +50,14 @@ npm run video                        # 나레이션 포함 MP4 + 자막 .srt
 
 음성이 아직 없으면 원고 글자 수로 길이를 추정해 장면 길이만 잡고, 소리는 BGM과 효과음만 들어갑니다.
 
+## CapCut으로 내보내기 (AutoFlowCut)
+
+`npm run afc`는 에피소드를 [AutoFlowCut](https://github.com/touchizen/AutoFlowCut) 프로젝트 재료로 바꿔 `out/afc/<ep>/`에 둡니다.
+- 문장 1개가 컷 1개예요. 컷 이미지는 우리 영상에서 그 문장이 끝나는 순간의 화면이에요.
+- 씬 CSV, 나레이션, 문장 자막, BGM이 함께 만들어져요.
+
+PC에서 AutoFlowCut 앱과 MCP 서버를 켜고 `autoflowcut-sns-export` 스킬을 실행하면 CapCut 프로젝트까지 내보내요.
+
 ## 효과음 큐
 
 | 소리 | 쓰는 곳 |
@@ -96,6 +104,7 @@ STILLS=1.5,8,14 EP=ep01-meeting npm run video   # 특정 시각 스틸만 빠르
 | `video.css` | 시리즈 2 디자인 토큰 |
 | `video.html` | 미리보기 플레이어 / 렌더 페이지 (`?render=1`) |
 | `audio.mjs` | BGM·효과음 합성 + 나레이션 믹스(덕킹) → WAV |
+| `afc-bundle.mjs` | AutoFlowCut 번들(씬 CSV · 컷 이미지 · 나레이션 · 자막 · BGM) 생성 |
 | `tts.mjs` | 타입캐스트로 장면별 나레이션 생성 → `vo/*.wav` + `manifest.json` |
 | `render.mjs` | 프레임 캡처 → ffmpeg로 MP4 생성 |
 | `episodes/<ep>/` | `episode.js`(원고) · `캡션.txt` · `배포자료/` |
