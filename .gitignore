@@ -1,1 +1,4 @@
 node_modules/
+out/video/**/audio.wav
+out/video/**/still-*.png
+out/afc/
