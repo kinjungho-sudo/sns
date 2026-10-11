@@ -1,0 +1,15 @@
+{
+  "_doc": "Voice script for the narrated 16:9 master. 'say' is what Typecast reads (numbers in Hangul so they are pronounced right); 'show' is the burned-in caption. 'at' is the earliest start (s); 'until' is the latest end before the next visual beat. narrate.mjs measures each clip and retimes captions to the real voice.",
+  "hold": 1.0,
+  "lines": [
+    { "id": "01", "at": 0.25, "until": 3.0,  "say": "커피 한 잔, 오천 원. 푼돈이죠?",            "show": "커피 한 잔, 5,000원. 푼돈이죠?" },
+    { "id": "02", "at": 3.05, "until": 5.0,  "say": "하루 한 칸씩 모으면,",                    "show": "하루 한 칸씩 모으면," },
+    { "id": "03", "at": 5.1,  "until": 8.55, "say": "일 년이면 삼백육십오 칸,",                 "show": "1년이면 365칸," },
+    { "id": "04", "at": 8.6,  "until": 10.5, "say": "백팔십이만 오천 원.",                    "show": "182만 5천 원." },
+    { "id": "05", "at": 10.7, "until": 19.8, "say": "이걸 삼십 년 동안 쌓으면,",               "show": "이걸 30년 동안 쌓으면," },
+    { "id": "06", "at": 19.9, "until": 22.5, "say": "모두 오천사백칠십오만 원입니다.",           "show": "모두 5,475만 원입니다." },
+    { "id": "07", "at": 22.6, "until": 24.55,"say": "십 년 늦게 모으기 시작하면,",              "show": "10년 늦게 모으기 시작하면," },
+    { "id": "08", "at": 24.6, "until": 27.0, "say": "천팔백이십오만 원이 덜 모입니다.",          "show": "1,825만 원이 덜 모입니다." },
+    { "id": "09", "at": 27.4, "until": 31.0, "say": "하루 오천 원, 삼십 년이면 오천사백칠십오만 원.", "show": "하루 5,000원, 30년이면 5,475만 원." }
+  ]
+}

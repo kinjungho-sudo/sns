@@ -14,7 +14,9 @@
   const THEME_ID = P.get("theme") || "paper";
   const RM = P.get("rm") === "1";
   const CAPS = P.get("caps") !== "0";
-  const DURATION = 30, FPS = 60;
+  const VO = P.get("vo") === "1";          // narrated master: captions follow the measured voice (out/vo/timing.json)
+  const DURATION = 30, FPS = 60;            // the visual timeline; a narrated master holds the last frame for `hold` seconds
+  let HOLD = 0;
 
   /* ---------------- inputs: the only three numbers ---------------- */
   const DAILY = 5000, DAYS_PER_YEAR = 365, YEARS = 30, LATE = 10;
@@ -457,7 +459,7 @@
 
   /* ---------------- interface ---------------- */
   window.TIMELINE = TIMELINE;
-  window.FILM = { W, H, FPS, DURATION, FMT_ID, THEME_ID, RM, NUMBERS: { DAILY, DAYS_PER_YEAR, YEARS, LATE, YEAR_SUM, TOTAL, TOTAL_DAYS, LATE_TOTAL } };
+  window.FILM = { W, H, FPS, DURATION, VO, FMT_ID, THEME_ID, RM, NUMBERS: { DAILY, DAYS_PER_YEAR, YEARS, LATE, YEAR_SUM, TOTAL, TOTAL_DAYS, LATE_TOTAL } };
   window.seek = (t) => { render(t); return true; };
   window.frameAt = (t) => { render(t); return canvas.toDataURL("image/png"); };
   window.renderAudio = renderAudio;
@@ -467,7 +469,11 @@
     ["label on cell", C.onAccent, C.accent], ["caption", C.capInk, C.capBg],
     ["bars vs ground (graphic, 3:1)", C.accent, C.ground], ["hollow bars vs ground (graphic, 3:1)", C.muted, C.ground],
   ];
-  Promise.all([500, 600, 700, 800].map((w) => document.fonts.load(`${w} 40px Pretendard`, "가0₩")))
+  const loadVoice = VO ? fetch("out/vo/timing.json").then((r) => r.json()).then((j) => {
+    HOLD = j.hold || 0; window.FILM.DURATION = DURATION + HOLD;
+    TIMELINE.captions = j.captions.map((c) => ({ t0: c.t0, t1: c.t1 + 0.25, text: c.text }));
+  }) : Promise.resolve();
+  Promise.all([loadVoice, ...[500, 600, 700, 800].map((w) => document.fonts.load(`${w} 40px Pretendard`, "가0₩"))])
     .then(() => document.fonts.ready)
     .then(() => { render(0); window.__ready = true; window.dispatchEvent(new Event("film-ready")); });
 })();

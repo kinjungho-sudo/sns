@@ -27,3 +27,4 @@ One line per call made without input.
     - Cut: the Q and P1 anchors, which repeated their captions, and the "10년 늦게 시작" sub-line suffix.
     - Kept: "오전 8:12". The card has to read as a real notification for the payoff to land.
 15. **Kept the turn rather than cutting it.** The reviewer offered cutting it as an option. The arc needs one changed variable, and "starting later" is the most useful lever for this audience. The payoff then restores 5,475만 원 as the last and largest number.
+16. **Narrated master (user request).** Only the 16:9 master gets a Typecast voice. The silent cuts stay as delivered. The narration script is shorter than the silent captions so each line fits its beat. Numbers are spelled out for the voice and shown as digits in captions. The last frame holds 1 s so the payoff line ends on the payoff image.

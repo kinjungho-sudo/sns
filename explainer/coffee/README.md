@@ -50,5 +50,22 @@ These are measured results from the files in `out/`, as built on 2026-10-11.
 
 **Not tested:** listening. The audio was checked only by measurement (loudness, peak, and a spectrum and waveform check of cue timing), not by ear. Captions were not checked by a native Korean speaker other than the author.
 
+## Narrated master (Typecast)
+
+`out/master_16x9_narrated.mp4` is the 16:9 master with a Korean Typecast voice. It is 31 s long: the last frame holds for 1 s so the final line can finish.
+
+```bash
+npm run film                                   # once, for the music bed
+TYPECAST_API_KEY=… npm run film:narrated       # optional: TYPECAST_VOICE_ID, TYPECAST_MODEL (default ssfm-v21)
+```
+
+- **Script:** `narration.json`. `say` is what the voice reads, with numbers written in Hangul so they are pronounced right. `show` is the caption.
+- **Timing:** each line is measured after trimming silence. It starts at its beat or just after the previous line. A line is sped up only if it would run past its beat, and never beyond 1.25×. Captions are retimed to the real voice (`captions_narrated.srt`).
+- **Mix:** the music bed is side-chain ducked under the voice. The mix is then normalized to −16 LUFS / −1.5 dBTP.
+- **Voice:** without `TYPECAST_VOICE_ID`, the first voice the API lists for the model is used. The full list is saved to `out/vo/voices.json`.
+
+**Tested so far:** the whole pipeline in dry-run mode (`TYPECAST_DRY_RUN=1`), with tones standing in for speech. All 9 lines fit their windows, the bed ducks by 10.7 dB under the voice and is unchanged elsewhere, the mix measures −16 LUFS, the 31 s master passes the flash check, and the hold frame and retimed captions render correctly. Dry-run output is deleted, never shipped.
+**Not yet tested:** a real Typecast call. This environment has no `TYPECAST_API_KEY`, and its network policy blocks `api.typecast.ai`.
+
 ## Assumptions shown on screen
 Plain sum: no interest, no inflation, no leap days. The chart says "이자 없이 그대로 모은 돈", and the last frame says "단순 합계 · 이자·물가 미반영". Details are in SOURCES.md.

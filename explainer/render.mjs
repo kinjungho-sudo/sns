@@ -20,7 +20,7 @@ import { createServer } from "../server.mjs";
 const args = process.argv.slice(2);
 const cmd = args[0];
 const opt = (k, d) => { const i = args.indexOf("--" + k); return i < 0 ? d : (args[i + 1] && !args[i + 1].startsWith("--") ? args[i + 1] : true); };
-const FMT = opt("fmt", "16x9"), THEME = opt("theme", "paper"), RM = !!opt("rm", false);
+const FMT = opt("fmt", "16x9"), THEME = opt("theme", "paper"), RM = !!opt("rm", false), VO = !!opt("vo", false);
 const FPS = Number(opt("fps", 60));
 const FILM = opt("film", "coffee");
 const DIR = `explainer/${FILM}`, OUT = `${DIR}/out`;
@@ -36,7 +36,7 @@ async function openFilm(fmt = FMT, extra = "") {
   const [w, h] = SIZES[fmt];
   const page = await browser.newPage({ viewport: { width: w, height: h }, deviceScaleFactor: 1 });
   page.on("pageerror", (e) => { console.error(`✖ page error: ${e.message}`); process.exitCode = 1; });
-  await page.goto(`http://localhost:${PORT}/explainer/${FILM}/film.html?export=1&fmt=${fmt}&theme=${THEME}${RM ? "&rm=1" : ""}${extra}`, { waitUntil: "networkidle" });
+  await page.goto(`http://localhost:${PORT}/explainer/${FILM}/film.html?export=1&fmt=${fmt}&theme=${THEME}${RM ? "&rm=1" : ""}${VO ? "&vo=1" : ""}${extra}`, { waitUntil: "networkidle" });
   await page.waitForFunction(() => window.__ready === true, { timeout: 20000 });
   return page;
 }
@@ -70,7 +70,7 @@ if (cmd === "video") {
   const { DURATION } = await page.evaluate(() => window.FILM);
   const [w, h] = SIZES[FMT];
   const scale = opt("scale", null);
-  const file = opt("out", `${OUT}/video_${FMT}${RM ? "_rm" : ""}.mp4`);
+  const file = opt("out", `${OUT}/video_${FMT}${RM ? "_rm" : ""}${VO ? "_vo" : ""}.mp4`);
   const vf = scale ? ["-vf", `scale=${Math.round(w * scale / 2) * 2}:${Math.round(h * scale / 2) * 2}`] : [];
   const ff = spawn("ffmpeg", ["-y", "-hide_banner", "-loglevel", "error", "-f", "image2pipe", "-framerate", String(FPS), "-i", "-",
     ...vf, "-c:v", "libx264", "-preset", "medium", "-crf", "16", "-pix_fmt", "yuv420p", "-movflags", "+faststart", file],
