@@ -1,11 +1,11 @@
 /* Checks a finished MP4: flashes, loudness, true peak, duration and size.
    node explainer/check-video.mjs explainer/out/master_16x9.mp4
    Flash rule: no more than 3 frame-to-frame luminance jumps of 10% or more in any 1-second window. */
-import { execFileSync } from "node:child_process";
+import { execFileSync, spawnSync } from "node:child_process";
 
 const file = process.argv[2];
 const run = (cmd, args) => execFileSync(cmd, args, { encoding: "utf8", maxBuffer: 1 << 28, stdio: ["ignore", "pipe", "pipe"] });
-const runErr = (cmd, args) => { try { execFileSync(cmd, args, { encoding: "utf8", maxBuffer: 1 << 28, stdio: ["ignore", "pipe", "pipe"] }); return ""; } catch (e) { return e.stderr || ""; } };
+const runErr = (cmd, args) => spawnSync(cmd, args, { encoding: "utf8", maxBuffer: 1 << 28 }).stderr || ""; // ffmpeg reports on stderr
 
 const probe = JSON.parse(run("ffprobe", ["-v", "error", "-show_entries", "stream=codec_type,codec_name,width,height,r_frame_rate,pix_fmt:format=duration", "-of", "json", file]));
 const v = probe.streams.find((s) => s.codec_type === "video"), a = probe.streams.find((s) => s.codec_type === "audio");

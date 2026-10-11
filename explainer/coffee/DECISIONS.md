@@ -15,3 +15,15 @@ One line per call made without input.
 11. **9:16 safe area:** captions sit at y≈1510, above the Shorts/Reels overlay, and every essential label is at least 36 px (13 px at 390 px wide).
 12. **Design-review lessons carried over from the stand-in film:** no window chrome, no brand tag, no decorative labels. Dimmed elements change outline style, not only lightness.
 13. **MP4 and WAV files stay out of git.** `npm run film` rebuilds them. Stills, captions and the contact sheet are committed.
+14. **Design review applied.**
+    - The turn now says *saving* starts late ("10년 늦게 모으기 시작하면").
+    - The chart is labelled "이자 없이 그대로 모은 돈" from its first frame.
+    - "= 5,475만 원" is the largest figure on the payoff card.
+    - Captions say each number when the counter reaches it.
+    - The counter steps in whole years, and its sub-line hides while the total falls, so the equation on screen is never false.
+    - 9:16 captions end at y=1480, above the Shorts overlay.
+    - Empty day slots are about 2:1 against the background.
+    - Footnote: 40 px in 9:16; "윤년" removed (it is still in SOURCES.md).
+    - Cut: the Q and P1 anchors, which repeated their captions, and the "10년 늦게 시작" sub-line suffix.
+    - Kept: "오전 8:12". The card has to read as a real notification for the payoff to land.
+15. **Kept the turn rather than cutting it.** The reviewer offered cutting it as an option. The arc needs one changed variable, and "starting later" is the most useful lever for this audience. The payoff then restores 5,475만 원 as the last and largest number.

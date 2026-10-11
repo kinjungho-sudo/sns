@@ -107,3 +107,8 @@ npm run reel:stills  # 씬별 스틸만 (빠른 검수용)
 | 훅 | 터미널 | 타이포 | 파티클 | 대시보드 | 글리치 | 타이틀 |
 |---|---|---|---|---|---|---|
 | ![](out/reel-claude-class/still-01.png) | ![](out/reel-claude-class/still-02.png) | ![](out/reel-claude-class/still-03.png) | ![](out/reel-claude-class/still-04.png) | ![](out/reel-claude-class/still-05.png) | ![](out/reel-claude-class/still-06.png) | ![](out/reel-claude-class/still-07.png) |
+
+## 설명 영상 (explainer/)
+
+- `explainer/coffee/` — **하루 커피값 5,000원, 30년이면?** 30초 설명 영상. 16:9 / 9:16 / 1:1 세 가지 화면비와 움직임을 줄인 버전, 자막 파일(.srt), 소리를 함께 만듭니다. `npm run film` 한 번으로 다시 렌더링합니다. 자세한 내용은 [explainer/coffee/README.md](explainer/coffee/README.md)를 보세요.
+- `explainer/context/` — 브리프가 비어 있을 때 임시로 만든 영상의 소스입니다(렌더링하지 않음).
