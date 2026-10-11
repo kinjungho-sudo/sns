@@ -1,4 +1,6 @@
-# DECISIONS
+# DECISIONS — stand-in film (superseded)
+
+> Built while the brief's placeholders were still blank. The user then supplied the real brief, the coffee-money film in `../coffee/`. This film is kept as source only and is not rendered by `npm run film`.
 
 One line per call made without input. Newest at the bottom.
 

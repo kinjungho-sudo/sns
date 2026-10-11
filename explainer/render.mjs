@@ -1,5 +1,5 @@
 /* Render pipeline for the explainer film.
-   node explainer/render.mjs <command> [--fmt 16x9|9x16|1x1] [--rm] [--theme paper] [--fps 60]
+   node explainer/render.mjs <command> [--film coffee|context] [--fmt 16x9|9x16|1x1] [--rm] [--theme paper] [--fps 60]
    commands:
      stills       one still per beat (mid-beat) + every anchor/caption moment → out/stills/<fmt>/
      frame --t N  one PNG at time N → out/frame.png
@@ -22,7 +22,8 @@ const cmd = args[0];
 const opt = (k, d) => { const i = args.indexOf("--" + k); return i < 0 ? d : (args[i + 1] && !args[i + 1].startsWith("--") ? args[i + 1] : true); };
 const FMT = opt("fmt", "16x9"), THEME = opt("theme", "paper"), RM = !!opt("rm", false);
 const FPS = Number(opt("fps", 60));
-const OUT = "explainer/out";
+const FILM = opt("film", "coffee");
+const DIR = `explainer/${FILM}`, OUT = `${DIR}/out`;
 const EXEC = process.env.CHROMIUM_PATH || "/opt/pw-browsers/chromium-1194/chrome-linux/chrome";
 const SIZES = { "16x9": [1920, 1080], "9x16": [1080, 1920], "1x1": [1080, 1080] };
 
@@ -35,7 +36,7 @@ async function openFilm(fmt = FMT, extra = "") {
   const [w, h] = SIZES[fmt];
   const page = await browser.newPage({ viewport: { width: w, height: h }, deviceScaleFactor: 1 });
   page.on("pageerror", (e) => { console.error(`✖ page error: ${e.message}`); process.exitCode = 1; });
-  await page.goto(`http://localhost:${PORT}/explainer/film.html?export=1&fmt=${fmt}&theme=${THEME}${RM ? "&rm=1" : ""}${extra}`, { waitUntil: "networkidle" });
+  await page.goto(`http://localhost:${PORT}/explainer/${FILM}/film.html?export=1&fmt=${fmt}&theme=${THEME}${RM ? "&rm=1" : ""}${extra}`, { waitUntil: "networkidle" });
   await page.waitForFunction(() => window.__ready === true, { timeout: 20000 });
   return page;
 }
@@ -98,7 +99,7 @@ if (cmd === "captions") {
   const ts = (s) => { const ms = Math.round(s * 1000), h = Math.floor(ms / 3600000), m = Math.floor(ms / 60000) % 60, sec = Math.floor(ms / 1000) % 60;
     return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(sec).padStart(2, "0")},${String(ms % 1000).padStart(3, "0")}`; };
   const srt = tl.captions.map((c, i) => `${i + 1}\n${ts(c.t0)} --> ${ts(c.t1)}\n${c.text}\n`).join("\n");
-  await writeFile("explainer/captions.srt", srt); console.log("✔ explainer/captions.srt");
+  await writeFile(`${DIR}/captions.srt`, srt); console.log(`✔ ${DIR}/captions.srt`);
 }
 
 if (cmd === "timing") {
@@ -113,7 +114,7 @@ if (cmd === "timing") {
 }
 
 if (cmd === "determinism") {
-  const t = Number(opt("t", 39.37));
+  const t = Number(opt("t", 19.37));
   const a = await png(await openFilm(), t), b = await png(await openFilm(), t);
   console.log(`t=${t}: run A ${sha(a)}  run B ${sha(b)}  ${a.equals(b) ? "IDENTICAL" : "DIFFERENT"}`);
   if (!a.equals(b)) process.exitCode = 1;
@@ -123,7 +124,8 @@ if (cmd === "fit") {
   let warnings = [];
   for (const fmt of Object.keys(SIZES)) for (const rm of ["", "&rm=1"]) {
     const page = await openFilm(fmt, rm);
-    for (let t = 0; t <= 60; t += 0.25) await page.evaluate((t) => window.seek(t), t);
+    const { DURATION } = await page.evaluate(() => window.FILM);
+    for (let t = 0; t <= DURATION; t += 0.25) await page.evaluate((t) => window.seek(t), t);
     warnings.push(...(await page.evaluate(() => [...window.__fitWarnings])));
     await page.close();
   }

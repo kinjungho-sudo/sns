@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>뻔한 답의 이유 — 설명 영상</title>
+  <title>커피값 30년 — 설명 영상</title>
   <style>
-    @font-face { font-family: "Pretendard"; font-weight: 400; font-display: block; src: url("../fonts/Pretendard-Regular.woff2") format("woff2"); }
-    @font-face { font-family: "Pretendard"; font-weight: 500; font-display: block; src: url("../fonts/Pretendard-Medium.woff2") format("woff2"); }
-    @font-face { font-family: "Pretendard"; font-weight: 600; font-display: block; src: url("../fonts/Pretendard-SemiBold.woff2") format("woff2"); }
-    @font-face { font-family: "Pretendard"; font-weight: 700; font-display: block; src: url("../fonts/Pretendard-Bold.woff2") format("woff2"); }
-    @font-face { font-family: "Pretendard"; font-weight: 800; font-display: block; src: url("../fonts/Pretendard-ExtraBold.woff2") format("woff2"); }
+    @font-face { font-family: "Pretendard"; font-weight: 400; font-display: block; src: url("../../fonts/Pretendard-Regular.woff2") format("woff2"); }
+    @font-face { font-family: "Pretendard"; font-weight: 500; font-display: block; src: url("../../fonts/Pretendard-Medium.woff2") format("woff2"); }
+    @font-face { font-family: "Pretendard"; font-weight: 600; font-display: block; src: url("../../fonts/Pretendard-SemiBold.woff2") format("woff2"); }
+    @font-face { font-family: "Pretendard"; font-weight: 700; font-display: block; src: url("../../fonts/Pretendard-Bold.woff2") format("woff2"); }
+    @font-face { font-family: "Pretendard"; font-weight: 800; font-display: block; src: url("../../fonts/Pretendard-ExtraBold.woff2") format("woff2"); }
     html, body { margin: 0; height: 100%; background: #e9e5dc; font-family: Pretendard, sans-serif; }
     body { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; }
     #film { max-width: 96vw; max-height: calc(100vh - 70px); box-shadow: 0 20px 60px rgba(0,0,0,.18); }
@@ -23,7 +23,7 @@
 </head>
 <body>
   <canvas id="film"></canvas>
-  <div id="bar"><button id="play">▶ 재생 (소리)</button><input id="scrub" type="range" min="0" max="60" step="0.01" value="0" /><b id="time">0.00</b></div>
+  <div id="bar"><button id="play">▶ 재생 (소리)</button><input id="scrub" type="range" min="0" max="30" step="0.01" value="0" /><b id="time">0.00</b></div>
   <script>if (new URLSearchParams(location.search).has("export")) document.body.dataset.export = "1";</script>
   <script src="film.js"></script>
   <script>
