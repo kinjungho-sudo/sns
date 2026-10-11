@@ -1,6 +1,6 @@
 /* 에피소드 영상을 MP4 로 렌더링 (사전 설치된 Chromium + ffmpeg)
    실행: npm run video                         → 모든 에피소드
-         EP=ep01-receipt npm run video         → 특정 에피소드만
+         EP=ep01-meeting npm run video         → 특정 에피소드만
          STILLS=1.5,6,12 EP=... npm run video  → 해당 시각 스틸 PNG 만 (빠른 확인용)
    결과: out/video/<ep>/<ep>.mp4 · cover.png · audio.wav */
 import { chromium } from "playwright";

@@ -21,7 +21,7 @@ HTML/CSS 로 만들고, 사전 설치된 Chromium 으로 **고해상도 PNG** �
 ## 🎬 영상 버전 (시리즈 2 'AI 업무 자동화')
 
 캐러셀을 20~25초짜리 4:5 피드 영상으로 바꾸는 파이프라인이 `video/`에 있습니다.
-BGM과 효과음까지 넣어 MP4로 뽑고, `EP=ep01-receipt npm run video`로 실행합니다. 기획과 사용법은 [video/README.md](video/README.md)에 있습니다.
+BGM과 효과음까지 넣어 MP4로 뽑고, `npm run video`로 실행합니다(EP.01 회의록, EP.02 지출결의서). 기획과 사용법은 [video/README.md](video/README.md)에 있습니다.
 
 ## 폴더 구조
 

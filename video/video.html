@@ -36,7 +36,7 @@
   <script>
     // ?ep=<에피소드 폴더명>  ?render=1 → 렌더 전용(컨트롤 숨김, 자동재생 없음)
     const p = new URLSearchParams(location.search);
-    const ep = p.get("ep") || "ep01-receipt";
+    const ep = p.get("ep") || "ep01-meeting";
     const render = p.get("render") === "1";
     if (render) document.body.classList.add("render");
 

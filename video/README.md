@@ -3,27 +3,30 @@
 매일 올리는 7장 캐러셀을 **20~25초 피드 영상**으로 바꿉니다.
 원고(`episode.js`) 하나로 MP4가 자동으로 나오고, 같은 원고면 언제 뽑아도 똑같은 영상이 나옵니다.
 
-![EP.01 커버](../out/video/ep01-receipt/cover.png)
+| EP.01 회의록 | EP.02 지출결의서 |
+|---|---|
+| ![EP.01](../out/video/ep01-meeting/cover.png) | ![EP.02](../out/video/ep02-receipt/cover.png) |
 
 ## 포맷
 
 | 항목 | 결정 |
 |---|---|
 | 비율 | **4:5 피드형** 1080×1350, 30fps, H.264 + AAC |
-| 길이 | **20~25초** (EP.01 = 23.4초) |
+| 길이 | **20~25초** (EP.01 = 24.2초, EP.02 = 23.4초) |
 | 소리 | **BGM + 효과음**, 내레이션 없음 (화면 글자만으로 전달, 소리 꺼도 이해됨) |
 | 디자인 | 시리즈 2 토큰 그대로: 크림 `#ECE6D8` + 도트, 러스트 `#C0592F`, 상단 pill · 하단 CoMindworks |
 | 폰트 | A2Z (파일이 `fonts/`에 있으면 자동 적용, 없으면 Pretendard로 대체) |
 
 ## 7장 구조 → 영상 장면
 
-| 장면 `type` | 원래 카드 | 연출 | EP.01 길이 |
+| 장면 `type` | 원래 카드 | 연출 | 길이 |
 |---|---|---|---|
 | `hook`   | 1 표지 | 헤드라인 + 밑줄 그리기, 완성된 표 티저(합계 카운트업), 입력칩 흐름 | 3.4초 |
-| `before` | 2 Before | 영수증이 하나씩 떨어져 쌓이고 '입력 중… N분째' 카운터 | 3.8초 |
-| `sheet`  | 3 핵심 + 4 After | 빈 양식 등장 → 행이 하나씩 채워짐(타이핑·카운트업) → 합계 → '30초' 도장 | 9.0초 |
+| `before` | 2 Before | 원본이 쌓임: 영수증 더미(`receipts`) 또는 회의 메모 + 녹취·사진 조각(`memo`), 'N분째' 카운터 | 3.8초 |
+| `sheet`  | 3 핵심 + 4 After (표형) | 빈 양식 → 행이 하나씩 채워짐(타이핑·카운트업) → 합계 → '30초' 도장 | 9.0초 |
+| `doc`    | 3 핵심 + 4 After (문서형) | 빈 회의록 양식 → 회의 정보 · 결정 · 미정('확인 필요' 태그) · 조치 표 순서로 채워짐 → 도장 | 10.2초 |
 | `steps`  | 5 3단계 + 6 요약 | 3단계 카드가 차례로 들어옴 + 준비물 | 3.8초 |
-| `cta`    | 7 CTA | 댓글창에 키워드 타이핑 → 배포 안내 → 팔로우 | 3.4초 |
+| `cta`    | 7 CTA | 댓글창에 키워드 타이핑 → 배포 안내 → 팔로우 | 3.0~3.4초 |
 
 원칙은 캐러셀과 같습니다. 장면 하나에 메시지 하나만 담고, 프롬프트와 양식은 영상에 넣지 않고 배포자료로만 전달합니다. 실명을 쓰지 않고, Parro 캐릭터는 등장시키지 않습니다.
 
@@ -45,9 +48,10 @@ BGM과 효과음은 `audio.mjs`가 코드로 합성하므로 음원 저작권을
 
 ```bash
 npm install                             # 최초 1회
-npm run serve                           # http://localhost:8080/video/video.html?ep=ep01-receipt 미리보기 (Space 재생)
-EP=ep01-receipt npm run video           # out/video/ep01-receipt/ep01-receipt.mp4 + cover.png
-STILLS=1.5,8,14 EP=ep01-receipt npm run video   # 특정 시각 스틸만 빠르게 확인
+npm run serve                           # http://localhost:8080/video/video.html?ep=ep01-meeting 미리보기 (Space 재생)
+npm run video                           # 모든 편 → out/video/<ep>/<ep>.mp4 + cover.png
+EP=ep01-meeting npm run video           # 특정 편만
+STILLS=1.5,8,14 EP=ep01-meeting npm run video   # 특정 시각 스틸만 빠르게 확인
 ```
 
 렌더링은 23초 영상 기준 약 1분 걸립니다.
@@ -55,29 +59,32 @@ STILLS=1.5,8,14 EP=ep01-receipt npm run video   # 특정 시각 스틸만 빠르
 ## 새 편 만들기 (매일 루틴)
 
 1. **검증 게이트 통과**: 실제 Claude로 처음부터 끝까지 돌려보고 결과물을 확보합니다.
-2. `episodes/ep01-receipt/`를 복사해 `epNN-주제/`를 만듭니다.
+2. 결과물이 표면 `episodes/ep02-receipt/`, 문서면 `episodes/ep01-meeting/`을 복사해 `epNN-주제/`를 만듭니다.
 3. `episode.js`의 문구와 데이터(영수증 → 원본, 표 → 실제 결과물)를 바꿉니다.
 4. `npm run serve`로 미리보며 장면 길이(`dur`)를 조정합니다.
 5. `EP=epNN-주제 npm run video`로 렌더링합니다.
 6. `캡션.txt`와 `배포자료/`(양식, 프롬프트)를 함께 정리하고 게시합니다.
 
-> 지금 결과물 프레임은 **표형**(`sheet`)만 있습니다. 문서형·대화형·화면형·설정형은 주제가 나올 때 `scenes.js`에 같은 방식으로 장면 템플릿을 추가하면 됩니다.
+> 지금 결과물 프레임은 **표형**(`sheet`)과 **문서형**(`doc`)이 있습니다. 대화형·화면형·설정형은 주제가 나올 때 `scenes.js`에 같은 방식으로 장면 템플릿을 추가하면 됩니다.
 
 ## 파일
 
 | 파일 | 역할 |
 |---|---|
 | `engine.js` | 타임라인 엔진. 애니메이션을 일시정지해 두고 `seek(t)`로 프레임을 그림 |
-| `scenes.js` | 장면 템플릿 (hook · before · sheet · steps · cta) |
+| `scenes.js` | 장면 템플릿 (hook · before · sheet · doc · steps · cta) |
 | `video.css` | 시리즈 2 디자인 토큰 |
 | `video.html` | 미리보기 플레이어 / 렌더 페이지 (`?render=1`) |
 | `audio.mjs` | BGM과 효과음 합성 → WAV |
 | `render.mjs` | 프레임 캡처 → ffmpeg로 MP4 생성 |
 | `episodes/<ep>/` | `episode.js`(원고) · `캡션.txt` · `배포자료/` |
 
-## EP.01 상태
+## 편별 상태
 
-- [x] 영상 시제품 (`out/video/ep01-receipt/ep01-receipt.mp4`)
-- [x] 캡션, 배포자료(프롬프트, 양식) 초안
-- [ ] **검증 게이트**: 배포 프롬프트로 실제 영수증 사진을 돌려 표와 합계가 재현되는지 확인. 영상 속 데이터를 실제 결과로 교체
+| 편 | 원본 | 상태 |
+|---|---|---|
+| EP.01 회의록 | 노션 배포 페이지 EP.1 실습 파일(`회의메모`, `회의록_양식.docx`). 영상 속 회의록 내용은 이 메모에서 옮김 | 영상 · 캡션 · 배포자료 완료 |
+| EP.02 지출결의서 | 노션 배포 페이지 EP.2 양식 · 프롬프트. 영수증 4장은 예시 데이터 | 영상 · 캡션 · 배포자료 완료. 실제 영수증 결과로 교체 권장 |
+
 - [ ] A2Z 폰트 적용 (`fonts/A2Z-*.woff2` 추가)
+- [ ] CTA 댓글 키워드("회의록", "영수증")가 실제 DM 자동화 키워드와 같은지 확인

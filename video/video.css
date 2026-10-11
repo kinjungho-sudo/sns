@@ -128,7 +128,14 @@
 
 /* ---- 지출내역표 ---- */
 .sheet { padding: 40px 44px 36px; }
-.sheet-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 22px; }
+.sheet-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 22px; }
+.sheet-head .sheet-meta { margin-top: 6px; }
+/* 결재란 */
+.appr { display: flex; border: 2px solid var(--line); border-radius: 10px; overflow: hidden; }
+.appr div { width: 92px; display: flex; flex-direction: column; border-left: 2px solid var(--line); }
+.appr div:first-child { border-left: 0; }
+.appr span { background: #F1EADC; font-weight: 700; font-size: 20px; color: #7d7368; text-align: center; padding: 6px 0; }
+.appr i { height: 52px; }
 .sheet-title { font-weight: 900; font-size: 44px; letter-spacing: -1.4px; }
 .sheet-meta { font-weight: 500; font-size: 24px; color: var(--muted); }
 .tbl { width: 100%; border-collapse: collapse; table-layout: fixed; }
@@ -137,22 +144,24 @@
   background: var(--ink); padding: 16px 18px;
 }
 .tbl th:first-child { border-radius: 12px 0 0 12px; }
-.tbl th:last-child { border-radius: 0 12px 12px 0; text-align: right; }
+.tbl th:last-child { border-radius: 0 12px 12px 0; }
+.tbl .num { text-align: right; font-variant-numeric: tabular-nums; font-weight: 800; }
+.tbl .center { text-align: center; }
 .tbl td {
   position: relative; height: 82px; padding: 0 18px;
   font-weight: 600; font-size: 29px; letter-spacing: -.6px;
   border-bottom: 2px solid var(--line); white-space: nowrap; overflow: hidden;
 }
-.tbl td:last-child { text-align: right; font-variant-numeric: tabular-nums; font-weight: 800; }
 .tbl .ph { display: block; height: 18px; border-radius: 9px; background: #ECE5D7; }
-.tbl td:last-child .ph { margin-left: auto; }
+.tbl td.num .ph { margin-left: auto; }
+.tbl td.center .ph { margin: 0 auto; }
 .tbl .acct {
   display: inline-block; font-size: 23px; font-weight: 700; color: var(--rust);
   background: var(--rsoft); border-radius: 999px; padding: 6px 16px;
 }
 .tbl tr.flash td { background: transparent; }
 .tbl .total td { border-bottom: none; height: 96px; font-weight: 900; font-size: 34px; }
-.tbl .total td:last-child { color: var(--rust); font-size: 40px; }
+.tbl .total td.num { color: var(--rust); font-size: 36px; overflow: visible; }
 
 /* 처리중 / 완료 칩 */
 .status {
@@ -198,3 +207,42 @@
   width: 64px; height: 64px; border-radius: 50%; background: var(--ink); color: var(--paper);
   display: flex; align-items: center; justify-content: center; font-size: 40px; font-weight: 800;
 }
+
+/* ---- 결과물: 문서형 (회의록) ---- */
+.doc { padding: 32px 40px 30px; }
+.doc-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 14px; }
+.doc-title { font-weight: 900; font-size: 44px; letter-spacing: 10px; }
+.doc-info { display: grid; grid-template-columns: 1fr 1fr; border-top: 2px solid var(--ink); border-bottom: 2px solid var(--line); margin-bottom: 14px; }
+.doc-info .kv { display: flex; align-items: center; gap: 16px; height: 42px; font-size: 24px; font-weight: 600; letter-spacing: -.5px; }
+.doc-info .kv.wide { grid-column: 1 / -1; border-bottom: 1px solid var(--line); }
+.doc-info .kv b { flex: 0 0 auto; width: 76px; font-weight: 800; color: var(--muted); font-size: 21px; }
+.doc .cell { position: relative; flex: 1; display: flex; align-items: center; min-height: 30px; }
+.doc .ph { display: block; height: 16px; border-radius: 8px; background: #ECE5D7; }
+.doc-sec { margin-top: 12px; }
+.doc-h { display: flex; align-items: center; gap: 10px; font-weight: 900; font-size: 27px; letter-spacing: -.8px; margin-bottom: 6px; }
+.doc-h span { width: 34px; height: 34px; border-radius: 9px; background: var(--rust); color: var(--paper); display: flex; align-items: center; justify-content: center; font-size: 21px; }
+.doc ul { list-style: none; }
+.doc li { display: flex; align-items: center; gap: 12px; height: 37px; font-size: 25px; font-weight: 600; letter-spacing: -.6px; white-space: nowrap; }
+.doc li::before { content: ""; flex: 0 0 auto; width: 8px; height: 8px; border-radius: 50%; background: var(--rust); }
+.tag { display: inline-block; font-size: 19px; font-weight: 800; color: var(--paper); background: var(--rust); border-radius: 999px; padding: 4px 12px; margin-left: 6px; vertical-align: 2px; }
+.tbl.mini th { font-size: 21px; padding: 10px 14px; }
+.tbl.mini td { height: 40px; font-size: 23px; padding: 0 14px; font-weight: 600; }
+.tbl.mini .tag { margin-left: 0; }
+
+/* ---- 훅 티저: 완성본 윗부분만 기울여 보여줌 ---- */
+.teaser { position: absolute; left: 150px; right: 150px; top: 590px; height: 440px; overflow: hidden; border-radius: 28px;
+  box-shadow: 0 30px 60px -20px rgba(42,36,31,.4);
+  -webkit-mask: linear-gradient(#000 78%, transparent); mask: linear-gradient(#000 78%, transparent); }
+.teaser-in { width: 920px; transform: scale(.848); transform-origin: top left; }
+.teaser-in .paper { box-shadow: none; }
+
+/* ---- Before: 회의 메모 ---- */
+.memo-paper {
+  position: absolute; left: 96px; top: 520px; width: 620px; padding: 30px 36px 36px;
+  background: #FFFDF5 repeating-linear-gradient(to bottom, transparent 0 41px, #E6DFCF 41px 43px) 0 70px;
+  box-shadow: 0 22px 46px -18px rgba(42,36,31,.45); border-radius: 6px;
+  font-family: var(--mono); color: #4a423b;
+}
+.memo-top { font-weight: 800; font-size: 26px; margin-bottom: 12px; color: var(--ink); }
+.ml { font-size: 25px; font-weight: 500; height: 43px; line-height: 43px; letter-spacing: -.5px; white-space: nowrap; }
+.chip.scrap { font-size: 27px; }
