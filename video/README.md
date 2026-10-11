@@ -33,13 +33,18 @@
 
 ## 나레이션 (타입캐스트)
 
-장면마다 `episode.js`의 `vo`에 읽을 문장을 적어 둡니다. `npm run tts`를 실행하면 타입캐스트 API로 장면별 음성(`episodes/<ep>/vo/*.wav`)과 `manifest.json`이 만들어지고, 영상은 그 실제 길이에 맞춰 장면 길이를 늘립니다. 원고·목소리·설정이 바뀐 줄만 다시 생성합니다.
+장면마다 `episode.js`의 `vo`에 읽을 문장을 적어 둡니다. `npm run tts`는 타입캐스트 `POST /v1/text-to-speech/with-timestamps`로 장면별 음성과 단어 타이밍을 받아 `episodes/<ep>/vo/*.wav`와 `manifest.json`을 만들고, 영상은 그 실제 길이에 맞춰 장면 길이를 늘립니다.
+
+- 모델은 기본 `ssfm-v30`이고 감정은 `smart`예요. 앞·뒤 장면 문장을 같이 넘겨서 이어지는 말투로 읽게 해요. 프리셋을 쓰려면 `TYPECAST_EMOTION_PRESET=happy`처럼 지정하세요.
+- 숫자와 영문(30초, Claude 등)은 읽기용으로만 한글로 바꿔서 보내요. 화면과 자막은 원고 그대로예요.
+- 원고·목소리·설정이 바뀐 줄만 다시 생성해서 유료 요청을 최소화해요.
+- API 키는 `TYPECAST_API_KEY`를 먼저 보고, 없으면 `cast login`이 저장한 `~/.typecast/config.yaml`을 읽어요.
+- 출처 표시: 요청 User-Agent 끝에 `typecast-integration/1 (source=api-page; generated_by=claude-code)`를 붙여요. 값은 `TYPECAST_INTEGRATION_SOURCE`, `TYPECAST_GENERATED_BY`로 바꿀 수 있어요.
 
 ```bash
-export TYPECAST_API_KEY=...          # 타입캐스트 API 키
-npm run tts -- --voices              # 목소리 목록 (voice_id · 이름 · 지원 감정)
+npm run tts -- --voices              # 한국어 목소리 목록 (voice_id · 이름 · 감정)
 export TYPECAST_VOICE_ID=...         # 고른 목소리
-TYPECAST_EMOTION=happy TYPECAST_TEMPO=0.95 npm run tts   # 선택: 감정 · 말 빠르기
+npm run tts                          # 장면별 음성 생성 (선택: TYPECAST_TEMPO=0.95)
 npm run video                        # 나레이션 포함 MP4 + 자막 .srt
 ```
 

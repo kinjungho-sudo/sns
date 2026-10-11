@@ -9,6 +9,9 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 export PATH="$(go env GOPATH)/bin:$PATH"
+# 타입캐스트 연동 출처 표시 (cast 가 User-Agent 에 붙임)
+export TYPECAST_INTEGRATION_SOURCE="${TYPECAST_INTEGRATION_SOURCE:-api-page}"
+export TYPECAST_GENERATED_BY="${TYPECAST_GENERATED_BY:-claude-code}"
 SRC="../../out/video/ep01-meeting/ep01-meeting.mp4"
 FONTS="../../fonts"
 STYLE="FontName=Pretendard,FontSize=11,Bold=1,PrimaryColour=&H00FFFFFF,OutlineColour=&H00000000,BorderStyle=1,Outline=1.6,Shadow=0,Alignment=2,MarginV=16"
