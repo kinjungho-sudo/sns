@@ -42,8 +42,10 @@
 
     const s = document.createElement("script");
     s.src = `episodes/${ep}/episode.js`;
-    s.onload = () => {
-      window.buildVideo(document.getElementById("stage"), window.EPISODE);
+    s.onload = async () => {
+      // tts.mjs 로 만든 나레이션 정보(없으면 원고 길이로 추정)
+      const vo = await fetch(`episodes/${ep}/vo/manifest.json`).then((r) => (r.ok ? r.json() : null)).catch(() => null);
+      window.buildVideo(document.getElementById("stage"), window.EPISODE, vo);
       window.seek(0);
       document.fonts.ready.then(() => { document.body.dataset.ready = "1"; });
       if (!render) player();

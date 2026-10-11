@@ -1,5 +1,6 @@
-/* BGM + 효과음을 코드로 합성해 WAV 로 저장 (외부 음원·저작권 걱정 없음)
-   - BGM : 96bpm 로파이 패드 + 부드러운 킥/하이햇 + 벨 아르페지오
+/* BGM + 효과음 + 나레이션을 WAV 한 트랙으로 믹스 (BGM·효과음은 코드로 합성 → 저작권 걱정 없음)
+   - BGM : 108bpm D장조, 기타 스트럼(플럭) + 베이스 + 글로켄 + 킥/클랩/셰이커 — 밝고 경쾌하게
+   - 나레이션: tts.mjs 가 만든 음성을 장면 시각에 맞춰 얹고, 그 구간은 BGM 을 낮춤(덕킹)
    - SFX : whoosh(장면전환) · pop(등장) · drop(영수증 떨어짐) · type(행 입력) · ding(합계) · stamp(도장)
    큐는 scenes.js 에서 cue(name, t, gain) 로 등록 → TL.cues 로 전달됩니다.
    자체 음원을 쓰려면 BGM=path/to/music.mp3 로 지정 (ffmpeg 로 길이 맞춰 믹스). */
@@ -17,44 +18,80 @@ function rng(seed = 1) {
 const mtof = (m) => 440 * Math.pow(2, (m - 69) / 12);
 
 /* ------------------------------------------------------------------ BGM */
+// 카플러스-스트롱 플럭(통기타·우쿨렐레 느낌) — 밝고 가벼운 소리
+function pluck(freq, len, seed, bright = 0.5) {
+  const out = new Float32Array(Math.floor(len * SR));
+  const N = Math.max(2, Math.round(SR / freq));
+  const r = rng(seed), buf = new Float32Array(N);
+  for (let i = 0; i < N; i++) buf[i] = r();
+  let idx = 0;
+  for (let i = 0; i < out.length; i++) {
+    const a = buf[idx], b = buf[(idx + 1) % N];
+    const y = (a * bright + b * (1 - bright)) * 0.996;
+    buf[idx] = y; out[i] = a; idx = (idx + 1) % N;
+  }
+  return out;
+}
+
+function addAt(L, R, buf, t, gain, pan = 0) {
+  const s0 = Math.floor(t * SR);
+  const gl = gain * (1 - pan) , gr = gain * (1 + pan);
+  for (let i = 0; i < buf.length && s0 + i < L.length; i++) { L[s0 + i] += buf[i] * gl; R[s0 + i] += buf[i] * gr; }
+}
+
 function bgm(L, R, dur) {
-  const bpm = 96, beat = 60 / bpm, bar = beat * 4;
-  // Fmaj7 – Em7 – Dm7 – Cmaj7 (각 1마디)
-  const chords = [[53, 57, 60, 64], [52, 55, 59, 62], [50, 53, 57, 60], [48, 52, 55, 59]];
+  const bpm = 108, beat = 60 / bpm, bar = beat * 4;
+  // D – A – Bm – G (장조, 밝은 진행)
+  const chords = [[62, 66, 69, 74], [61, 64, 69, 73], [59, 62, 66, 71], [59, 62, 67, 71]];
+  const roots = [50, 45, 47, 43];
+  const noise = rng(21);
+  const cache = new Map();
+  const pl = (m, len, seed, br) => {
+    const k = `${m}|${len}|${seed}|${br}`;
+    if (!cache.has(k)) cache.set(k, pluck(mtof(m), len, seed, br));
+    return cache.get(k);
+  };
+  const bars = Math.ceil(dur / bar);
+  for (let b = 0; b < bars; b++) {
+    const ch = chords[b % 4], t0 = b * bar;
+    // 기타 스트럼: 다운·다운업·업다운업 리듬
+    for (const [beatPos, up, g] of [[0, 0, 1], [1, 0, 0.7], [1.5, 1, 0.55], [2.5, 1, 0.55], [3, 0, 0.7], [3.5, 1, 0.5]]) {
+      const notes = up ? [...ch].reverse() : ch;
+      notes.forEach((m, j) => addAt(L, R, pl(m, 1.0, 3 + j, 0.5), t0 + beatPos * beat + j * 0.012, 0.055 * g, (j - 1.5) * 0.12));
+    }
+    // 베이스
+    for (const bp of [0, 2, 2.5]) addAt(L, R, pl(roots[b % 4], 0.6, 9, 0.7), t0 + bp * beat, 0.16);
+    // 글로켄 멜로디 (화음 구성음)
+    const mel = [ch[3] + 12, ch[2] + 12, ch[1] + 12, ch[2] + 12];
+    [[0, 0], [0.75, 1], [1.5, 2], [2.5, 3]].forEach(([bp, k]) => {
+      const f = mtof(mel[k]), s0 = Math.floor((t0 + bp * beat) * SR), n = Math.floor(0.7 * SR);
+      for (let i = 0; i < n && s0 + i < L.length; i++) {
+        const t = i / SR, v = (Math.sin(TAU * f * t) + 0.25 * Math.sin(TAU * f * 4 * t) * Math.exp(-t * 12)) * Math.exp(-t * 5) * 0.03;
+        L[s0 + i] += v * 0.8; R[s0 + i] += v * 1.2;
+      }
+    });
+  }
+  // 리듬: 킥(1·3) · 클랩(2·4) · 셰이커(16분)
   const n = Math.floor(dur * SR);
-  const noise = rng(7);
-  let lp = 0;
+  let hp = 0, prev = 0, cl = 0;
   for (let i = 0; i < n; i++) {
     const t = i / SR;
-    const bi = Math.floor(t / bar), ch = chords[bi % 4], tb = t - bi * bar;
-    // 패드: 살짝 디튠된 사인+삼각, 마디마다 부드러운 어택
-    const env = Math.min(1, tb / 0.4) * (0.75 + 0.25 * Math.cos(TAU * tb / bar));
-    let pad = 0;
-    for (const m of ch) {
-      const f = mtof(m);
-      pad += Math.sin(TAU * f * t) * 0.5 + Math.sin(TAU * f * 1.003 * t) * 0.35;
-      pad += (2 / Math.PI) * Math.asin(Math.sin(TAU * f * 0.5 * t)) * 0.15;
-    }
-    pad *= 0.022 * env;
-    // 베이스 (루트 한 옥타브 아래)
-    const bass = Math.sin(TAU * mtof(ch[0] - 12) * t) * 0.06 * Math.min(1, tb / 0.05) * Math.exp(-tb * 0.9);
-    // 킥 (1, 3박)
-    const tbeat = t % (beat * 2);
-    const kick = Math.sin(TAU * (50 + 90 * Math.exp(-tbeat * 30)) * tbeat) * Math.exp(-tbeat * 9) * 0.16;
-    // 하이햇 (8분음 뒷박)
-    const th = (t + beat / 2) % beat;
-    const hat = noise() * Math.exp(-th * 60) * 0.025;
-    // 벨 아르페지오 (8분음)
-    const e8 = beat / 2, ai = Math.floor(t / e8), te = t - ai * e8;
-    const note = ch[[0, 2, 1, 3, 2, 1, 3, 2][ai % 8]] + 12;
-    const bell = (Math.sin(TAU * mtof(note) * t) + 0.3 * Math.sin(TAU * mtof(note) * 3 * t)) * Math.exp(-te * 7) * 0.022;
-    let s = pad + bass + kick + hat + bell;
-    lp += (s - lp) * 0.35; // 살짝 따뜻하게
-    // 시작 페이드인 0.3s / 끝 페이드아웃 1.2s
-    const fade = Math.min(1, t / 0.3, (dur - t) / 1.2);
-    const v = lp * Math.max(0, fade);
-    L[i] += v * (1 + 0.15 * Math.sin(TAU * 0.13 * t));
-    R[i] += v * (1 - 0.15 * Math.sin(TAU * 0.13 * t));
+    const tk = t % (beat * 2);
+    const kick = Math.sin(TAU * (55 + 110 * Math.exp(-tk * 35)) * tk) * Math.exp(-tk * 11) * 0.18;
+    const tc = (t + beat) % (beat * 2);
+    const nz = noise();
+    cl += (nz - cl) * 0.6;
+    const clap = (nz - cl) * Math.exp(-tc * 28) * 0.07;
+    const ts = t % (beat / 4);
+    hp = 0.85 * (hp + nz - prev); prev = nz;
+    const shaker = hp * Math.exp(-ts * 70) * (Math.floor(t / (beat / 4)) % 2 ? 0.018 : 0.011);
+    const v = kick + clap + shaker;
+    L[i] += v; R[i] += v;
+  }
+  // 시작 페이드인 0.3s / 끝 페이드아웃 1.5s
+  for (let i = 0; i < n; i++) {
+    const t = i / SR, f = Math.max(0, Math.min(1, t / 0.3, (dur - t) / 1.5));
+    L[i] *= f; R[i] *= f;
   }
 }
 
@@ -144,20 +181,57 @@ function toWav(L, R) {
   return Buffer.concat([h, data]);
 }
 
-export async function renderAudio({ duration, cues, out }) {
+// 음성 파일 → 44.1kHz 모노 Float32 (ffmpeg 로 디코딩)
+function decode(file) {
+  const raw = execFileSync("ffmpeg", ["-v", "error", "-i", file, "-f", "f32le", "-ac", "1", "-ar", String(SR), "-"], { maxBuffer: 1 << 28 });
+  return new Float32Array(raw.buffer, raw.byteOffset, raw.byteLength / 4);
+}
+
+// 나레이션 구간에서 BGM 을 낮춤 (덕킹)
+function duckGain(n, voice, low = 0.3, ramp = 0.2) {
+  const g = new Float32Array(n).fill(1);
+  for (const v of voice) {
+    const a = v.t, b = v.t + v.dur;
+    for (let i = Math.max(0, Math.floor((a - ramp) * SR)); i < Math.min(n, Math.ceil((b + ramp) * SR)); i++) {
+      const t = i / SR;
+      const k = t < a ? (a - t) / ramp : t > b ? (t - b) / ramp : 0;
+      g[i] = Math.min(g[i], low + (1 - low) * Math.min(1, k));
+    }
+  }
+  return g;
+}
+
+/* voice: [{ file, t, dur }] — file 이 없으면(아직 TTS 전) 덕킹 없이 BGM 만 */
+export async function renderAudio({ duration, cues, voice = [], out }) {
   const n = Math.ceil(duration * SR);
   const L = new Float32Array(n), R = new Float32Array(n);
-  if (!process.env.BGM) bgm(L, R, duration);
-  for (const c of cues) mixCue(L, R, c);
+  const spoken = voice.filter((v) => v.file);
+
+  // 1) BGM (+ 나레이션 구간 덕킹)
+  if (!process.env.BGM) {
+    const bl = new Float32Array(n), br = new Float32Array(n);
+    bgm(bl, br, duration);
+    const g = duckGain(n, spoken);
+    const level = spoken.length ? 0.8 : 1;
+    for (let i = 0; i < n; i++) { L[i] += bl[i] * g[i] * level; R[i] += br[i] * g[i] * level; }
+  }
+  // 2) 효과음 (나레이션이 있으면 살짝 작게)
+  for (const c of cues) mixCue(L, R, { ...c, gain: c.gain * (spoken.length ? 0.6 : 1) });
+  // 3) 나레이션
+  for (const v of spoken) {
+    const buf = decode(v.file);
+    addAt(L, R, buf, v.t, 1.6);
+  }
   await writeFile(out, toWav(L, R));
 
-  // 외부 BGM 지정 시: 효과음 트랙 위에 BGM(-14dB, 끝 1.2초 페이드아웃)을 섞음
+  // 외부 BGM 지정 시: 위 트랙 위에 BGM(-14dB, 나레이션 구간 추가 감쇄, 끝 1.5초 페이드아웃)을 섞음
   if (process.env.BGM) {
-    const tmp = out.replace(/\.wav$/, ".sfx.wav");
+    const tmp = out.replace(/\.wav$/, ".mix.wav");
     execFileSync("mv", [out, tmp]);
+    const duck = spoken.map((v) => `volume=enable='between(t,${(v.t - 0.2).toFixed(2)},${(v.t + v.dur + 0.2).toFixed(2)})':volume=0.35`).join(",");
     execFileSync("ffmpeg", ["-y", "-loglevel", "error", "-i", tmp, "-stream_loop", "-1", "-i", process.env.BGM,
       "-filter_complex",
-      `[1:a]volume=0.2,afade=t=out:st=${(duration - 1.2).toFixed(2)}:d=1.2[b];[0:a][b]amix=inputs=2:duration=first:normalize=0`,
+      `[1:a]volume=0.2${duck ? "," + duck : ""},afade=t=out:st=${(duration - 1.5).toFixed(2)}:d=1.5[b];[0:a][b]amix=inputs=2:duration=first:normalize=0`,
       "-t", String(duration), out]);
     execFileSync("rm", [tmp]);
   }

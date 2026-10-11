@@ -364,21 +364,42 @@
   };
 
   /* -------------------------------------------------------------- build */
-  function build(stage, ep) {
+  // 나레이션 길이 추정(초) — 실제 음성(vo/manifest.json)이 없을 때 장면 길이를 잡는 용도
+  function estimateVo(text) {
+    const chars = text.replace(/\s/g, "").length;
+    const pauses = (text.match(/[,.?!…]/g) || []).length;
+    return chars / 6.2 + pauses * 0.25;
+  }
+
+  // vo: tts.mjs 가 만든 manifest ({ items: [{ scene, file, dur }] }) 또는 null
+  function build(stage, ep, vo) {
     // 공통 상단 태그 · 하단 로고 · 진행바
     stage.appendChild(h(`<div class="chrome-top"><span class="pill">${ep.tag}</span><span class="ep">${ep.ep} · ${ep.topic}</span></div>`));
     const bot = h('<div class="chrome-bot"><div class="logo">Co<b>Mind</b>works</div><div class="progress"><i></i></div></div>');
     stage.appendChild(bot);
 
+    const pace = ep.pace || 1;
+    const LEAD = 0.35, TAIL = 0.6; // 장면 시작 후 말 시작까지 / 말 끝나고 다음 장면까지 (실제 초)
     let t = 0;
-    for (const s of ep.scenes) {
+    ep.scenes.forEach((s, i) => {
       if (!T[s.type]) throw new Error(`알 수 없는 장면 type: ${s.type}`);
+      // 나레이션이 장면 안에 다 들어가도록 장면 길이를 늘림 (줄이지는 않음)
+      const item = vo && vo.items.find((x) => x.scene === i);
+      const voDur = item ? item.dur : s.vo ? estimateVo(s.vo) : 0;
+      if (voDur) {
+        s.dur = Math.max(s.dur, (LEAD + voDur + TAIL + (i === ep.scenes.length - 1 ? 0.8 : 0)) / pace);
+        window.TL.voice.push({ scene: i, t: +(t * pace + LEAD).toFixed(3), dur: +voDur.toFixed(3), file: item ? item.file : null, text: s.vo });
+      }
       T[s.type](stage, s, t, ep);
       t += s.dur;
-    }
-    window.TL.duration = +(t + (ep.tail || 0)).toFixed(3);
+    });
+    const TL = window.TL;
+    TL.pace = pace;
+    TL.base = +(t + (ep.tail || 0)).toFixed(3);
+    TL.duration = +(TL.base * pace).toFixed(3);
+    TL.cues = TL.cues.map((c) => ({ ...c, t: +(c.t * pace).toFixed(3) })); // 효과음도 실제 시각으로
     const bar = bot.querySelector(".progress i");
-    tick((now) => { bar.style.width = `${Math.min(100, (now / window.TL.duration) * 100)}%`; });
+    tick((now) => { bar.style.width = `${Math.min(100, (now / TL.base) * 100)}%`; });
   }
 
   window.buildVideo = build;

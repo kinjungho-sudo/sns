@@ -1,15 +1,17 @@
 /* EP.02 영수증 사진 → 지출결의서 (결과물 프레임: 표형)
    원본: 무료 자료 배포 페이지의 EP.2 지출결의서 양식 · 프롬프트
-   장면 길이(dur)는 초 단위. 합계 23.4초. */
+   장면 길이(dur)는 원고 기준 최소 길이(초). 나레이션(vo)이 길면 자동으로 늘어나고, pace 만큼 전체가 느려집니다. */
 window.EPISODE = {
   slug: "ep02-receipt",
   tag: "AI 업무 자동화",
   ep: "EP.02",
   topic: "지출결의서",
+  pace: 1.3, // 전체 속도 배율 (1 = 원래 속도, 1.3 = 30% 느리게)
   scenes: [
     {
       type: "hook",
       dur: 3.4,
+      vo: "월말마다 영수증 정리, 아직 손으로 하세요? 사진만 넣으면 30초 만에 지출결의서가 채워집니다.",
       headline: '영수증 사진,\n<span class="hl">30초</span>면 결의서',
       sub: "사진만 넣으면 회사 양식 그대로 채워져요",
       flow: [
@@ -21,6 +23,7 @@ window.EPISODE = {
     {
       type: "before",
       dur: 3.8,
+      vo: "영수증 한 장씩 날짜 보고, 금액 옮기고, 계정과목 고민하다 보면 한 시간이 훌쩍 가죠.",
       label: "BEFORE",
       headline: '월말마다 영수증\n<span class="hl">한 줄씩 옮겨 적기</span>',
       timer: { prefix: "입력 중… ", to: 47, unit: "분째" },
@@ -34,6 +37,7 @@ window.EPISODE = {
     {
       type: "sheet",
       dur: 9.0,
+      vo: "우리 회사 지출결의서 양식을 그대로 넣고 영수증 사진을 던지면, 날짜와 적요, 금액이 채워지고 계정과목까지 알아서 분류돼요. 합계도 자동으로 계산됩니다.",
       swapAt: 2.6,
       frame: { label: "핵심", headline: '우리 회사 양식,\n<span class="hl">그대로</span> 넣으세요' },
       after: { label: "AFTER", headline: '사진 던지고\n<span class="hl">30초</span> 뒤' },
@@ -63,6 +67,7 @@ window.EPISODE = {
     {
       type: "steps",
       dur: 3.8,
+      vo: "딱 세 단계예요. 사진과 양식을 올리고, 프롬프트를 붙여넣고, 합계랑 날짜만 한 번 확인하세요.",
       label: "HOW",
       headline: '딱 <span class="hl">3단계</span>',
       steps: [
@@ -75,6 +80,7 @@ window.EPISODE = {
     {
       type: "cta",
       dur: 3.4,
+      vo: "양식이랑 프롬프트가 필요하시면, 댓글에 영수증이라고 남겨 주세요. 바로 보내 드릴게요.",
       label: "무료 배포",
       headline: '댓글에\n<span class="hl">“영수증”</span>',
       keyword: "영수증",

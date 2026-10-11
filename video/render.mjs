@@ -5,7 +5,7 @@
    결과: out/video/<ep>/<ep>.mp4 · cover.png · audio.wav */
 import { chromium } from "playwright";
 import { spawn } from "node:child_process";
-import { mkdir, readdir } from "node:fs/promises";
+import { mkdir, readdir, writeFile } from "node:fs/promises";
 import { createServer } from "../server.mjs";
 import { renderAudio } from "./audio.mjs";
 
@@ -27,9 +27,10 @@ for (const ep of eps) {
   await mkdir(dir, { recursive: true });
   await page.goto(`http://localhost:${PORT}/video/video.html?ep=${ep}&render=1`, { waitUntil: "networkidle" });
   await page.waitForFunction(() => document.body.dataset.ready === "1", { timeout: 15000 });
-  const { duration, cues, coverAt } = await page.evaluate(() => ({
-    duration: window.TL.duration, cues: window.TL.cues, coverAt: window.EPISODE.coverAt ?? 2.6,
+  const { duration, cues, voice, coverAt } = await page.evaluate(() => ({
+    duration: window.TL.duration, cues: window.TL.cues, voice: window.TL.voice, coverAt: window.EPISODE.coverAt ?? 3.4,
   }));
+  if (voice.length && !voice.some((v) => v.file)) console.log(`  ${ep}: 나레이션 음성 없음 → 원고 길이로 추정해 장면 길이만 맞춤 (npm run tts 로 생성)`);
   const shot = async (t, path) => {
     await page.evaluate((t) => window.seek(t), t);
     return page.screenshot({ path, type: "png" });
@@ -43,7 +44,7 @@ for (const ep of eps) {
 
   // 1) 오디오 (BGM + 효과음 큐)
   const wav = `${dir}/audio.wav`;
-  await renderAudio({ duration, cues, out: wav });
+  await renderAudio({ duration, cues, voice, out: wav });
 
   // 2) 프레임 → ffmpeg 파이프
   const mp4 = `${dir}/${ep}.mp4`;
@@ -67,6 +68,12 @@ for (const ep of eps) {
   await closed;
   await shot(coverAt, `${dir}/cover.png`);
   console.log(`\r✔ ${mp4}  (${duration}s · ${total}프레임 · 1080×1350)`);
+  // 나레이션 원고를 자막 파일로도 저장 (인스타 자막/접근성용)
+  const srt = voice.map((v, i) => {
+    const f = (x) => new Date(x * 1000).toISOString().slice(11, 23).replace(".", ",");
+    return `${i + 1}\n${f(v.t)} --> ${f(v.t + v.dur)}\n${v.text}\n`;
+  }).join("\n");
+  if (srt) await writeFile(`${dir}/${ep}.srt`, srt);
 }
 
 await browser.close();

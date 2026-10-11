@@ -7,7 +7,8 @@
   "scripts": {
     "serve": "node server.mjs",
     "export": "node export.mjs",
-    "video": "node video/render.mjs"
+    "video": "node video/render.mjs",
+    "tts": "node video/tts.mjs"
   },
   "devDependencies": {
     "playwright": "^1.49.0"

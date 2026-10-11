@@ -1,15 +1,17 @@
 /* EP.01 회의 메모 → 회의록 (결과물 프레임: 문서형)
    원본: 무료 자료 배포 페이지의 EP.1 실습 파일(회의메모.txt · 회의록_양식.docx)
-   장면 길이(dur)는 초 단위. 합계 24.2초. */
+   장면 길이(dur)는 원고 기준 최소 길이(초). 나레이션(vo)이 길면 자동으로 늘어나고, pace 만큼 전체가 느려집니다. */
 window.EPISODE = {
   slug: "ep01-meeting",
   tag: "AI 업무 자동화",
   ep: "EP.01",
   topic: "회의록 정리",
+  pace: 1.3, // 전체 속도 배율 (1 = 원래 속도, 1.3 = 30% 느리게)
   scenes: [
     {
       type: "hook",
       dur: 3.4,
+      vo: "회의 끝나고 메모 정리, 아직도 직접 하세요? 녹취랑 메모만 던지면 30초 만에 회의록이 나옵니다.",
       headline: '회의 메모,\n<span class="hl">30초</span>면 회의록',
       sub: "녹취 · 메모 · 손글씨, 그대로 던지세요",
       flow: [
@@ -21,6 +23,7 @@ window.EPISODE = {
     {
       type: "before",
       dur: 3.8,
+      vo: "회의는 40분이었는데, 메모 해독하는 데 또 40분. 녹취에 화이트보드 사진, 단톡방까지 뒤져야 하죠.",
       label: "BEFORE",
       headline: '회의 끝나면\n<span class="hl">메모 해독</span>부터',
       timer: { prefix: "정리 중… ", to: 40, unit: "분째" },
@@ -48,6 +51,7 @@ window.EPISODE = {
     {
       type: "doc",
       dur: 10.2,
+      vo: "방법은 간단해요. 우리 회사 회의록 양식을 그대로 넣고, 메모를 던지면 끝. 결정된 일과 확인이 필요한 일이 알아서 나뉘고, 담당자와 기한은 표로 정리됩니다. 메모에 없는 내용은 지어내지 않고, 확인 필요라고 표시해 줘요.",
       swapAt: 2.6,
       top: 455,
       frame: { label: "핵심", headline: '우리 회사 양식,\n<span class="hl">그대로</span> 넣으세요' },
@@ -91,6 +95,7 @@ window.EPISODE = {
     {
       type: "steps",
       dur: 3.8,
+      vo: "딱 세 단계예요. 메모와 양식을 넣고, 프롬프트를 붙여넣고, 워드로 저장하면 끝.",
       label: "HOW",
       headline: '딱 <span class="hl">3단계</span>',
       steps: [
@@ -103,6 +108,7 @@ window.EPISODE = {
     {
       type: "cta",
       dur: 3.0,
+      vo: "양식이랑 프롬프트가 필요하시면, 댓글에 회의록이라고 남겨 주세요. 바로 보내 드릴게요.",
       label: "무료 배포",
       headline: '댓글에\n<span class="hl">“회의록”</span>',
       keyword: "회의록",
