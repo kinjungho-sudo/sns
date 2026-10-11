@@ -30,7 +30,7 @@
   /* ---------------- tokens ---------------- */
   const THEMES = {
     paper: { ground: "#F4F1EA", surface: "#FFFDF8", ink: "#1E1D1A", muted: "#5E5A52", line: "#D6CFC2",
-             accent: "#0B6B62", accentFill: "#DCEBE6", onAccent: "#FFFDF8", capBg: "#1E1D1A", capInk: "#FFFDF8", slot: "#B5AB99" },
+             accent: "#0B6B62", accentFill: "#DCEBE6", onAccent: "#FFFDF8", capBg: "#1E1D1A", capInk: "#FFFDF8", slot: "#928878" },
     noir: { ground: "#0A0B0B", surface: "#161918", ink: "#F4F6F5", muted: "#A3AAA8", line: "#2A2F2D",
             accent: "#17D0BB", accentFill: "#12322E", onAccent: "#0A0B0B", capBg: "#F4F6F5", capInk: "#0A0B0B", slot: "#3A403E" },
     blueprint: { ground: "#EEF2F6", surface: "#FFFFFF", ink: "#14202E", muted: "#4A5868", line: "#C5D0DC",
@@ -122,6 +122,7 @@
       { t: 27.9, kind: "motif" },      // the opening image, read correctly
     ],
     bpm: 96,
+    bed: [[0, 0.45], [3, 0.6], [10.5, 0.85], [22.5, 0.55], [27, 0.8]],   // bed level over time: low under the question, lower in the turn
   };
   const M = TIMELINE.moves;
 
@@ -158,10 +159,10 @@
   // numbers in fixed digit slots so a counting number never jitters sideways
   function number(str, x, y, size, o = {}) {
     const dw = measure("0", size, 800), cw = measure(",", size, 800);
-    let w = 0; for (const ch of str) w += ch === "," ? cw : /\d/.test(ch) ? dw : measure(ch, size * 0.62, 700) + 6;
+    let w = 0; for (const ch of str) w += ch === "," || ch === "." ? cw : /\d/.test(ch) ? dw : measure(ch, size * 0.62, 700) + 6;
     let cx = o.align === "right" ? x - w : o.align === "center" ? x - w / 2 : x;
     for (const ch of str) {
-      if (/\d|,/.test(ch)) { const adv = ch === "," ? cw : dw; text(ch, cx + adv / 2, y, { size, weight: 800, align: "center", color: o.color, alpha: o.alpha }); cx += adv; }
+      if (/[\d,.]/.test(ch)) { const adv = ch === "," || ch === "." ? cw : dw; text(ch, cx + adv / 2, y, { size, weight: 800, align: "center", color: o.color, alpha: o.alpha }); cx += adv; }
       else { text(ch, cx + 6, y + size * 0.16, { size: size * 0.62, weight: 700, color: o.color, alpha: o.alpha }); cx += measure(ch, size * 0.62, 700) + 6; }
     }
     return w;
@@ -277,7 +278,8 @@
     const cellsAlpha = RM ? 1 - fa(M.grid_to_bar, 1.2) : clamp(1 - collapse * 2.2);
     // empty slots: the year waiting to be filled
     ctx.save(); ctx.globalAlpha = 0.9 * cellsAlpha * fa(M.cell_to_grid, 0.5);
-    ctx.fillStyle = C.slot; for (let k = 0; k < DAYS_PER_YEAR; k++) { const r = cellRect(k); rrect(r.x, r.y, r.w, r.h, 6); ctx.fill(); }
+    ctx.fillStyle = C.surface; ctx.strokeStyle = C.slot; ctx.lineWidth = 2;
+    for (let k = 0; k < DAYS_PER_YEAR; k++) { const r = cellRect(k); rrect(r.x + 1, r.y + 1, r.w - 2, r.h - 2, 5); ctx.fill(); ctx.stroke(); }
     ctx.restore();
     ctx.save(); ctx.globalAlpha = cellsAlpha; ctx.fillStyle = C.accent;
     for (let k = (T < M.cell_to_grid + 0.6 && !RM ? 1 : 0); k < n; k++) { const r = cellRect(k); rrect(r.x, r.y, r.w, r.h, 6); ctx.fill(); }
@@ -370,7 +372,8 @@
       if (T < c.t0 || T > c.t1) continue;
       const a = Math.min(clamp((T - c.t0) / 0.12), clamp((c.t1 - T) / 0.12));
       const size = F.cap.size, lh = size * 1.36;
-      const lines = wrap(c.text, F.cap.maxW - 48, size, 500).slice(0, 2);
+      let lines = wrap(c.text, F.cap.maxW - 48, size, 500);
+      if (lines.length > 2) { fitWarnings.add(`${FMT_ID}: caption "${c.text}" needs ${lines.length} lines (max 2)`); lines = lines.slice(0, 2); }
       const w = Math.max(...lines.map((l) => measure(l, size, 500))) + 48, h = lines.length * lh + 24;
       const top = F.cap.bottom - h;
       ctx.save(); ctx.globalAlpha = a; rrect(W / 2 - w / 2, top, w, h, 14); ctx.fillStyle = C.capBg; ctx.fill(); ctx.restore();
@@ -405,7 +408,7 @@
     master.gain.setValueAtTime(0.8, 0); master.gain.setValueAtTime(0.8, DURATION - 1.0); master.gain.linearRampToValueAtTime(0.0001, DURATION);
     const beat = 60 / TIMELINE.bpm, bar = beat * 4, hz = (m) => 440 * Math.pow(2, (m - 69) / 12);
     const bed = ac.createGain(); bed.connect(master);
-    const lv = [[0, 0.45], [3, 0.6], [10.5, 0.85], [22.5, 0.55], [27, 0.8], [DURATION, 0.8]];
+    const lv = [...TIMELINE.bed, [DURATION, TIMELINE.bed.at(-1)[1]]];
     bed.gain.setValueAtTime(lv[0][1], 0); for (const [tt, v] of lv.slice(1)) bed.gain.linearRampToValueAtTime(v, tt);
     const lp = ac.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 1100; lp.Q.value = 0.4; lp.connect(bed);
     const chords = [[50, 54, 57], [47, 50, 54], [43, 47, 50], [45, 49, 52]]; // D – Bm – G – A, two bars each
@@ -424,7 +427,7 @@
     }
     const nb = ac.createBuffer(1, SR * 0.08, SR), nd = nb.getChannelData(0), r1 = rng(7);
     for (let i = 0; i < nd.length; i++) nd[i] = (r1() * 2 - 1) * Math.pow(1 - i / nd.length, 3);
-    for (let tb = beat; tb < DURATION - 1; tb += beat * 2) { if (tb < 3) continue;
+    for (let tb = beat; tb < DURATION - 1; tb += beat * 2) { if (tb < TIMELINE.beats[1].t0) continue;   // hats enter with the model
       const s = ac.createBufferSource(); s.buffer = nb; const bp = ac.createBiquadFilter(); bp.type = "bandpass"; bp.frequency.value = 5200; bp.Q.value = 0.8;
       const g = ac.createGain(); g.gain.value = 0.045; s.connect(bp).connect(g).connect(bed); s.start(tb); }
     const tone = (tt, f, amp, dur, type = "sine", f2) => { const o = ac.createOscillator(); o.type = type; o.frequency.setValueAtTime(f, tt);
@@ -459,7 +462,7 @@
 
   /* ---------------- interface ---------------- */
   window.TIMELINE = TIMELINE;
-  window.FILM = { W, H, FPS, DURATION, VO, FMT_ID, THEME_ID, RM, NUMBERS: { DAILY, DAYS_PER_YEAR, YEARS, LATE, YEAR_SUM, TOTAL, TOTAL_DAYS, LATE_TOTAL } };
+  window.FILM = { W, H, FPS, DURATION, VO, FMT_ID, THEME_ID, RM, GROUND: C.ground, NUMBERS: { DAILY, DAYS_PER_YEAR, YEARS, LATE, YEAR_SUM, TOTAL, TOTAL_DAYS, LATE_TOTAL } };
   window.seek = (t) => { render(t); return true; };
   window.frameAt = (t) => { render(t); return canvas.toDataURL("image/png"); };
   window.renderAudio = renderAudio;
@@ -468,6 +471,7 @@
     ["muted on surface", C.muted, C.surface], ["accent on surface", C.accent, C.surface], ["accent on icon", C.accent, C.accentFill],
     ["label on cell", C.onAccent, C.accent], ["caption", C.capInk, C.capBg],
     ["bars vs ground (graphic, 3:1)", C.accent, C.ground], ["hollow bars vs ground (graphic, 3:1)", C.muted, C.ground],
+    ["empty slot outline vs ground (graphic, 3:1)", C.slot, C.ground],
   ];
   const loadVoice = VO ? fetch("out/vo/timing.json").then((r) => r.json()).then((j) => {
     HOLD = j.hold || 0; window.FILM.DURATION = DURATION + HOLD;

@@ -6,3 +6,4 @@ explainer/*/out/*.wav
 explainer/*/out/*.json
 explainer/*/out/motion/
 explainer/*/out/vo/
+dist/

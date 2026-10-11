@@ -7,7 +7,7 @@
      video         frames t = n/fps piped to ffmpeg (libx264, crf 16, yuv420p) → out/video_<fmt>[_rm][_vo].mp4
      audio         the Web Audio bed rendered offline → out/audio_raw.wav
      captions      TIMELINE.captions → captions.srt
-     determinism   the same frame rendered in two fresh page loads, byte-compared
+     determinism   frames at 30/64.5/85% (or --t) rendered in two fresh page loads, byte-compared
      fit           every format, normal + reduced motion, every 0.25 s: lists any text that had to shrink
      contrast      WCAG ratio of every text/background pair the theme declares (window.TEXT_PAIRS)
      timing        caption reading speed in characters (no spaces) per second; fails above 9
@@ -58,7 +58,7 @@ if (cmd === "frame") {
 
 if (cmd === "stills" || cmd === "contact") {
   const page = await openFilm(cmd === "contact" ? "16x9" : FMT);
-  const tl = await page.evaluate(() => window.TIMELINE);
+  const tl = await page.evaluate(() => window.TIMELINE), ground = await page.evaluate(() => window.FILM.GROUND || "#F4F1EA");
   const dir = `${OUT}/stills/${cmd === "contact" ? "16x9" : FMT}${RM ? "_rm" : ""}${THEME !== "paper" ? "_" + THEME : ""}`;
   await mkdir(dir, { recursive: true });
   const files = [];
@@ -66,7 +66,7 @@ if (cmd === "stills" || cmd === "contact") {
   if (cmd === "contact") {
     const cols = 4, n = files.length, rows = Math.ceil(n / cols), blanks = rows * cols - n;
     const ins = files.flatMap((f) => ["-i", f]);
-    for (let i = 0; i < blanks; i++) ins.push("-f", "lavfi", "-i", "color=c=0xF4F1EA:s=1920x1080:d=1");
+    for (let i = 0; i < blanks; i++) ins.push("-f", "lavfi", "-i", `color=c=0x${ground.slice(1)}:s=1920x1080:d=1`);
     const total = n + blanks;
     const fc = Array.from({ length: total }, (_, i) => `[${i}:v]scale=640:-1[s${i}]`).join(";") + ";" +
       Array.from({ length: total }, (_, i) => `[s${i}]`).join("") + `xstack=inputs=${total}:grid=${cols}x${rows}`;
@@ -114,9 +114,12 @@ if (cmd === "timing") {
 
 if (cmd === "determinism") {
   const page0 = await openFilm(); const { DURATION } = await page0.evaluate(() => window.FILM); await page0.close();
-  const t = Number(opt("t", +(DURATION * 0.645).toFixed(2)));
-  const a = await png(await openFilm(), t), b = await png(await openFilm(), t);
-  console.log(`t=${t}: run A ${sha(a)}  run B ${sha(b)}  ${a.equals(b) ? "IDENTICAL" : "DIFFERENT"}`); if (!a.equals(b)) process.exitCode = 1;
+  // three times across the film by default (one may be a quiet frame); --t checks one specific time
+  const times = opt("t") ? [Number(opt("t"))] : [0.3, 0.645, 0.85].map((k) => +(DURATION * k).toFixed(2));
+  for (const t of times) {
+    const a = await png(await openFilm(), t), b = await png(await openFilm(), t);
+    console.log(`t=${t}: run A ${sha(a)}  run B ${sha(b)}  ${a.equals(b) ? "IDENTICAL" : "DIFFERENT"}`); if (!a.equals(b)) process.exitCode = 1;
+  }
 }
 
 if (cmd === "fit") {

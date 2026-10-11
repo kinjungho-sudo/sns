@@ -1,6 +1,6 @@
 ---
 name: explainer-film
-description: Make a finished short explainer or motion-graphics video — 30–90 s, rendered MP4 with sound and captions, in 16:9 plus 9:16 (Shorts/Reels) and 1:1 recompositions — drawn entirely in code (canvas, no video-generation AI), with optional Korean narration via the Typecast API. Use this whenever someone wants an 설명 영상, 모션그래픽, 쇼츠/릴스 영상, 인포그래픽 영상, 숫자·데이터를 보여주는 짧은 영상, an "explainer film", "motion graphics", "animated explainer", a video that teaches one idea, or a narrated (나레이션/타입캐스트) version of such a video — even if they only describe a topic and an audience, or paste a brief with {{TOPIC}}/{{AUDIENCE}} slots. Not for editing existing footage or generating photoreal video.
+description: Make a finished short explainer or motion-graphics video — 15–90 s, rendered MP4 with sound and captions, in 16:9 plus 9:16 (Shorts/Reels) and 1:1 recompositions — drawn entirely in code (canvas, no video-generation AI), with optional Korean narration via the Typecast API. Use this whenever someone wants an 설명 영상, 모션그래픽, 쇼츠/릴스 영상, 인포그래픽 영상, 숫자·데이터를 보여주는 짧은 영상, an "explainer film", "motion graphics", "animated explainer", a video that teaches one idea, or a narrated (나레이션/타입캐스트) version of such a video — even if they only describe a topic and an audience, or paste a brief with {{TOPIC}}/{{AUDIENCE}} slots. Not for editing existing footage or generating photoreal video.
 ---
 
 # Explainer film
@@ -24,12 +24,12 @@ Work through these in order. When the brief is thin, make the call, log it as on
 
 1. **One idea.** Write the question the viewer would ask, in their own words, and the one sentence they can say afterward. Split facts into must-know and a cut list, and the cut list stays out. Find the hook: the belief most viewers hold that turns out to be wrong.
 2. **Numbers and sources.** Every number on screen needs a line in `SOURCES.md`, either a citation or the arithmetic that produces it. Compute numbers in code from their inputs instead of typing them. If a claim needs a rate or statistic you can't source, drop it and say on screen what the plain version leaves out.
-3. **Story arc.** Question (0–10%) → Model (10–35%) → Proof (35–75%) → Turn (75–90%) → Payoff (90–100%). Open on the misconception as an image, not a title card. In the turn, change one variable and show what follows. The payoff brings back the opening image, now read correctly, plus one next step. Write `SCENES.md` with one row per beat: teaches, frame, motion, words, sound, and what the viewer can now say.
+3. **Story arc.** Question (0–10%) → Model (10–35%) → Proof (35–75%) → Turn (75–90%) → Payoff (90–100%). Under about 25 s, keep all five parts but give each one beat, and let the model flow straight into the proof (one object transforming) rather than cutting. Open on the misconception as an image, not a title card. In the turn, change one variable and show what follows. The payoff brings back the opening image, now read correctly, plus one next step. Write `SCENES.md` with one row per beat: teaches, frame, motion, words, sound, and what the viewer can now say.
 4. **Tokens and directions.** Pull palette and type from the brand into tokens. The template's Paper theme is warm neutral with one accent. Render the same key frame in 3 directions (`theme=` param) and keep a `directions.html` that marks the winner and why.
-5. **Build.** Rewrite `film.js`'s story section; `references/template-anatomy.md` says what to keep and what to replace. Check beat stills for all three formats early (`node tools/render.mjs stills --fmt 9x16`). Check mid-motion frames too (`frame --t`), because most bugs live between beats.
+5. **Build.** Rewrite `film.js`'s story section; `references/template-anatomy.md` says what to keep and what to replace. Check beat stills for all three formats early (`node tools/render.mjs stills --fmt 9x16`). Check mid-motion frames too (`node tools/render.mjs frame --t 12.4 --out out/mid/12.4.png`; without `--out` each frame overwrites `out/frame.png`), because most bugs live between beats.
 6. **Sound and captions.** Keep the procedural bed and one motif that returns on the key idea, with cues only on meaningful actions. Captions are the voice track, at no more than 9 characters per second, and each one lands when its number does.
 7. **Verify** (next section). Get an independent design review: spawn a subagent with the stills and `SCENES.md`, not your own conclusions. Fix what it finds and keep before/after frame pairs in `out/review/`.
-8. **Export.** Run `npm run film`, which builds the audio, all four videos, captions, stills, contact sheet and the checks. For a narrated master, see `references/typecast.md`.
+8. **Export.** Run `npm run film`, which builds the audio, all four videos, captions, stills, contact sheet and the checks. `npm run film -- 9x16` builds only the cuts you name (`16x9 9x16 1x1 rm`), which is useful for a quick look. For a narrated master, see `references/typecast.md`.
 
 Read `references/craft.md` before step 3. It holds the rules for copy, motion, visuals, sound and accessibility. Read `references/pitfalls.md` before step 7. It lists real bugs from past films and is the fastest way to avoid repeating them.
 
@@ -39,9 +39,9 @@ Read `references/craft.md` before step 3. It holds the rules for copy, motion, v
 |---|---|---|
 | Contrast | `node tools/render.mjs contrast` | text ≥ 4.5:1, graphics ≥ 3:1 |
 | Caption speed | `node tools/render.mjs timing` | ≤ 9 chars/s |
-| Text fit | `node tools/render.mjs fit` | nothing shrinks, any format, normal + reduced motion |
-| Determinism | `node tools/render.mjs determinism` | identical bytes |
-| Flashes, loudness | `node tools/check-video.mjs out/<file>.mp4` | ≤ 3 luma jumps/s; −16 ±1 LUFS; ≤ −1.5 dBTP |
+| Text fit | `node tools/render.mjs fit` | nothing shrinks and no caption needs 3 lines, any format, normal + reduced motion |
+| Determinism | `node tools/render.mjs determinism` (3 times across the film; `--t` for a busy moment) | identical bytes |
+| Flashes, loudness | `node tools/check-video.mjs out/<file>.mp4` | ≤ 3 luma jumps/s; −16 ±1 LUFS; peak ≤ −1.0 dBTP after AAC (mixed to −1.5) |
 | Phone width | scale 9:16 stills to 390 px wide and read every line | essential text ≥ ~36 px in the 1080-wide frame |
 | Shorts overlay | caption box bottom in 9:16 | above y ≈ 1536 |
 | Muted and audio-only | 1-fps frame sheet; waveform/spectrum vs `TIMELINE.cues` | story reads without sound; cues land on their actions |

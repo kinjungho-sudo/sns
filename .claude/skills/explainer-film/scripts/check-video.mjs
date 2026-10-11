@@ -1,4 +1,4 @@
-/* Checks a finished MP4: flashes, loudness, true peak, duration and size.
+/* Checks a finished MP4: flashes, loudness and true peak; prints codec, size and duration.
    node tools/check-video.mjs out/master_16x9.mp4
    Flash rule: no more than 3 frame-to-frame luminance jumps of 10% or more in any 1-second window. */
 import { execFileSync, spawnSync } from "node:child_process";
@@ -27,7 +27,7 @@ if (a) {
   const I = +(e.match(/I:\s+(-?[\d.]+) LUFS/g) || []).pop()?.match(/-?[\d.]+/)[0];
   const tp = +(e.match(/Peak:\s+(-?[\d.]+) dBFS/g) || []).pop()?.match(/-?[\d.]+/)[0];
   const ok = Math.abs(I + 16) <= 1 && tp <= -1.0;
-  console.log(`  loudness ${I} LUFS integrated, true peak ${tp} dBTP → ${ok ? "pass" : "FAIL"} (target -16 ±1, ≤ -1.5 before AAC)`);
+  console.log(`  loudness ${I} LUFS integrated, true peak ${tp} dBTP → ${ok ? "pass" : "FAIL"} (target -16 ±1 LUFS; peak ≤ -1.0 dBTP after AAC, mixed to -1.5 before it)`);
   if (!ok) process.exitCode = 1;
 }
 if (worst > 3) process.exitCode = 1;
