@@ -1,0 +1,438 @@
+{
+  "browser": "Chrome via bundled Playwright",
+  "errors": [],
+  "checks": [
+    "42 settled scene screenshots at 1920x1080 and 1366x768",
+    "all local images loaded",
+    "fixed part 2 and 3 headings",
+    "future/example and separate-negotiation labels on all part 3 scenes",
+    "pause freezes waveform and all element styles",
+    "ArrowRight/PageDown/Home/End keyboard controls",
+    "hash persists after reload",
+    "continuous playback crosses part 1→2 and 2→3",
+    "playback stops on final scene",
+    "reduced motion starts settled and waveform remains still"
+  ],
+  "results": [
+    {
+      "viewport": [
+        1920,
+        1080
+      ],
+      "scene": 1,
+      "part": 1,
+      "title": "홈페이지",
+      "brokenImages": []
+    },
+    {
+      "viewport": [
+        1920,
+        1080
+      ],
+      "scene": 2,
+      "part": 1,
+      "title": "Dr.GEO 진단",
+      "brokenImages": []
+    },
+    {
+      "viewport": [
+        1920,
+        1080
+      ],
+      "scene": 3,
+      "part": 1,
+      "title": "진단 결과",
+      "brokenImages": []
+    },
+    {
+      "viewport": [
+        1920,
+        1080
+      ],
+      "scene": 4,
+      "part": 1,
+      "title": "점수와 그래프",
+      "brokenImages": []
+    },
+    {
+      "viewport": [
+        1920,
+        1080
+      ],
+      "scene": 5,
+      "part": 1,
+      "title": "모두닥 정보 불일치",
+      "brokenImages": []
+    },
+    {
+      "viewport": [
+        1920,
+        1080
+      ],
+      "scene": 6,
+      "part": 1,
+      "title": "진료과 정보 차이",
+      "brokenImages": []
+    },
+    {
+      "viewport": [
+        1920,
+        1080
+      ],
+      "scene": 7,
+      "part": 1,
+      "title": "진료시간 · 접근",
+      "brokenImages": []
+    },
+    {
+      "viewport": [
+        1920,
+        1080
+      ],
+      "scene": 8,
+      "part": 1,
+      "title": "확인된 과제",
+      "brokenImages": []
+    },
+    {
+      "viewport": [
+        1920,
+        1080
+      ],
+      "scene": 9,
+      "part": 2,
+      "title": "이번 제공 범위",
+      "brokenImages": []
+    },
+    {
+      "viewport": [
+        1920,
+        1080
+      ],
+      "scene": 10,
+      "part": 2,
+      "title": "이번 제공 범위",
+      "brokenImages": []
+    },
+    {
+      "viewport": [
+        1920,
+        1080
+      ],
+      "scene": 11,
+      "part": 2,
+      "title": "이번 제공 범위",
+      "brokenImages": []
+    },
+    {
+      "viewport": [
+        1920,
+        1080
+      ],
+      "scene": 12,
+      "part": 2,
+      "title": "이번 제공 범위",
+      "brokenImages": []
+    },
+    {
+      "viewport": [
+        1920,
+        1080
+      ],
+      "scene": 13,
+      "part": 2,
+      "title": "이번 제공 범위",
+      "brokenImages": []
+    },
+    {
+      "viewport": [
+        1920,
+        1080
+      ],
+      "scene": 14,
+      "part": 2,
+      "title": "이번 제공 범위",
+      "brokenImages": []
+    },
+    {
+      "viewport": [
+        1920,
+        1080
+      ],
+      "scene": 15,
+      "part": 3,
+      "title": "향후 로드맵",
+      "brokenImages": []
+    },
+    {
+      "viewport": [
+        1920,
+        1080
+      ],
+      "scene": 16,
+      "part": 3,
+      "title": "향후 로드맵",
+      "brokenImages": []
+    },
+    {
+      "viewport": [
+        1920,
+        1080
+      ],
+      "scene": 17,
+      "part": 3,
+      "title": "향후 로드맵",
+      "brokenImages": []
+    },
+    {
+      "viewport": [
+        1920,
+        1080
+      ],
+      "scene": 18,
+      "part": 3,
+      "title": "향후 로드맵",
+      "brokenImages": []
+    },
+    {
+      "viewport": [
+        1920,
+        1080
+      ],
+      "scene": 19,
+      "part": 3,
+      "title": "향후 로드맵",
+      "brokenImages": []
+    },
+    {
+      "viewport": [
+        1920,
+        1080
+      ],
+      "scene": 20,
+      "part": 3,
+      "title": "향후 로드맵",
+      "brokenImages": []
+    },
+    {
+      "viewport": [
+        1920,
+        1080
+      ],
+      "scene": 21,
+      "part": 3,
+      "title": "향후 로드맵",
+      "brokenImages": []
+    },
+    {
+      "viewport": [
+        1366,
+        768
+      ],
+      "scene": 1,
+      "part": 1,
+      "title": "홈페이지",
+      "brokenImages": []
+    },
+    {
+      "viewport": [
+        1366,
+        768
+      ],
+      "scene": 2,
+      "part": 1,
+      "title": "Dr.GEO 진단",
+      "brokenImages": []
+    },
+    {
+      "viewport": [
+        1366,
+        768
+      ],
+      "scene": 3,
+      "part": 1,
+      "title": "진단 결과",
+      "brokenImages": []
+    },
+    {
+      "viewport": [
+        1366,
+        768
+      ],
+      "scene": 4,
+      "part": 1,
+      "title": "점수와 그래프",
+      "brokenImages": []
+    },
+    {
+      "viewport": [
+        1366,
+        768
+      ],
+      "scene": 5,
+      "part": 1,
+      "title": "모두닥 정보 불일치",
+      "brokenImages": []
+    },
+    {
+      "viewport": [
+        1366,
+        768
+      ],
+      "scene": 6,
+      "part": 1,
+      "title": "진료과 정보 차이",
+      "brokenImages": []
+    },
+    {
+      "viewport": [
+        1366,
+        768
+      ],
+      "scene": 7,
+      "part": 1,
+      "title": "진료시간 · 접근",
+      "brokenImages": []
+    },
+    {
+      "viewport": [
+        1366,
+        768
+      ],
+      "scene": 8,
+      "part": 1,
+      "title": "확인된 과제",
+      "brokenImages": []
+    },
+    {
+      "viewport": [
+        1366,
+        768
+      ],
+      "scene": 9,
+      "part": 2,
+      "title": "이번 제공 범위",
+      "brokenImages": []
+    },
+    {
+      "viewport": [
+        1366,
+        768
+      ],
+      "scene": 10,
+      "part": 2,
+      "title": "이번 제공 범위",
+      "brokenImages": []
+    },
+    {
+      "viewport": [
+        1366,
+        768
+      ],
+      "scene": 11,
+      "part": 2,
+      "title": "이번 제공 범위",
+      "brokenImages": []
+    },
+    {
+      "viewport": [
+        1366,
+        768
+      ],
+      "scene": 12,
+      "part": 2,
+      "title": "이번 제공 범위",
+      "brokenImages": []
+    },
+    {
+      "viewport": [
+        1366,
+        768
+      ],
+      "scene": 13,
+      "part": 2,
+      "title": "이번 제공 범위",
+      "brokenImages": []
+    },
+    {
+      "viewport": [
+        1366,
+        768
+      ],
+      "scene": 14,
+      "part": 2,
+      "title": "이번 제공 범위",
+      "brokenImages": []
+    },
+    {
+      "viewport": [
+        1366,
+        768
+      ],
+      "scene": 15,
+      "part": 3,
+      "title": "향후 로드맵",
+      "brokenImages": []
+    },
+    {
+      "viewport": [
+        1366,
+        768
+      ],
+      "scene": 16,
+      "part": 3,
+      "title": "향후 로드맵",
+      "brokenImages": []
+    },
+    {
+      "viewport": [
+        1366,
+        768
+      ],
+      "scene": 17,
+      "part": 3,
+      "title": "향후 로드맵",
+      "brokenImages": []
+    },
+    {
+      "viewport": [
+        1366,
+        768
+      ],
+      "scene": 18,
+      "part": 3,
+      "title": "향후 로드맵",
+      "brokenImages": []
+    },
+    {
+      "viewport": [
+        1366,
+        768
+      ],
+      "scene": 19,
+      "part": 3,
+      "title": "향후 로드맵",
+      "brokenImages": []
+    },
+    {
+      "viewport": [
+        1366,
+        768
+      ],
+      "scene": 20,
+      "part": 3,
+      "title": "향후 로드맵",
+      "brokenImages": []
+    },
+    {
+      "viewport": [
+        1366,
+        768
+      ],
+      "scene": 21,
+      "part": 3,
+      "title": "향후 로드맵",
+      "brokenImages": []
+    }
+  ]
+}

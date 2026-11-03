@@ -1,0 +1,391 @@
+{
+  "errors": [],
+  "comparisons": [
+    {
+      "scene": 1,
+      "width": 1920,
+      "height": 1080,
+      "visuallyEquivalent": true,
+      "maxChannelDifference": 0,
+      "changedChannels": 0,
+      "sha256": "be3993cb9b55c1de3c2afc358cfbee5332500d7647d7623de034313b6ade0f2a"
+    },
+    {
+      "scene": 2,
+      "width": 1920,
+      "height": 1080,
+      "visuallyEquivalent": true,
+      "maxChannelDifference": 0,
+      "changedChannels": 0,
+      "sha256": "272232bb2fffac5c2632f5f34055bfc06d4ca9384394f5147dae7b593e81ccd3"
+    },
+    {
+      "scene": 3,
+      "width": 1920,
+      "height": 1080,
+      "visuallyEquivalent": true,
+      "maxChannelDifference": 0,
+      "changedChannels": 0,
+      "sha256": "3d2b7a64e391d61c3bb750bdb3a26e2cc761bceff29831db224f85f596acf204"
+    },
+    {
+      "scene": 4,
+      "width": 1920,
+      "height": 1080,
+      "visuallyEquivalent": true,
+      "maxChannelDifference": 0,
+      "changedChannels": 0,
+      "sha256": "8f906c971f1e6a9c5c7937b2737140f54bff7bea142f776484b255d06f920c71"
+    },
+    {
+      "scene": 5,
+      "width": 1920,
+      "height": 1080,
+      "visuallyEquivalent": true,
+      "maxChannelDifference": 0,
+      "changedChannels": 0,
+      "sha256": "e9682b5bbc89a63dd78bc66b196563da1be26f2619ad2f8aa12a4042369a3d56"
+    },
+    {
+      "scene": 6,
+      "width": 1920,
+      "height": 1080,
+      "visuallyEquivalent": true,
+      "maxChannelDifference": 0,
+      "changedChannels": 0,
+      "sha256": "a712a989db3bb87782ba51032fba49bbad678b622c2a8472119c4f12712d5963"
+    },
+    {
+      "scene": 7,
+      "width": 1920,
+      "height": 1080,
+      "visuallyEquivalent": true,
+      "maxChannelDifference": 0,
+      "changedChannels": 0,
+      "sha256": "4beee9cc19db2b746567f56c9853d0d818bd37797036fa526846238602276b5b"
+    },
+    {
+      "scene": 8,
+      "width": 1920,
+      "height": 1080,
+      "visuallyEquivalent": true,
+      "maxChannelDifference": 0,
+      "changedChannels": 0,
+      "sha256": "d1c5c2e6ac8eecf8c34c284458d956981af6b58719a51f6ae328a29f64ffb6d8"
+    },
+    {
+      "scene": 9,
+      "width": 1920,
+      "height": 1080,
+      "visuallyEquivalent": true,
+      "maxChannelDifference": 0,
+      "changedChannels": 0,
+      "sha256": "45d98f02f0e74fb1a17ef1e99187255fa869b6f5f1cd99e0a2c3fb206798f8a8"
+    },
+    {
+      "scene": 10,
+      "width": 1920,
+      "height": 1080,
+      "visuallyEquivalent": true,
+      "maxChannelDifference": 0,
+      "changedChannels": 0,
+      "sha256": "13e1e1b361ccac76abc990e8d3242e8895fcd9c41bb84f9236e49c501796786c"
+    },
+    {
+      "scene": 11,
+      "width": 1920,
+      "height": 1080,
+      "visuallyEquivalent": true,
+      "maxChannelDifference": 0,
+      "changedChannels": 0,
+      "sha256": "5afb3599495485381658c147faaa66fe0c9fa89ccddee797124f963db91a62ca"
+    },
+    {
+      "scene": 12,
+      "width": 1920,
+      "height": 1080,
+      "visuallyEquivalent": true,
+      "maxChannelDifference": 0,
+      "changedChannels": 0,
+      "sha256": "6dede45e37cb924f78a13338fdabea360c63e326b8a105f8a4af138f377a7f8c"
+    },
+    {
+      "scene": 13,
+      "width": 1920,
+      "height": 1080,
+      "visuallyEquivalent": true,
+      "maxChannelDifference": 0,
+      "changedChannels": 0,
+      "sha256": "496424988aef2ca433abecc5db705b596c9248cd812f350569b7cb598bcdf37e"
+    },
+    {
+      "scene": 14,
+      "width": 1920,
+      "height": 1080,
+      "visuallyEquivalent": true,
+      "maxChannelDifference": 0,
+      "changedChannels": 0,
+      "sha256": "20628a135ede004864c24259a755a5c65b749da30e8fdf009b84312eed23bdd8"
+    },
+    {
+      "scene": 15,
+      "width": 1920,
+      "height": 1080,
+      "visuallyEquivalent": true,
+      "maxChannelDifference": 0,
+      "changedChannels": 0,
+      "sha256": "40b3b657e6565390beb45f926d1917caf8edead6f3c42adbb33fa3c480fba173"
+    },
+    {
+      "scene": 16,
+      "width": 1920,
+      "height": 1080,
+      "visuallyEquivalent": true,
+      "maxChannelDifference": 0,
+      "changedChannels": 0,
+      "sha256": "ab135890214f30ad54e031aa526283e4a5ab196381d7b5ce824c665a8c3d101e"
+    },
+    {
+      "scene": 17,
+      "width": 1920,
+      "height": 1080,
+      "visuallyEquivalent": true,
+      "maxChannelDifference": 0,
+      "changedChannels": 0,
+      "sha256": "44797fb57c7d0a6fb8f36dcb9f58fe1860c65ee24dd4b8edfe04a1116f711d81"
+    },
+    {
+      "scene": 18,
+      "width": 1920,
+      "height": 1080,
+      "visuallyEquivalent": true,
+      "maxChannelDifference": 0,
+      "changedChannels": 0,
+      "sha256": "5f248b1b54979f82091b8c4d2edd8277912ef4707f00e41873b3fc5459661666"
+    },
+    {
+      "scene": 19,
+      "width": 1920,
+      "height": 1080,
+      "visuallyEquivalent": true,
+      "maxChannelDifference": 0,
+      "changedChannels": 0,
+      "sha256": "657feda82e095b864329c677aa866c9538f0b0df3ccc823eea07b837e17b1d3b"
+    },
+    {
+      "scene": 20,
+      "width": 1920,
+      "height": 1080,
+      "visuallyEquivalent": true,
+      "maxChannelDifference": 0,
+      "changedChannels": 0,
+      "sha256": "e2ab23531d154a1b161a2b33063673b6311a0cf7c5ca859baded24b26194121d"
+    },
+    {
+      "scene": 21,
+      "width": 1920,
+      "height": 1080,
+      "visuallyEquivalent": true,
+      "maxChannelDifference": 0,
+      "changedChannels": 0,
+      "sha256": "63a3428ac2d729b32c2f4f8c66d3b128200129158354d5932ef5b1ec2743468a"
+    },
+    {
+      "scene": 1,
+      "width": 1366,
+      "height": 768,
+      "visuallyEquivalent": true,
+      "maxChannelDifference": 1,
+      "changedChannels": 148,
+      "sha256": "48076b9fba503874355dbf615cc14e360a2b65420c30a1cbe00a7f92b04f48c6"
+    },
+    {
+      "scene": 2,
+      "width": 1366,
+      "height": 768,
+      "visuallyEquivalent": true,
+      "maxChannelDifference": 1,
+      "changedChannels": 362,
+      "sha256": "a366bd67138fbc896ef46056ff505b880879ec4646dd118ace65a699b2f74179"
+    },
+    {
+      "scene": 3,
+      "width": 1366,
+      "height": 768,
+      "visuallyEquivalent": true,
+      "maxChannelDifference": 0,
+      "changedChannels": 0,
+      "sha256": "25892b7838e955024f50a9ed1c3031a81e362484e58c7e1265c90417764437be"
+    },
+    {
+      "scene": 4,
+      "width": 1366,
+      "height": 768,
+      "visuallyEquivalent": true,
+      "maxChannelDifference": 0,
+      "changedChannels": 0,
+      "sha256": "4d8c4ef633e1fc03d8f30dd0a1a19cad0244f05bcd7881abbb63e9450acc2199"
+    },
+    {
+      "scene": 5,
+      "width": 1366,
+      "height": 768,
+      "visuallyEquivalent": true,
+      "maxChannelDifference": 0,
+      "changedChannels": 0,
+      "sha256": "f1507be2daf5b402243adb2574ff5c03fa1453751ae541aaa1338f45efdefdea"
+    },
+    {
+      "scene": 6,
+      "width": 1366,
+      "height": 768,
+      "visuallyEquivalent": true,
+      "maxChannelDifference": 1,
+      "changedChannels": 3,
+      "sha256": "ea2df37626d93f8538e7bd1bf0c9b6337d60df08da86c4a72ffe94b33d7aa648"
+    },
+    {
+      "scene": 7,
+      "width": 1366,
+      "height": 768,
+      "visuallyEquivalent": true,
+      "maxChannelDifference": 0,
+      "changedChannels": 0,
+      "sha256": "7561a452c7e2600374e30fb099374f6206f8cabc48034cbef6f4e79a7052801d"
+    },
+    {
+      "scene": 8,
+      "width": 1366,
+      "height": 768,
+      "visuallyEquivalent": true,
+      "maxChannelDifference": 0,
+      "changedChannels": 0,
+      "sha256": "a9f7529dded73e11fd56452b967382f4e043fe1c6458ea6b4b61d0cc96425ec6"
+    },
+    {
+      "scene": 9,
+      "width": 1366,
+      "height": 768,
+      "visuallyEquivalent": true,
+      "maxChannelDifference": 0,
+      "changedChannels": 0,
+      "sha256": "8ad678fad6f7f8d76f9a34779b763a4db904bc2b303da9219278d3f465bb905e"
+    },
+    {
+      "scene": 10,
+      "width": 1366,
+      "height": 768,
+      "visuallyEquivalent": true,
+      "maxChannelDifference": 0,
+      "changedChannels": 0,
+      "sha256": "68eae325b501db83e879cd8edef7a0771bd260403715b779d49d866598ff132c"
+    },
+    {
+      "scene": 11,
+      "width": 1366,
+      "height": 768,
+      "visuallyEquivalent": true,
+      "maxChannelDifference": 0,
+      "changedChannels": 0,
+      "sha256": "a9c0d7dec2222b278e00f4d7debdf8bbc834c3e90857c1929fc70a295620540f"
+    },
+    {
+      "scene": 12,
+      "width": 1366,
+      "height": 768,
+      "visuallyEquivalent": true,
+      "maxChannelDifference": 0,
+      "changedChannels": 0,
+      "sha256": "815ca3bafb1d77c8c2e9c5a1f3ee4f51d3b916d878e7d7ad0b64c27ec249a927"
+    },
+    {
+      "scene": 13,
+      "width": 1366,
+      "height": 768,
+      "visuallyEquivalent": true,
+      "maxChannelDifference": 0,
+      "changedChannels": 0,
+      "sha256": "670fa772dd44d12aa95ab2940b19184bd2f028d8ca5f48f3c0a394daadd6aa1c"
+    },
+    {
+      "scene": 14,
+      "width": 1366,
+      "height": 768,
+      "visuallyEquivalent": true,
+      "maxChannelDifference": 0,
+      "changedChannels": 0,
+      "sha256": "13e57a47729c2538758ca4bafe1710d0496b180ac5bfab28cd69744302e33a1e"
+    },
+    {
+      "scene": 15,
+      "width": 1366,
+      "height": 768,
+      "visuallyEquivalent": true,
+      "maxChannelDifference": 0,
+      "changedChannels": 0,
+      "sha256": "c8c3f2784ee59f06fa5c7aba14dd3298c680f0a6742b04a34dade15ae881b736"
+    },
+    {
+      "scene": 16,
+      "width": 1366,
+      "height": 768,
+      "visuallyEquivalent": true,
+      "maxChannelDifference": 0,
+      "changedChannels": 0,
+      "sha256": "407df5143a2c954139943d007c9fdbffa675555479eb360b751113e42093af11"
+    },
+    {
+      "scene": 17,
+      "width": 1366,
+      "height": 768,
+      "visuallyEquivalent": true,
+      "maxChannelDifference": 0,
+      "changedChannels": 0,
+      "sha256": "0e518a713ef9782b68ccb7acb700e3540365afa7b4605bb8fd38f7493ddf45dc"
+    },
+    {
+      "scene": 18,
+      "width": 1366,
+      "height": 768,
+      "visuallyEquivalent": true,
+      "maxChannelDifference": 0,
+      "changedChannels": 0,
+      "sha256": "6be015d1583cb06cf15d93cc11e6ab38d68cb5d6c7fe9ef2862fe843a1666632"
+    },
+    {
+      "scene": 19,
+      "width": 1366,
+      "height": 768,
+      "visuallyEquivalent": true,
+      "maxChannelDifference": 0,
+      "changedChannels": 0,
+      "sha256": "fda5cbdc21c43d8abe952b715ec094f2eff9fb042b5c3887ed412fa55b38352b"
+    },
+    {
+      "scene": 20,
+      "width": 1366,
+      "height": 768,
+      "visuallyEquivalent": true,
+      "maxChannelDifference": 0,
+      "changedChannels": 0,
+      "sha256": "dfff9a16e475a974dcb46a419b92d8ed1ccf796c525e0c0cf001e34b0a5879a0"
+    },
+    {
+      "scene": 21,
+      "width": 1366,
+      "height": 768,
+      "visuallyEquivalent": true,
+      "maxChannelDifference": 0,
+      "changedChannels": 0,
+      "sha256": "9314aa2e32eef3c9f37de0869cdff0eeffc5fe65574471c1b6ceccff9ba0936b"
+    }
+  ],
+  "checks": [
+    "42 original/lightweight screenshots visually equivalent (maximum allowed RGB channel difference 1/255 for browser text antialiasing)",
+    "all scene images loaded from local files",
+    "play and pause",
+    "keyboard End",
+    "part 2 to part 3 continuous playback"
+  ],
+  "method": "Actual Chrome, local file URLs; unchanged source and image assets"
+}
