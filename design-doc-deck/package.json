@@ -1,0 +1,16 @@
+{
+  "name": "design-doc-deck",
+  "private": true,
+  "type": "module",
+  "description": "슬라이드 자체는 빌드 없이 index.html로 열립니다. 이 파일은 영상 렌더와 자동 검사용 도구만 담습니다.",
+  "scripts": {
+    "sync": "node tools/sync-content.mjs",
+    "video": "node tools/render-video.mjs",
+    "check": "node tools/check.mjs"
+  },
+  "devDependencies": {
+    "chart.js": "4.4.1",
+    "gsap": "3.12.5",
+    "playwright": "^1.49.0"
+  }
+}
