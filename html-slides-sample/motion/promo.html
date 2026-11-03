@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <title>promo · 모션그래픽 소스</title>
+  <!-- 15초 · 1920×1080 · 30fps. 브라우저로 열면 반복 재생, ?render=1 이면 정지 상태로 window.seek(t)를 기다린다 (tools/render-video.mjs). -->
+  <style>
+    @font-face { font-family: "Pretendard"; font-weight: 700; font-display: block; src: url("../assets/fonts/Pretendard-Bold.woff2") format("woff2"); }
+    @font-face { font-family: "Pretendard"; font-weight: 800; font-display: block; src: url("../assets/fonts/Pretendard-ExtraBold.woff2") format("woff2"); }
+    :root { --accent: #e81768; --accent-deep: #920951; --accent-pale: #fbedf3; --ink: #292a33; --muted: #787983; --line: #e9e8ed; --bg: #ffffff; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { background: #000; overflow: hidden; }
+    #frame {
+      position: relative; width: 1920px; height: 1080px; overflow: hidden; background: var(--ink); color: #fff;
+      font-family: "Pretendard", sans-serif; word-break: keep-all; transform-origin: 0 0;
+    }
+    body:not(.render) #frame { transform: scale(var(--s, 1)); }
+    .scene { position: absolute; inset: 0; }
+    .center { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .eyebrow { display: flex; align-items: center; gap: 14px; font-size: 26px; font-weight: 700; letter-spacing: .3em; color: #b9bac4; }
+    .eyebrow::before { content: ""; width: 14px; height: 14px; border-radius: 50%; background: var(--accent); }
+
+    /* 1. 키워드 */
+    .kw { margin-top: 30px; display: flex; font-size: 360px; font-weight: 800; line-height: 1; letter-spacing: -.04em; }
+    .kw span { display: inline-block; }
+    .kw span:last-child { color: var(--accent); }
+
+    /* 2. 숫자 */
+    .n-label { font-size: 44px; font-weight: 700; color: #d6d6de; }
+    .n-row { margin-top: 10px; display: flex; align-items: baseline; gap: 24px; }
+    .n-num { font-size: 320px; font-weight: 800; line-height: 1; letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
+    .n-unit { font-size: 120px; font-weight: 800; color: var(--accent); }
+    .n-bar { margin-top: 26px; width: 1180px; height: 14px; border-radius: 7px; background: var(--accent); transform-origin: left center; }
+    .n-chip { margin-top: 44px; padding: 16px 34px; border-radius: 48px; background: var(--accent); font-size: 48px; font-weight: 800; }
+    .dummy { position: absolute; left: 80px; bottom: 60px; font-size: 26px; font-weight: 700; color: #b9bac4; }
+
+    /* 3. 4단계 흐름 */
+    .steps { position: absolute; left: 220px; right: 220px; top: 470px; height: 300px; }
+    .track, .line { position: absolute; left: 30px; right: 30px; top: 26px; height: 8px; border-radius: 4px; }
+    .track { background: rgba(255,255,255,.14); }
+    .line { background: var(--accent); transform-origin: left center; }
+    .node { position: absolute; top: 0; width: 60px; display: flex; flex-direction: column; align-items: center; }
+    .node i { width: 60px; height: 60px; border-radius: 50%; background: var(--ink); border: 8px solid rgba(255,255,255,.3); }
+    .node.on i { background: var(--accent); border-color: var(--accent); }
+    .node .no { margin-top: 34px; font-size: 30px; font-weight: 700; letter-spacing: .12em; color: #b9bac4; }
+    .node b { margin-top: 6px; font-size: 92px; font-weight: 800; white-space: nowrap; }
+    .s3-title { position: absolute; left: 0; right: 0; top: 250px; text-align: center; }
+
+    /* 전환 막 */
+    #wipe { position: absolute; inset: 0; background: var(--accent); transform: translateX(-100%); }
+
+    /* 4. 마무리 (흰 배경) */
+    #s4 { background: var(--bg); color: var(--ink); visibility: hidden; }
+    .brand { font-size: 220px; font-weight: 800; letter-spacing: -.04em; line-height: 1; }
+    .brand em { font-style: normal; color: var(--accent); }
+    .msg { position: relative; margin-top: 40px; font-size: 76px; font-weight: 800; letter-spacing: -.02em; }
+    .msg u { position: absolute; left: 0; right: 0; bottom: -18px; height: 14px; border-radius: 7px; background: var(--accent); transform-origin: left center; text-decoration: none; }
+    #s4 .eyebrow { color: var(--muted); margin-bottom: 40px; }
+  </style>
+</head>
+<body>
+  <div id="frame">
+    <section class="scene center" id="s1">
+      <p class="eyebrow" id="kw-eyebrow"></p>
+      <h1 class="kw" id="kw"></h1>
+    </section>
+    <section class="scene center" id="s2">
+      <p class="n-label" id="n-label"></p>
+      <div class="n-row"><span class="n-num" id="n-num">0</span><span class="n-unit" id="n-unit"></span></div>
+      <div class="n-bar" id="n-bar"></div>
+      <p class="n-chip" id="n-chip"></p>
+    </section>
+    <section class="scene" id="s3">
+      <p class="eyebrow s3-title" style="justify-content:center">HOW WE WORK</p>
+      <div class="steps" id="steps"><div class="track"></div><div class="line" id="line"></div></div>
+    </section>
+    <section class="scene center" id="s4">
+      <p class="eyebrow" id="s4-eyebrow"></p>
+      <h2 class="brand" id="brand"></h2>
+      <p class="msg" id="msg"><span id="msg-text"></span><u id="ul"></u></p>
+    </section>
+    <div id="wipe"></div>
+    <p class="dummy" id="dummy"></p>
+  </div>
+
+  <script src="vendor/gsap.min.js"></script>
+  <script src="../js/content.js"></script>
+  <script>
+  (async () => {
+    const RENDER = new URLSearchParams(location.search).has("render");
+    if (RENDER) document.body.classList.add("render");
+    // 내용은 슬라이드와 같은 content.json에서 (더블클릭으로 열면 js/content.js 사본)
+    let C;
+    if (location.protocol === "file:") C = window.CONTENT_FALLBACK;
+    else try { C = await (await fetch("../content.json", { cache: "no-store" })).json(); } catch { C = window.CONTENT_FALLBACK; }
+    const M = C.metrics, V = C.motion, $ = (id) => document.getElementById(id);
+
+    // 숫자는 원자료에서 계산
+    const years = Object.keys(M.years).sort(), y = V.numberYear, py = years[years.indexOf(y) - 1];
+    const sum = (k) => M.years[k].quarters.reduce((a, b) => a + b, 0);
+    const total = sum(y), chg = ((total - sum(py)) / sum(py)) * 100;
+
+    $("kw-eyebrow").textContent = V.keywordEyebrow;
+    $("kw").innerHTML = [...V.keyword].map((c) => `<span>${c}</span>`).join("");
+    $("n-label").textContent = M.bigLabel.replace("{year}", y);
+    $("n-unit").textContent = M.unit;
+    $("n-chip").textContent = `${M.changeLabel} ${chg > 0 ? "+" : ""}${chg.toFixed(1)}%`;
+    $("dummy").textContent = C.dummy ? (C.meta.dummyLabel || "예시 데이터") : "";
+    $("s4-eyebrow").textContent = C.meta.deckSubtitle;
+    $("brand").textContent = C.meta.brand;
+    $("msg-text").textContent = V.message;
+    const steps = $("steps");
+    C.cover.steps.forEach((s, i) => {
+      const n = document.createElement("div"); n.className = "node"; n.style.left = `calc(${(i / (C.cover.steps.length - 1)) * 100}% - ${i / (C.cover.steps.length - 1) * 60}px)`;
+      n.innerHTML = `<i></i><span class="no">${String(i + 1).padStart(2, "0")}</span><b>${s}</b>`; steps.appendChild(n);
+    });
+    await document.fonts.ready;
+    $("n-num").textContent = total.toLocaleString("ko-KR");                     // 최종 숫자 폭에 밑줄 길이를 맞춘다
+    $("n-bar").style.width = document.querySelector(".n-row").offsetWidth + "px"; $("n-num").textContent = "0";
+
+    const tl = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } });
+    const chars = document.querySelectorAll("#kw span"), nodes = [...document.querySelectorAll(".node")];
+
+    // 0–3s 키워드가 글자 단위로 튀어나옴
+    tl.set(["#s2", "#s3"], { autoAlpha: 0 }, 0)
+      .from("#kw-eyebrow", { autoAlpha: 0, y: 20, duration: .5 }, .15)
+      .from(chars, { yPercent: 115, scale: .4, rotation: -10, autoAlpha: 0, duration: .6, stagger: .12, ease: "back.out(1.9)" }, .35)
+      .to(chars, { scale: 1.06, duration: .25, stagger: .05, yoyo: true, repeat: 1, ease: "sine.inOut" }, 1.5)
+      .to(["#kw-eyebrow", ...chars], { yPercent: -120, autoAlpha: 0, duration: .35, stagger: .04, ease: "power3.in" }, 2.6);
+
+    // 3–7s 핵심 숫자가 카운트업되며 화면 가득
+    const counter = { v: 0 };
+    tl.set("#s2", { autoAlpha: 1 }, 3)
+      .from("#n-label", { autoAlpha: 0, y: 30, duration: .45 }, 3.0)
+      .from(".n-row", { scale: .82, autoAlpha: 0, duration: .6 }, 3.05)
+      .to(counter, { v: total, duration: 2.1, ease: "expo.out", onUpdate: () => ($("n-num").textContent = Math.round(counter.v).toLocaleString("ko-KR")) }, 3.1)
+      .from("#n-bar", { scaleX: 0, duration: 1.6, ease: "power2.inOut" }, 3.3)
+      .from("#n-chip", { scale: .5, autoAlpha: 0, duration: .5, ease: "back.out(2)" }, 5.25)
+      .to("#s2", { y: -90, autoAlpha: 0, duration: .4, ease: "power3.in" }, 6.6);
+
+    // 7–11s 4단계 흐름이 빠르게 연결 (선은 일정 속도라 노드 도착 시각을 계산할 수 있다)
+    const L0 = 7.3, LD = 2.4, k = nodes.length - 1;
+    tl.set("#s3", { autoAlpha: 1 }, 7)
+      .from(".s3-title", { autoAlpha: 0, y: 20, duration: .4 }, 7.0)
+      .from(".track", { scaleX: 0, transformOrigin: "left center", duration: .5, ease: "power2.out" }, 7.0)
+      .from("#line", { scaleX: 0, duration: LD, ease: "none" }, L0);
+    nodes.forEach((n, i) => {
+      const at = L0 + (i / k) * LD;
+      tl.from(n.querySelector("i"), { scale: 0, duration: .45, ease: "back.out(2.4)" }, at - .05)   // 강조색 켜짐은 seek()에서 시각으로 계산
+        .from([n.querySelector(".no"), n.querySelector("b")], { y: 40, autoAlpha: 0, duration: .5, stagger: .06 }, at);
+    });
+
+    // 10.6–11.4s 강조색 막이 지나가며 흰 화면으로
+    tl.to("#wipe", { x: "0%", duration: .4, ease: "power3.in" }, 10.6)
+      .set("#s3", { autoAlpha: 0 }, 11.0).set("#s4", { visibility: "visible" }, 11.0).set("#dummy", { autoAlpha: 0 }, 11.0)
+      .to("#wipe", { x: "100%", duration: .8, ease: "sine.inOut" }, 11.0);   // 천천히 걷어 밝기가 한 번에 튀지 않게
+
+    // 11–15s 브랜드 + 한 줄 메시지, 강조색 밑줄
+    tl.from("#s4-eyebrow", { autoAlpha: 0, y: 20, duration: .5 }, 11.25)
+      .from("#brand", { y: 80, autoAlpha: 0, duration: .7 }, 11.3)
+      .from("#msg-text", { y: 40, autoAlpha: 0, duration: .6 }, 11.65)
+      .from("#ul", { scaleX: 0, duration: .9, ease: "power3.inOut" }, 12.2)
+      .set({}, {}, 15);
+
+    window.DURATION = 15;
+    window.seek = (t) => { tl.seek(t, false); nodes.forEach((n, i) => n.classList.toggle("on", t >= L0 + (i / k) * LD)); };
+    if (RENDER) { window.seek(0); window.__ready = true; }
+    else {
+      const fit = () => document.getElementById("frame").style.setProperty("--s", Math.min(innerWidth / 1920, innerHeight / 1080));
+      fit(); addEventListener("resize", fit); tl.repeat(-1).repeatDelay(.6).play();
+      tl.eventCallback("onUpdate", () => nodes.forEach((n, i) => n.classList.toggle("on", tl.time() >= L0 + (i / k) * LD)));
+    }
+  })();
+  </script>
+</body>
+</html>
