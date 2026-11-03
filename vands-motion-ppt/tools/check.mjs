@@ -15,21 +15,21 @@ const exe = process.env.CHROMIUM_PATH || (() => { const d = existsSync("/opt/pw-
 const browser = await chromium.launch({ executablePath: exe, args: ["--autoplay-policy=no-user-gesture-required"] });
 
 /* 영상 사양 */
-{
-  const p = JSON.parse(execFileSync("ffprobe", ["-v", "error", "-show_streams", "-show_format", "-of", "json", join(ROOT, "assets/video/opening.mp4")]).toString());
+for (const [name, sec] of [["opening", 15], ["sns", 14], ["knowledge", 10], ["voice", 11]]) {
+  const p = JSON.parse(execFileSync("ffprobe", ["-v", "error", "-show_streams", "-show_format", "-of", "json", join(ROOT, `assets/video/${name}.mp4`)]).toString());
   const v = p.streams.find((s) => s.codec_type === "video"), audio = p.streams.some((s) => s.codec_type === "audio");
-  log(v.codec_name === "h264" && v.width === 1920 && v.height === 1080 && v.r_frame_rate === "30/1" && Math.abs(+p.format.duration - 15) < .05 && !audio,
-    "오프닝 영상: H.264 · 1920×1080 · 30fps · 15초 · 무음", `${v.codec_name} ${v.width}×${v.height} ${v.r_frame_rate} ${(+p.format.duration).toFixed(2)}s`);
-  const y = execFileSync("ffprobe", ["-v", "error", "-f", "lavfi", "-i", `movie=${join(ROOT, "assets/video/opening.mp4")},signalstats`, "-show_entries", "frame_tags=lavfi.signalstats.YAVG", "-of", "csv=p=0"]).toString()
+  log(v.codec_name === "h264" && v.width === 1920 && v.height === 1080 && v.r_frame_rate === "30/1" && Math.abs(+p.format.duration - sec) < .05 && !audio,
+    `${name} 영상: H.264 · 1920×1080 · 30fps · ${sec}초 · 무음`, `${v.codec_name} ${v.width}×${v.height} ${v.r_frame_rate} ${(+p.format.duration).toFixed(2)}s`);
+  const y = execFileSync("ffprobe", ["-v", "error", "-f", "lavfi", "-i", `movie=${join(ROOT, `assets/video/${name}.mp4`)},signalstats`, "-show_entries", "frame_tags=lavfi.signalstats.YAVG", "-of", "csv=p=0"]).toString()
     .split("\n").map((x) => parseFloat(x)).filter((x) => !isNaN(x));
   const jumps = y.filter((v, i) => i && Math.abs(v - y[i - 1]) >= 21.9).length;
-  log(jumps <= 3, "오프닝 영상: 밝기 급변(프레임 간 10% 이상) 없음", `${jumps}회`);
+  log(jumps <= 3, `${name} 영상: 밝기 급변(프레임 간 10% 이상) 3회 이하`, `${jumps}회`);
 }
 
 // 검사 브라우저(Playwright Chromium)는 H.264를 재생하지 못한다. 재생 동작은 같은 영상을 VP9(.mp4)로 바꾼 임시 사본에서 확인한다.
 const PLAY = mkdtempSync(join(tmpdir(), "vands-play-"));
 for (const f of readdirSync(ROOT)) if (!["node_modules", "review", "verification-original"].includes(f)) cpSync(join(ROOT, f), join(PLAY, f), { recursive: true });
-execFileSync("ffmpeg", ["-v", "error", "-y", "-i", join(ROOT, "assets/video/opening.mp4"), "-c:v", "libvpx-vp9", "-b:v", "2M", "-deadline", "realtime", "-cpu-used", "8", "-an", join(PLAY, "assets/video/opening.mp4")]);
+for (const name of ["opening", "sns", "knowledge", "voice"]) execFileSync("ffmpeg", ["-v", "error", "-y", "-i", join(ROOT, `assets/video/${name}.mp4`), "-c:v", "libvpx-vp9", "-b:v", "2M", "-deadline", "realtime", "-cpu-used", "8", "-an", join(PLAY, `assets/video/${name}.mp4`)]);
 note("재생 검사는 VP9 임시 사본으로 함 (검사 브라우저가 H.264 미지원, 크롬은 H.264 재생)");
 
 async function open(ctx, root, hash = 1) {
@@ -40,7 +40,7 @@ async function open(ctx, root, hash = 1) {
   await page.waitForFunction(() => document.body.dataset.ready);
   return { page, errors };
 }
-const N = 22;
+const N = 19;   // 오프닝 1 + 1부 8 + 2부 6 + 3부 4
 
 /* 1. 오프라인 더블클릭: 외부 요청 전부 차단, 폰트 로드, 이미지 누락 없음, 오프닝 자동 재생 */
 {
@@ -49,7 +49,7 @@ const N = 22;
   const { page, errors } = await open(ctx, PLAY, 1);
   await wait(1600);
   const st = await page.evaluate(() => ({ fonts: [...document.fonts].filter((f) => f.family.replace(/"/g, "") === "Pretendard").map((f) => `${f.weight}:${f.status}`),
-    v: (() => { const v = document.querySelector("#opening-video"); return { paused: v.paused, t: v.currentTime, muted: v.muted }; })() }));
+    v: (() => { const v = document.querySelector("#scene video"); return { paused: v.paused, t: v.currentTime, muted: v.muted }; })() }));
   log(["400", "700", "800"].every((w) => st.fonts.includes(`${w}:loaded`)), "오프라인: 내장 폰트 로드", st.fonts.join(" "));
   log(!st.v.paused && st.v.t > .5 && st.v.muted, "오프닝: 들어오면 무음 자동 재생", `${st.v.t.toFixed(2)}s`);
   const deckT = await page.evaluate(() => +document.querySelector("#seek").value);
@@ -108,15 +108,20 @@ for (const [w, h] of [[1920, 1080], [1366, 768]]) {
   await page.keyboard.press("End"); const end = await page.evaluate(() => location.hash);
   await page.reload(); await page.waitForFunction(() => document.body.dataset.ready); const kept = await page.evaluate(() => [location.hash, document.querySelector("#title").textContent]);
   log(s1 === 2.8 && s2 === 5.7 && playing > 6, "→ 단계 이동(2.8 → 5.7초)과 Space 재생", `${s1} → ${s2}, 재생 후 ${playing.toFixed(1)}s`);
-  log(h2[0] === "#10" && h2[1] === "이번 제공 범위" && h3[0] === "#16" && h3[1] === "향후 로드맵" && h3[2] === 7, "부 선택: 2부 #10, 3부 #16 (레일 7장)", `${h2.join(" ")} / ${h3.join(" ")}`);
-  log(home === "#1" && end === "#22" && kept[0] === "#22", "Home/End, 새로고침 후 장면 유지", `${home} ${end} ${kept.join(" ")}`);
+  log(h2[0] === "#10" && h2[1] === "이번 제공 범위" && h3[0] === "#16" && h3[1] === "향후 로드맵" && h3[2] === 4, "부 선택: 2부 #10, 3부 #16 (레일 4장)", `${h2.join(" ")} / ${h3.join(" ")}`);
+  log(home === "#1" && end === "#19" && kept[0] === "#19", "Home/End, 새로고침 후 장면 유지", `${home} ${end} ${kept.join(" ")}`);
   // 오프닝을 떠나면 영상 정지
   await page.keyboard.press("Home"); await wait(1200);
-  const before = await page.evaluate(() => !document.querySelector("#opening-video").paused);
-  const vid = await page.evaluateHandle(() => document.querySelector("#opening-video"));
+  const before = await page.evaluate(() => !document.querySelector("#scene video").paused);
+  const vid = await page.evaluateHandle(() => document.querySelector("#scene video"));
   await page.keyboard.press("PageDown"); await wait(300);
   const after = await vid.evaluate((v) => v.paused);
   log(before && after, "오프닝: 다른 장면으로 가면 영상 정지");
+  for (const n of [16, 18, 19]) {
+    await page.evaluate((n) => (location.hash = String(n)), n); await wait(1300);
+    const st = await page.evaluate(() => { const v = document.querySelector("#scene video"); return v ? [v.paused, v.currentTime, v.getAttribute("src")] : null; });
+    log(st && !st[0] && st[1] > .5, `3부 #${n}: 시연 영상 자동 재생`, st ? `${st[2]} ${st[1].toFixed(2)}s` : "영상 없음");
+  }
   log(errors.length === 0, "이동·재생 중 콘솔 오류 0건", errors.join(" / "));
   await ctx.close();
 }
@@ -128,7 +133,7 @@ for (const [w, h] of [[1920, 1080], [1366, 768]]) {
   await wait(200);
   const st = await page.evaluate(() => ({ nums: [...document.querySelectorAll(".metric strong")].map((s) => s.firstChild.textContent), op: [...document.querySelectorAll("#scene .reveal")].every((e) => e.style.opacity === "1") }));
   await page.keyboard.press("Home"); await wait(800);
-  const v = await page.evaluate(() => document.querySelector("#opening-video").paused);
+  const v = await page.evaluate(() => document.querySelector("#scene video").paused);
   log(st.nums.join(",") === "65,19,96" && st.op && v, "동작 줄이기: 점수·요소가 바로 완성, 오프닝 자동 재생 안 함", `${st.nums.join(",")} 영상 정지 ${v}`);
   await ctx.close();
 }

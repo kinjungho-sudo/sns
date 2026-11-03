@@ -23,3 +23,18 @@ body,button,input{font-family:"Pretendard","Malgun Gothic","Segoe UI",sans-serif
 .chapters-mini span{border:1px solid #6d558d;border-radius:30px;padding:9px 18px;background:#29203e;font-size:17px;color:#e5d8fa;align-self:flex-start}
 .screen .viewport{overflow:hidden}
 .screen .viewport img{transform-origin:50% 0;will-change:transform}
+
+/* ───────── 추가: 3부 시연 영상 장면 ───────── */
+.demo{display:grid;grid-template-columns:768px 1fr;gap:40px;align-items:start}
+.demo-player{width:768px;height:432px}
+.demo-side{display:flex;flex-direction:column;gap:22px}
+.demo-side h2{font-size:32px;line-height:1.3;margin:0 0 14px}
+.demo-points{margin:0;padding:0;list-style:none;display:grid;gap:10px;font-size:20px;line-height:1.45}
+.demo-points li{position:relative;padding-left:22px}.demo-points li:before{content:'';position:absolute;left:0;top:.6em;width:8px;height:8px;border-radius:50%;background:var(--accent)}
+.similar{padding:18px 20px;border:1px solid #665285;border-radius:14px;background:#18172f}
+.prods{margin-top:12px;display:grid;gap:10px}.prods div{display:flex;flex-direction:column;gap:2px}.prods b{font-size:19px}.prods span{font-size:16px;color:var(--muted)}
+.sim-note{margin:12px 0 0;font-size:15px;color:#a9a0be}
+.sns-research{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;height:360px}
+.res{height:100%;padding:26px 26px}.res h2{font-size:28px;margin:12px 0 16px}
+.res ul{margin:0;padding:0;list-style:none;display:grid;gap:14px;font-size:17px;line-height:1.5;color:#d9d2ea}.res li b{display:block;font-size:19px;color:#fff;margin-bottom:2px}
+.res.warn{border-color:#c58bff;background:#241a3c}
