@@ -8,9 +8,9 @@ PASS  voice 영상: H.264 · 1920×1080 · 30fps · 11초 · 무음  — h264 19
 PASS  voice 영상: 밝기 급변(프레임 간 10% 이상) 3회 이하  — 0회
       재생 검사는 VP9 임시 사본으로 함 (검사 브라우저가 H.264 미지원, 크롬은 H.264 재생)
 PASS  오프라인: 내장 폰트 로드  — 400:loaded 700:loaded 800:loaded
-PASS  오프라인: 3부 시연 영상 무음 자동 재생  — 1.64s
-PASS  시연 영상: 장면 진행 막대가 영상 시간을 따라감  — 막대 1.62s
-PASS  . 키: 시연 영상 장면 → 다음 장면  — #12 참고 · 만들 수 있는 것들
+PASS  오프라인: 3부 시연 영상 무음 자동 재생  — 1.63s
+PASS  시연 영상: 장면 진행 막대가 영상 시간을 따라감  — 막대 1.63s
+PASS  . 키: 시연 영상 장면 → 다음 장면  — #14 참고 · 만들 수 있는 것들
 PASS  오프라인: 13개 장면 이미지 누락 없음
 PASS  오프라인: 콘솔 오류 0건
 PASS  1920×1080: 13개 장면 경계·글자 넘침 없음
@@ -19,13 +19,14 @@ PASS  1366×768: 13개 장면 경계·글자 넘침 없음
 PASS  1366×768: 콘솔 오류 0건
 PASS  하단 조작 막대·좌측 번호 숨김, 테마 선택 없음  — none / none / 없음
 PASS  Space 재생: 부 안에서 다음 장면으로 자동 진행  — #2
-PASS  . 장면 이동, → ← 부 이동, 숫자·탭으로 부 바로 가기  — . #3 → #6 → #10 ← #6 1 #1 탭3 #10/5
-PASS  End, 새로고침 후 장면 유지  — #14 #14
+PASS  . 장면 이동, → ← 부 이동, 숫자·탭으로 부 바로 가기  — . #3 → #7 → #12 ← #7 1 #1 탭3 #12/5
+PASS  End, 새로고침 후 장면 유지  — #16 #16
 PASS  시연 영상: 다른 장면으로 가면 영상 정지
-PASS  3부 #11: 시연 영상 자동 재생  — assets/video/noir/sns.mp4 1.26s
-PASS  3부 #12: 시연 영상 자동 재생  — assets/video/noir/brain.mp4 1.27s
-PASS  3부 #13: 시연 영상 자동 재생  — assets/video/noir/interpret.mp4 1.27s
-PASS  3부 #14: 시연 영상 자동 재생  — assets/video/noir/voice.mp4 1.24s
+PASS  3부 #13: 시연 영상 자동 재생  — assets/video/noir/sns.mp4 1.26s
+PASS  3부 #14: 시연 영상 자동 재생  — assets/video/noir/brain.mp4 1.25s
+PASS  3부 #15: 시연 영상 자동 재생  — assets/video/noir/interpret.mp4 1.26s
+PASS  3부 #16: 시연 영상 자동 재생  — assets/video/noir/voice.mp4 1.25s
+PASS  시연 영상: 클릭하면 화면 가득, 다시 클릭하면 원래대로  — true 1600 1600 → false
 PASS  이동·재생 중 콘솔 오류 0건
 PASS  테마 violet: 오류 없이 열림, 영상 파일 있음  — style.css · assets/video/sns.mp4
 PASS  테마 noir: 오류 없이 열림, 영상 파일 있음  — themes/noir.css · assets/video/noir/sns.mp4

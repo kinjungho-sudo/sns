@@ -46,7 +46,7 @@ const N = 13;   // 부마다 표지 1 + 1부 4 + 2부 3 + 3부 3
 {
   const ctx = await browser.newContext({ viewport: { width: 1920, height: 1080 } });
   await ctx.route("**/*", (r) => (r.request().url().startsWith("file:") ? r.continue() : r.abort()));
-  const { page, errors } = await open(ctx, PLAY, 11);
+  const { page, errors } = await open(ctx, PLAY, 13);
   await wait(1600);
   const st = await page.evaluate(() => ({ fonts: [...document.fonts].filter((f) => f.family.replace(/"/g, "") === "Pretendard").map((f) => `${f.weight}:${f.status}`),
     v: (() => { const v = document.querySelector("#scene video"); return { paused: v.paused, t: v.currentTime, muted: v.muted }; })() }));
@@ -56,7 +56,7 @@ const N = 13;   // 부마다 표지 1 + 1부 4 + 2부 3 + 3부 3
   log(Math.abs(deckT - st.v.t) < 1, "시연 영상: 장면 진행 막대가 영상 시간을 따라감", `막대 ${deckT.toFixed(2)}s`);
   await page.keyboard.press("."); await wait(300);
   const paused = await page.evaluate(() => [location.hash, document.querySelector("#title").textContent]);
-  log(paused[0] === "#12" && paused[1] === "참고 · 만들 수 있는 것들", ". 키: 시연 영상 장면 → 다음 장면", paused.join(" "));
+  log(paused[0] === "#14" && paused[1] === "참고 · 만들 수 있는 것들", ". 키: 시연 영상 장면 → 다음 장면", paused.join(" "));
   // 이미지 누락
   let broken = [];
   for (let n = 1; n <= N; n++) { await page.evaluate((n) => (location.hash = String(n)), n); await wait(150);
@@ -111,20 +111,26 @@ for (const [w, h] of [[1920, 1080], [1366, 768]]) {
   await page.click('[data-part="3"]'); const c3 = await page.evaluate(() => [location.hash, document.querySelectorAll("#rail button").length]);
   await page.keyboard.press("End"); const end = await H();
   await page.reload(); await page.waitForFunction(() => document.body.dataset.ready); const kept = await H();
-  log(dot === "#3" && p2 === "#6" && p3 === "#10" && pb === "#6" && k1 === "#1" && c3[0] === "#10" && c3[1] === 5, ". 장면 이동, → ← 부 이동, 숫자·탭으로 부 바로 가기", `. ${dot} → ${p2} → ${p3} ← ${pb} 1 ${k1} 탭3 ${c3.join("/")}`);
-  log(end === "#14" && kept === "#14", "End, 새로고침 후 장면 유지", `${end} ${kept}`);
+  log(dot === "#3" && p2 === "#7" && p3 === "#12" && pb === "#7" && k1 === "#1" && c3[0] === "#12" && c3[1] === 5, ". 장면 이동, → ← 부 이동, 숫자·탭으로 부 바로 가기", `. ${dot} → ${p2} → ${p3} ← ${pb} 1 ${k1} 탭3 ${c3.join("/")}`);
+  log(end === "#16" && kept === "#16", "End, 새로고침 후 장면 유지", `${end} ${kept}`);
   // 시연 영상 장면을 떠나면 영상 정지
-  await page.evaluate(() => (location.hash = "11")); await wait(1200);
+  await page.evaluate(() => (location.hash = "13")); await wait(1200);
   const before = await page.evaluate(() => !document.querySelector("#scene video").paused);
   const vid = await page.evaluateHandle(() => document.querySelector("#scene video"));
   await page.keyboard.press("."); await wait(300);
   const after = await vid.evaluate((v) => v.paused);
   log(before && after, "시연 영상: 다른 장면으로 가면 영상 정지");
-  for (const n of [11, 12, 13, 14]) {
+  for (const n of [13, 14, 15, 16]) {
     await page.evaluate((n) => (location.hash = String(n)), n); await wait(1300);
     const st = await page.evaluate(() => { const v = document.querySelector("#scene video"); return v ? [v.paused, v.currentTime, v.getAttribute("src")] : null; });
     log(st && !st[0] && st[1] > .5, `3부 #${n}: 시연 영상 자동 재생`, st ? `${st[2]} ${st[1].toFixed(2)}s` : "영상 없음");
   }
+  await page.evaluate(() => (location.hash = "13")); await wait(800);
+  await page.click("#scene video"); await wait(300);
+  const big = await page.evaluate(() => { const p = document.querySelector(".player.big"); return p ? [true, Math.round(p.getBoundingClientRect().width), innerWidth] : [false, 0, innerWidth]; });
+  await page.click(".player video"); await wait(300);
+  const small = await page.evaluate(() => !!document.querySelector(".player.big") || !document.querySelector("#scene .player"));
+  log(big[0] && big[1] >= big[2] - 2 && !small, "시연 영상: 클릭하면 화면 가득, 다시 클릭하면 원래대로", `${big.join(" ")} → ${small}`);
   log(errors.length === 0, "이동·재생 중 콘솔 오류 0건", errors.join(" / "));
   await ctx.close();
 }
@@ -136,7 +142,7 @@ for (const [w, h] of [[1920, 1080], [1366, 768]]) {
     const ctx = await browser.newContext({ viewport: { width: 1600, height: 930 } });
     const page = await ctx.newPage(), errors = [];
     page.on("console", (m) => m.type() === "error" && errors.push(m.text())); page.on("pageerror", (e) => errors.push(e.message));
-    await page.goto(pathToFileURL(join(ROOT, "index.html")).href + `?theme=${th}&nostart#11`); await page.waitForFunction(() => document.body.dataset.ready);
+    await page.goto(pathToFileURL(join(ROOT, "index.html")).href + `?theme=${th}&nostart#13`); await page.waitForFunction(() => document.body.dataset.ready);
     const src = await page.evaluate(() => [document.querySelector("#theme-css").getAttribute("href"), document.querySelector("#scene video").getAttribute("src")]);
     const vidOk = existsSync(join(ROOT, src[1]));
     for (const n of [1, 4, 8, 11]) {
@@ -166,10 +172,10 @@ for (const [w, h] of [[1920, 1080], [1366, 768]]) {
 /* 4. 동작 줄이기: 처음부터 완성 상태, 시연 영상 자동 재생 안 함 */
 {
   const ctx = await browser.newContext({ viewport: { width: 1600, height: 930 }, reducedMotion: "reduce" });
-  const { page } = await open(ctx, PLAY, 4);
+  const { page } = await open(ctx, PLAY, 5);
   await wait(200);
   const st = await page.evaluate(() => ({ nums: [...document.querySelectorAll(".metric strong")].map((s) => s.firstChild.textContent), op: [...document.querySelectorAll("#scene .reveal")].every((e) => e.style.opacity === "1") }));
-  await page.evaluate(() => (location.hash = "11")); await wait(800);
+  await page.evaluate(() => (location.hash = "13")); await wait(800);
   const v = await page.evaluate(() => document.querySelector("#scene video").paused);
   log(st.nums.join(",") === "65,19,96" && st.op && v, "동작 줄이기: 점수·요소가 바로 완성, 시연 영상 자동 재생 안 함", `${st.nums.join(",")} 영상 정지 ${v}`);
   await ctx.close();
