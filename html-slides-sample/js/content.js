@@ -1,0 +1,116 @@
+/* 자동 생성: content.json의 사본 (더블클릭으로 열 때 사용). 직접 고치지 말고 content.json을 고친 뒤 node tools/sync-content.mjs */
+window.CONTENT_FALLBACK = {
+  "dummy": true,
+  "meta": {
+    "brand": "CoMindWorks",
+    "deckSubtitle": "AI 업무 자동화 브리핑",
+    "maker": "김정호",
+    "date": "2026.11.03 기준",
+    "dummyLabel": "예시 데이터"
+  },
+  "cover": {
+    "railTitle": "표지",
+    "eyebrow": "AI Automation Briefing",
+    "titleLines": [
+      "반복은 시스템이 맡고",
+      "판단은 사람이 내리고",
+      "성과는 함께 나눕니다"
+    ],
+    "subtitleLines": [
+      "작은 반복 업무부터 자동화해 팀의 시간을 되찾는 방법,",
+      "도입 단계와 지난 3년의 변화를 3장으로 정리했습니다."
+    ],
+    "cta": "발표 시작하기 ↗",
+    "stamp": "AUTOMATION · BRIEFING · 2026 · ",
+    "stampCenter": "AI",
+    "steps": [
+      "진단",
+      "설계",
+      "자동화",
+      "확산"
+    ],
+    "source": "자료: 내부 정리 (예시)"
+  },
+  "metrics": {
+    "railTitle": "연도별 처리량",
+    "eyebrow": "Yearly Throughput",
+    "title": "연도별 *자동화 처리량* 비교",
+    "subtitle": "분기별 처리 건수. 강조색은 선택한 해, 회색은 그 전 해입니다.",
+    "unit": "건",
+    "bigLabel": "{year}년 연간 처리 건수",
+    "changeLabel": "전년 대비",
+    "quarterLabels": [
+      "1분기",
+      "2분기",
+      "3분기",
+      "4분기"
+    ],
+    "baselineYear": "2022",
+    "years": {
+      "2022": {
+        "quarters": [
+          820,
+          860,
+          900,
+          940
+        ]
+      },
+      "2023": {
+        "quarters": [
+          880,
+          950,
+          1180,
+          1320
+        ],
+        "notes": [
+          "도입 첫해로, 3분기부터 처리량이 눈에 띄게 늘었습니다.",
+          "상반기는 기존 방식과 함께 돌린 시험 운영 기간이었습니다."
+        ]
+      },
+      "2024": {
+        "quarters": [
+          1400,
+          1520,
+          1610,
+          1750
+        ],
+        "notes": [
+          "모든 분기가 전년 같은 분기를 넘었습니다.",
+          "세 해 가운데 증가율이 가장 높은 해입니다."
+        ]
+      },
+      "2025": {
+        "quarters": [
+          1820,
+          1980,
+          2140,
+          2310
+        ],
+        "notes": [
+          "증가 폭은 줄었지만 분기마다 최고치를 새로 썼습니다.",
+          "3분기에 처음으로 분기 2,000건을 넘었습니다."
+        ]
+      }
+    },
+    "buttons": [
+      "2023",
+      "2024",
+      "2025"
+    ],
+    "defaultYear": "2025",
+    "caution": "예시 데이터입니다. 실제 수치로 바꾼 뒤에는 해설 문장도 함께 확인하세요.",
+    "source": "자료: 내부 처리 로그 (예시)"
+  },
+  "motion": {
+    "railTitle": "모션그래픽",
+    "eyebrow": "Motion Graphic",
+    "title": "*CoMindWorks* 가능성을 움직이다",
+    "video": "assets/video/promo.mp4",
+    "poster": "assets/video/promo-poster.jpg",
+    "keyword": "자동화",
+    "keywordEyebrow": "AI AUTOMATION",
+    "numberYear": "2025",
+    "message": "반복은 줄이고, 가능성은 키웁니다",
+    "source": "영상: motion/promo.html 렌더 (예시 데이터 사용)"
+  }
+};

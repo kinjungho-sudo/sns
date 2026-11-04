@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <title>voice · 시연 영상 소스</title>
+  <!-- 3부 보이스 차트 간단 시연 (11초). 가상 대화이며 실제 환자 정보·녹음이 아니다. -->
+  <link rel="stylesheet" href="base.ivory.css" />
+  <style>
+    .left { position: absolute; left: 110px; top: 190px; width: 760px; height: 720px; padding: 40px; }
+    .mic { width: 150px; height: 150px; border-radius: 50%; margin: 10px auto 0; display: grid; place-items: center; background:#eae1d5; border:4px solid #c8a777; box-shadow:0 0 50px #c29e6988; }
+    .mic svg { width: 64px; height: 64px; }
+    .rec { margin-top: 18px; text-align: center; font-size: 24px; font-weight: 700; color:#4c4335; }
+    .rec i { display: inline-block; width: 14px; height: 14px; border-radius: 50%; background:#c8a878; margin-right: 10px; }
+    .wave { height: 90px; margin: 18px 0 8px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .wave i { width: 9px; border-radius: 6px; background:#c8a97a; }
+    .line { margin-top: 16px; padding: 14px 20px; border-radius: 12px; background:#f0eae2; font-size: 26px; line-height: 1.4; }
+    .line b { color: var(--accent-ink); margin-right: 10px; }
+    .arrow { position: absolute; left: 905px; top: 520px; font-size: 80px; color: var(--accent-ink); }
+    .chart { position: absolute; left: 1020px; top: 190px; width: 790px; height: 720px; padding: 42px; }
+    .chart h3 { font-size: 34px; font-weight: 800; display: flex; justify-content: space-between; align-items: center; }
+    .chart h3 span { font-size: 20px; padding: 6px 14px; border-radius: 16px; background:#e6e1d9; color:#4b4234; }
+    .f { margin-top: 26px; }
+    .f label { font-size: 20px; font-weight: 700; color:#77582b; }
+    .f div { margin-top: 8px; min-height: 58px; padding: 12px 16px; border-radius: 10px; background:#ffffff; border:2px solid #e1dfdb; font-size: 27px; }
+    .f.todo div { border-style: dashed; color:#83622f; }
+    .btn { position: absolute; right: 42px; bottom: 42px; padding: 18px 34px; border-radius: 14px; background:#bf9a62; color:#242019; font-size: 28px; font-weight: 800; }
+    .saved { position: absolute; left: 42px; bottom: 50px; font-size: 26px; font-weight: 800; color:#4b4234; }
+  </style>
+</head>
+<body>
+  <div id="frame">
+    <div class="badge"><span>참고 예시</span><span>보이스 차트</span></div>
+    <div class="card left" id="left">
+      <div class="mic" id="mic"><svg viewBox="0 0 24 24" fill="none" stroke="#242019" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></div>
+      <p class="rec" id="rec"><i></i>진료 대화 듣는 중 · 가상 대화</p>
+      <div class="wave" id="wave"></div>
+      <div class="line" id="l1"><b>환자</b>요즘 볼이 많이 건조하고 당겨요.</div>
+      <div class="line" id="l2"><b>의사</b>최근에 쓰는 화장품을 바꾸셨나요?</div>
+      <div class="line" id="l3"><b>환자</b>지난달에 크림을 바꿨어요.</div>
+    </div>
+    <div class="arrow" id="arrow">→</div>
+    <div class="paper chart" id="chart"><h3>차트 초안 <span>AI 정리 · 초안</span></h3>
+      <div class="f"><label>주요 증상</label><div id="f1"></div></div>
+      <div class="f"><label>문진 내용</label><div id="f2"></div></div>
+      <div class="f todo"><label>소견 · 계획</label><div id="f3"></div></div>
+      <p class="saved" id="saved">✓ 담당자 확인 후 저장</p>
+      <div class="btn" id="btn">확인 · 저장</div>
+    </div>
+    <p class="caption" id="cap">말하면 기록 초안이 만들어지고, 담당자가 확인해 저장합니다<small>가상 시연 · 실제 환자 정보 없음</small></p>
+  </div>
+  <script src="vendor/gsap.min.js"></script>
+  <script src="motion-kit.js"></script>
+  <script>
+  (async () => {
+    const $ = (s) => document.querySelector(s);
+    const H = [20, 44, 70, 52, 30, 64, 88, 46, 26, 58, 80, 40, 22, 62, 74, 36, 18, 50, 66, 28];
+    $("#wave").innerHTML = H.map((h) => `<i style="height:${h}px"></i>`).join("");
+    const bars = [...document.querySelectorAll(".wave i")];
+    await motionKit.ready();
+    const tl = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } });
+    tl.from("#left", { x: -60, autoAlpha: 0, duration: .5 }, 0)
+      .from("#cap", { autoAlpha: 0, duration: .5 }, .3)
+      .from("#mic", { scale: .4, duration: .5, ease: "back.out(2)" }, .2)
+      .to("#mic", { boxShadow: "0 0 90px #c9aa7bcc", duration: .5, yoyo: true, repeat: 5, ease: "sine.inOut" }, .7)
+      .from(["#l1", "#l2", "#l3"], { y: 24, autoAlpha: 0, duration: .4, stagger: .9 }, 1.0)
+      .from("#arrow", { x: -30, autoAlpha: 0, duration: .4 }, 3.9)
+      .from("#chart", { x: 60, autoAlpha: 0, duration: .5 }, 4.0);
+    motionKit.typeText(tl, $("#f1"), "볼 부위 건조감, 당김", 4.6, .8);
+    motionKit.typeText(tl, $("#f2"), "지난달 보습 크림 변경", 5.5, .9);
+    motionKit.typeText(tl, $("#f3"), "의사가 직접 입력", 6.5, .7);
+    tl.to("#rec", { autoAlpha: .35, duration: .3 }, 4.2)
+      .from("#btn", { autoAlpha: 0, y: 20, duration: .4 }, 7.4)
+      .to("#btn", { scale: .9, duration: .12, yoyo: true, repeat: 1, ease: "power2.inOut" }, 8.3)
+      .to("#btn", { backgroundColor: "#e7ddce", duration: .2 }, 8.45)
+      .from("#saved", { autoAlpha: 0, x: -20, duration: .4 }, 8.6);
+    // 파형: 듣는 동안(0.6–4.2초)만 움직이고, 시각으로 계산해 어느 시점이든 같은 화면
+    const wave = (t) => bars.forEach((b, i) => { const on = t > .6 && t < 4.2; b.style.transform = `scaleY(${on ? .35 + .65 * Math.abs(Math.sin(t * 7 + i * .7)) : .25})`; });
+    motionKit.start(tl, 11, wave);
+  })();
+  </script>
+</body>
+</html>

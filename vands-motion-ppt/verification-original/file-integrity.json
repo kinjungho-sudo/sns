@@ -1,0 +1,54 @@
+[
+  {
+    "File": "app.js",
+    "Identical": true
+  },
+  {
+    "File": "index.html",
+    "Identical": true
+  },
+  {
+    "File": "next-scenes.js",
+    "Identical": true
+  },
+  {
+    "File": "style.css",
+    "Identical": true
+  },
+  {
+    "File": "assets\\drgeo.png",
+    "Identical": true
+  },
+  {
+    "File": "assets\\homepage.png",
+    "Identical": true
+  },
+  {
+    "File": "assets\\new-homepage-hero.png",
+    "Identical": true
+  },
+  {
+    "File": "assets\\new-homepage.png",
+    "Identical": true
+  },
+  {
+    "File": "assets\\new-location.png",
+    "Identical": true
+  },
+  {
+    "File": "assets\\new-treatments.png",
+    "Identical": true
+  },
+  {
+    "File": "sources\\밴스의원 부산점 AI 검색 진단_기존 홈피_2026. 11. 3_.pdf",
+    "Identical": true
+  },
+  {
+    "File": "sources\\밴스의원 AI 검색 진단_New 홈피_2026. 11. 3_.pdf",
+    "Identical": true
+  },
+  {
+    "File": "sources\\next\\STORYBOARD-next.md",
+    "Identical": true
+  }
+]

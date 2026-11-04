@@ -1,0 +1,21 @@
+/* 자동 생성: tools/make-themes.py · 테마 blush (누드 · 로즈골드). 직접 고치지 말고 style.css를 고친 뒤 다시 실행 */
+/* 모션그래픽 공통: 발표와 같은 네이비·바이올렛 토큰과 내장 폰트 */
+@font-face { font-family: "Pretendard"; font-weight: 400; font-display: block; src: url("../assets/fonts/Pretendard-Regular.woff2") format("woff2"); }
+@font-face { font-family: "Pretendard"; font-weight: 700; font-display: block; src: url("../assets/fonts/Pretendard-Bold.woff2") format("woff2"); }
+@font-face { font-family: "Pretendard"; font-weight: 800; font-display: block; src: url("../assets/fonts/Pretendard-ExtraBold.woff2") format("woff2"); }
+:root { --accent-ink:#6b514a;--accent:#c58d7e; --deep:#be7f6f; --ink:#291f1c; --muted:#664d47; --line:#e8d5d1; --bg:#f6efee; --pale:#f0e9e7; --paper:#f6f4f3; --paper-ink:#372926; --ok:#c38879; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background:#fbf7f7; overflow: hidden; }
+#frame { position: relative; width: 1920px; height: 1080px; overflow: hidden; color: var(--ink); font-family: "Pretendard", sans-serif; word-break: keep-all;
+  background:radial-gradient(ellipse at 88% 0%, #eee0dc 0%, #f4edeb 42%, #f6f0ef 82%); transform-origin: 0 0; }
+body:not(.render) #frame { transform: scale(var(--s, 1)); }
+.scene { position: absolute; inset: 0; }
+.eyebrow { font-size: 24px; font-weight: 700; letter-spacing: .26em; color: var(--accent-ink); }
+.badge { position: absolute; left: 70px; top: 56px; display: flex; gap: 12px; font-size: 22px; }
+.badge span { padding: 8px 18px; border-radius: 30px; border:1.5px solid #ba7564; background:#f0e6e3; color:#3b2d29; }
+.badge span:first-child { background: var(--pale); color:#3f302c; font-weight: 700; border-color: var(--pale); }
+.card { background:#f2e9e7; border:2px solid #bd7c6c; border-radius: 22px; }
+.paper { background: var(--paper); color: var(--paper-ink); border:2px solid #e2d3cf; border-radius: 20px; box-shadow:0 14px 40px #f8f4f266; }
+.chip { display: inline-flex; align-items: center; gap: 10px; padding: 8px 18px; border-radius: 30px; font-size: 22px; font-weight: 700; background:#ebdbd7; border:1.5px solid #c48a7b; color:#342724; white-space: nowrap; }
+.caption { position: absolute; left: 0; right: 0; bottom: 56px; text-align: center; font-size: 30px; font-weight: 700; color:#372926; }
+.caption small { display: block; margin-top: 6px; font-size: 20px; font-weight: 400; color: var(--muted); }

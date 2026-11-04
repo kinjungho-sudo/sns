@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI 업무 자동화 브리핑</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div id="stage" aria-live="polite">
+    <!-- 고정 틀: 상단바 -->
+    <header class="topbar">
+      <div class="brand"><span class="logo" aria-hidden="true"></span><b data-k="meta.brand"></b><span class="sep">·</span><span data-k="meta.deckSubtitle"></span></div>
+      <div class="maker" data-k="meta.maker"></div>
+      <div class="date" data-k="meta.date"></div>
+      <button class="icon-btn" id="fs-btn" title="전체화면 (F)" aria-label="전체화면">⛶</button>
+    </header>
+
+    <!-- 고정 틀: 좌측 레일 -->
+    <nav class="rail" aria-label="장 목록">
+      <button data-go="1">01</button>
+      <button data-go="2">02</button>
+      <button data-go="3">03</button>
+    </nav>
+
+    <main class="slides">
+      <!-- 장 1: 표지 -->
+      <section class="slide cover" data-slide="1" aria-label="표지">
+        <div class="cover-left" data-box>
+          <p class="eyebrow st" data-k="cover.eyebrow"></p>
+          <h1 class="cover-title st">
+            <span class="line" data-k="cover.titleLines.0" data-first-em></span>
+            <span class="line" data-k="cover.titleLines.1" data-first-em></span>
+            <span class="line" data-k="cover.titleLines.2" data-first-em></span>
+          </h1>
+          <p class="subtitle st"><span data-k="cover.subtitleLines.0"></span><br /><span data-k="cover.subtitleLines.1"></span></p>
+          <button class="cta st" data-go="2" data-k="cover.cta"></button>
+        </div>
+        <div class="cover-art st" data-box aria-hidden="true">
+          <div class="art-tilt">
+            <div class="art-circle"></div>
+            <div class="art-arc"></div>
+            <div class="art-bars"><i></i><i></i><i></i></div>
+            <div class="art-dots"></div>
+          </div>
+          <div class="stamp">
+            <svg viewBox="0 0 200 200">
+              <defs><path id="stamp-path" d="M100,100 m-74,0 a74,74 0 1,1 148,0 a74,74 0 1,1 -148,0" /></defs>
+              <circle cx="100" cy="100" r="96" />
+              <g class="stamp-ring"><text><textPath href="#stamp-path" data-k="cover.stamp"></textPath></text></g>
+              <text class="stamp-center" x="100" y="100" data-k="cover.stampCenter"></text>
+            </svg>
+          </div>
+        </div>
+        <div class="flow st" data-box>
+          <svg class="flow-svg" viewBox="0 0 1000 20" preserveAspectRatio="none" aria-hidden="true">
+            <line class="flow-track" x1="0" y1="10" x2="1000" y2="10" />
+            <line class="flow-line" x1="0" y1="10" x2="1000" y2="10" pathLength="1" />
+          </svg>
+          <ol class="flow-steps">
+            <li><i></i><span class="n">01</span><b data-k="cover.steps.0"></b></li>
+            <li><i></i><span class="n">02</span><b data-k="cover.steps.1"></b></li>
+            <li><i></i><span class="n">03</span><b data-k="cover.steps.2"></b></li>
+            <li><i></i><span class="n">04</span><b data-k="cover.steps.3"></b></li>
+          </ol>
+        </div>
+        <p class="source st" data-source="cover"></p>
+      </section>
+
+      <!-- 장 2: 수치 -->
+      <section class="slide metrics" data-slide="2" aria-label="연도별 처리량">
+        <div class="head" data-box>
+          <p class="eyebrow st" data-k="metrics.eyebrow"></p>
+          <h2 class="title st" data-k="metrics.title" data-em></h2>
+          <p class="subtitle st" data-k="metrics.subtitle"></p>
+        </div>
+        <div class="chart-col st" data-box>
+          <div class="legend" aria-hidden="true">
+            <span><i class="sw sw-prev"></i><b id="lg-prev"></b></span>
+            <span><i class="sw sw-cur"></i><b id="lg-cur"></b></span>
+          </div>
+          <div class="chart-wrap" id="chart-wrap"><canvas id="chart" role="img"></canvas></div>
+        </div>
+        <aside class="panel st" data-box>
+          <p class="big-label" id="big-label"></p>
+          <p class="big"><span class="num" id="big-num" data-count="0">0</span><span class="unit" data-k="metrics.unit"></span></p>
+          <p class="change"><span class="change-label" data-k="metrics.changeLabel"></span> <span class="num" id="chg-num" data-count="0" data-decimals="1" data-sign="+">0</span><span class="pct">%</span></p>
+          <hr />
+          <ul class="notes" id="notes"></ul>
+          <div class="caution" data-k="metrics.caution"></div>
+        </aside>
+        <div class="year-btns st" role="group" aria-label="연도 선택" data-box></div>
+        <p class="source st" data-source="metrics"></p>
+      </section>
+
+      <!-- 장 3: 모션그래픽 -->
+      <section class="slide motion" data-slide="3" aria-label="모션그래픽">
+        <div class="head" data-box>
+          <p class="eyebrow st" data-k="motion.eyebrow"></p>
+          <h2 class="title st" data-k="motion.title" data-em></h2>
+        </div>
+        <div class="player st" id="player" data-box>
+          <video id="promo" muted playsinline preload="auto"></video>
+          <div class="controls">
+            <button id="v-play" class="v-btn" aria-label="재생">▶ 재생</button>
+            <button id="v-replay" class="v-btn" aria-label="다시 보기">↻ 다시 보기</button>
+            <span id="v-time" class="v-time">0:00 / 0:00</span>
+            <input id="v-seek" type="range" min="0" max="1000" value="0" step="1" aria-label="탐색" />
+            <button id="v-fs" class="v-btn" aria-label="영상 전체화면">전체화면</button>
+          </div>
+        </div>
+        <p class="source st" data-source="motion"></p>
+      </section>
+    </main>
+
+    <!-- 고정 틀: 하단바 + 진행 막대 -->
+    <footer class="bottombar">
+      <span class="count"><b id="cur">01</b> / <span id="total">03</span></span>
+      <span class="slide-title" id="slide-title"></span>
+      <span class="arrows"><button id="prev" aria-label="이전 장">←</button><button id="next" aria-label="다음 장">→</button></span>
+    </footer>
+    <div class="progress"><i id="progress"></i></div>
+
+    <div class="edit-bar" id="edit-bar" hidden>
+      <b>편집 모드</b><span>글자를 클릭해 고치고, 저장하면 content.json으로 내려받습니다.</span>
+      <button id="edit-save">content.json 저장</button><button id="edit-close">닫기 (E)</button>
+    </div>
+  </div>
+
+  <!-- content.json을 읽지 못할 때(파일을 더블클릭으로 연 경우) 쓰는 사본. node tools/sync-content.mjs 로 갱신 -->
+  <script src="js/content.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" defer></script>
+  <script src="js/charts.js" defer></script>
+  <script src="js/app.js" defer></script>
+</body>
+</html>

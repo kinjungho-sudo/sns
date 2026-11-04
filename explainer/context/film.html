@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>뻔한 답의 이유 — 설명 영상</title>
+  <style>
+    @font-face { font-family: "Pretendard"; font-weight: 400; font-display: block; src: url("../../fonts/Pretendard-Regular.woff2") format("woff2"); }
+    @font-face { font-family: "Pretendard"; font-weight: 500; font-display: block; src: url("../../fonts/Pretendard-Medium.woff2") format("woff2"); }
+    @font-face { font-family: "Pretendard"; font-weight: 600; font-display: block; src: url("../../fonts/Pretendard-SemiBold.woff2") format("woff2"); }
+    @font-face { font-family: "Pretendard"; font-weight: 700; font-display: block; src: url("../../fonts/Pretendard-Bold.woff2") format("woff2"); }
+    @font-face { font-family: "Pretendard"; font-weight: 800; font-display: block; src: url("../../fonts/Pretendard-ExtraBold.woff2") format("woff2"); }
+    html, body { margin: 0; height: 100%; background: #e9e5dc; font-family: Pretendard, sans-serif; }
+    body { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; }
+    #film { max-width: 96vw; max-height: calc(100vh - 70px); box-shadow: 0 20px 60px rgba(0,0,0,.18); }
+    #bar { display: flex; gap: 12px; align-items: center; width: min(96vw, 720px); font-size: 14px; color: #5e5a52; }
+    #bar input { flex: 1; accent-color: #0b6b62; }
+    #bar button { font: inherit; padding: 6px 14px; border-radius: 8px; border: 1px solid #c9c2b4; background: #fffdf8; cursor: pointer; }
+    body[data-export] { display: block; background: none; }
+    body[data-export] #film { max-width: none; max-height: none; box-shadow: none; }
+    body[data-export] #bar { display: none; }
+  </style>
+</head>
+<body>
+  <canvas id="film"></canvas>
+  <div id="bar"><button id="play">▶ 재생 (소리)</button><input id="scrub" type="range" min="0" max="60" step="0.01" value="0" /><b id="time">0.00</b></div>
+  <script>if (new URLSearchParams(location.search).has("export")) document.body.dataset.export = "1";</script>
+  <script src="film.js"></script>
+  <script>
+    // Preview only: plays the same audio the export renders, locked to the same clock.
+    (() => {
+      if (document.body.dataset.export) return;
+      let t = 0, playing = false, ac, src, startAt = 0;
+      const scrub = document.getElementById("scrub"), timeEl = document.getElementById("time"), btn = document.getElementById("play");
+      const draw = () => { seek(t); scrub.value = t; timeEl.textContent = t.toFixed(2); };
+      const stop = () => { playing = false; if (src) { src.stop(); src = null; } btn.textContent = "▶ 재생 (소리)"; };
+      btn.onclick = async () => {
+        if (playing) return stop();
+        btn.textContent = "…"; if (!window.__audioBuffer) await renderAudio();
+        ac = ac || new AudioContext(); src = ac.createBufferSource(); src.buffer = window.__audioBuffer; src.connect(ac.destination);
+        src.start(0, t); startAt = ac.currentTime - t; playing = true; btn.textContent = "❚❚ 정지";
+        const loop = () => { if (!playing) return; t = ac.currentTime - startAt; if (t >= FILM.DURATION) { t = FILM.DURATION; stop(); } draw(); requestAnimationFrame(loop); };
+        loop();
+      };
+      scrub.oninput = () => { stop(); t = +scrub.value; draw(); };
+      addEventListener("film-ready", draw);
+    })();
+  </script>
+</body>
+</html>

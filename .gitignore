@@ -1,1 +1,9 @@
-node_modules/
+node_modules
+out/reel/reel.mp4
+out/reel-*/reel.mp4
+explainer/*/out/*.mp4
+explainer/*/out/*.wav
+explainer/*/out/*.json
+explainer/*/out/motion/
+explainer/*/out/vo/
+dist/

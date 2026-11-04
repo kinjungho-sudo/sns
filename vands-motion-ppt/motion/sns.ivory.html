@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <title>sns · 시연 영상 소스</title>
+  <!-- 3부 SNS 콘텐츠 자동화 시연 (17초). 인스타그램 게시물 → 피드 → 블로그 글. 가상 예시: 실제 계정·게시가 아니다.
+       사진은 고객 전달 시안의 병원 내부 사진. 효과·후기·최상급 표현은 쓰지 않는다. -->
+  <link rel="stylesheet" href="base.ivory.css" />
+  <style>
+    /* 왼쪽: 흐름 */
+    .flow { position: absolute; left: 80px; top: 160px; width: 440px; }
+    .src { padding: 26px 28px; }
+    .src h4 { font-size: 22px; letter-spacing: .2em; color: var(--accent-ink); }
+    .src p { margin-top: 14px; font-size: 25px; line-height: 1.35; display: flex; gap: 12px; }
+    .src p b { color: var(--muted); font-weight: 400; min-width: 92px; }
+    .steps { margin-top: 26px; display: flex; flex-direction: column; gap: 14px; }
+    .st { position: relative; display: flex; align-items: center; gap: 18px; padding: 18px 22px; border-radius: 16px; background:#f2eee7; border:2px solid #e9e0d2; font-size: 27px; font-weight: 700; color:#82612f; }
+    .st i { width: 40px; height: 40px; border-radius: 50%; border:2px solid #be9860; display: grid; place-items: center; font-style: normal; font-size: 22px; }
+    .st .on { position: absolute; inset: -2px; border-radius: 16px; border: 2px solid var(--accent); background:#c9aa7b1f; opacity: 0; }
+    /* 가운데 무대 */
+    .stage { position: absolute; left: 580px; top: 128px; width: 1260px; height: 800px; }
+    .win { position: absolute; inset: 0; border-radius: 18px; overflow: hidden; box-shadow: 0 30px 80px #000a; }
+    /* 인스타그램 게시물 */
+    .ig { display: flex; background:#f5f1ec; }
+    .ig .img { position: relative; width: 640px; height: 800px; overflow: hidden; flex-shrink: 0; }
+    .ig .side { flex: 1; color:#322c23; padding: 26px 30px; font-size: 23px; line-height: 1.5; }
+    .prof { display: flex; align-items: center; gap: 16px; padding-bottom: 20px; border-bottom:1px solid #f0eae1; }
+    .av { width: 56px; height: 56px; border-radius: 50%; background:#e8e6e3; color:#3a3328; display: grid; place-items: center; font-family: Georgia, serif; font-size: 24px; font-weight: 700; flex-shrink: 0; }
+    .prof b { font-size: 23px; } .prof small { display: block; font-size: 18px; color:#896631; }
+    .prof .fl { color:#72644f; font-weight: 700; margin-left: 6px; }
+    .cap { display: flex; gap: 16px; margin-top: 22px; }
+    .cap .t { min-height: 150px; white-space: pre-line; }
+    .tags { color:#685b48; margin-top: 6px; }
+    .cmt { margin-top: 22px; display: flex; gap: 16px; color:#4e4436; font-size: 20px; }
+    .bar { position: absolute; left: 670px; right: 30px; bottom: 26px; display: flex; gap: 26px; font-size: 34px; color:#322c23; }
+    .bar .sv { margin-left: auto; }
+    .likes { position: absolute; left: 670px; bottom: 84px; font-size: 20px; color:#483f32; }
+    .ai { display: inline-block; font-size: 16px; padding: 2px 10px; border-radius: 10px; background:#f0ebe3; color:#53493a; margin-left: 8px; vertical-align: middle; }
+    /* 게시물 이미지 위 글씨 (참고: 피부과 매거진형 게시물) */
+    .ph { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .shade { position: absolute; inset: 0; background: linear-gradient(180deg, #0000 40%, #0007 100%); }
+    .ov { position: absolute; left: 48px; right: 40px; bottom: 60px; color:#242019; }
+    .ov .k { font-size: 30px; font-weight: 700; }
+    .ov .lab { display: inline-block; margin-top: 16px; padding: 10px 22px; background:#f0ebe4; font-size: 40px; font-weight: 800; }
+    .ov .en { margin-top: 26px; font-size: 22px; line-height: 1.35; opacity: .92; }
+    .mag .ov .k { font-size: 24px; letter-spacing: .2em; }
+    .mag .ov .h { margin-top: 18px; font-size: 54px; font-weight: 700; line-height: 1.3; }
+    .typo { position: absolute; inset: 0; background:linear-gradient(160deg, #e8e5e1, #cbac7e); color:#362f25; padding: 70px 56px; }
+    .typo .k { font-size: 24px; letter-spacing: .2em; font-weight: 700; color:#74562a; }
+    .typo .h { margin-top: 26px; font-size: 64px; font-weight: 800; line-height: 1.25; }
+    .typo .s { position: absolute; left: 56px; bottom: 64px; font-size: 24px; color:#4b4234; }
+    .dark { position: absolute; inset: 0; background:#f2eee7; color:#3f372c; padding: 70px 56px; }
+    .dark .h { font-size: 58px; font-weight: 800; line-height: 1.3; }
+    .dark .s { margin-top: 26px; font-size: 26px; line-height: 1.5; color:#625644; }
+    /* 피드 */
+    .feed { background:#f7f4f0; padding: 34px 60px; color:#322c23; }
+    .feed .ph2 { display: flex; align-items: center; gap: 30px; padding-bottom: 26px; border-bottom:1px solid #f0eae1; }
+    .feed .ph2 .av { width: 110px; height: 110px; font-size: 44px; }
+    .feed .ph2 b { font-size: 34px; } .feed .ph2 p { font-size: 22px; color:#6c5f4b; margin-top: 6px; }
+    .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 22px; }
+    .tile { position: relative; height: 282px; overflow: hidden; border-radius: 4px; }
+    .tile .ov { left: 20px; right: 16px; bottom: 20px; } .tile .ov .k { font-size: 15px; } .tile .ov .lab { font-size: 19px; padding: 5px 10px; margin-top: 8px; }
+    .tile .ov .h { font-size: 24px; margin-top: 8px; } .tile .typo, .tile .dark { padding: 26px 20px; } .tile .typo .h, .tile .dark .h { font-size: 27px; margin-top: 10px; }
+    .tile .typo .k { font-size: 13px; } .tile .typo .s, .tile .dark .s { font-size: 14px; } .tile .typo .s { left: 20px; bottom: 20px; }
+    /* 블로그 */
+    .blog { background:#ffffff; color:#28231c; }
+    .blog .top { height: 70px; display: flex; align-items: center; gap: 18px; padding: 0 30px; background:#f6f6f6; border-bottom:1px solid #e3e3e3; font-size: 22px; color:#4b4234; }
+    .blog .top b { color:#4b4234; font-size: 26px; }
+    .blog .pub { margin-left: auto; padding: 10px 24px; border-radius: 8px; background:#e7ddce; color:#242019; font-weight: 800; }
+    .blog .body { padding: 40px 130px; }
+    .blog .cat { font-size: 20px; color:#4b4234; font-weight: 700; }
+    .blog h2 { margin-top: 12px; font-size: 44px; font-weight: 800; line-height: 1.3; min-height: 60px; }
+    .blog .meta { margin-top: 10px; font-size: 18px; color:#83622f; }
+    .blog .cover { margin-top: 22px; height: 230px; border-radius: 10px; overflow: hidden; position: relative; }
+    .blog h5 { margin-top: 24px; font-size: 27px; font-weight: 800; }
+    .blog p { margin-top: 10px; font-size: 22px; line-height: 1.6; color:#4b4234; min-height: 36px; }
+    .blog .tg { margin-top: 18px; display: flex; gap: 12px; font-size: 19px; color:#4b4234; }
+    .done { position: absolute; right: 40px; top: 90px; padding: 14px 26px; border-radius: 12px; background:#f2f0ed; color:#4b4234; font-size: 24px; font-weight: 800; border:2px solid #c9aa7b; }
+    .stamp { position: absolute; padding: 12px 24px; border-radius: 30px; font-size: 24px; font-weight: 800; background:#f6f5f3; color:#373026; box-shadow: 0 10px 30px #0008; }
+  </style>
+</head>
+<body>
+  <div id="frame">
+    <div class="badge"><span>참고 예시</span><span>SNS 콘텐츠 자동화</span></div>
+
+    <div class="flow">
+      <div class="card src" id="src"><h4>확인된 병원 정보</h4>
+        <p><b>시술</b>레이저 리프팅 · 필러</p><p><b>진료</b>평일 20시까지 · 토·일</p><p><b>위치</b>서면역 7번 출구</p></div>
+      <div class="steps">
+        <div class="st" id="s1"><b class="on"></b><i>1</i>AI 초안 · 사진 + 글</div>
+        <div class="st" id="s2"><b class="on"></b><i>2</i>의료광고 기준 점검</div>
+        <div class="st" id="s3"><b class="on"></b><i>3</i>담당자 승인</div>
+        <div class="st" id="s4"><b class="on"></b><i>4</i>인스타 · 블로그 예약 게시</div>
+      </div>
+    </div>
+
+    <div class="stage">
+      <!-- A. 인스타그램 게시물 -->
+      <div class="win ig" id="ig">
+        <div class="img" id="igimg">
+          <img class="ph" id="igph" src="../assets/sns/room3.jpg" alt="" />
+          <div class="shade"></div>
+          <div class="ov"><p class="k" id="o1">#의료진 직접 상담</p><p class="lab" id="o2">레이저 리프팅, 깊이부터 설계</p>
+            <p class="en" id="o3">Laser lifting, planned layer by layer<br>for your skin thickness and contour.</p></div>
+        </div>
+        <div class="side">
+          <div class="prof"><div class="av">VS</div><div><b>vands_busan</b><span class="fl">· 팔로우</span><small>AI 콘텐츠 · 밴스의원 부산점</small></div></div>
+          <div class="cap"><div class="av" style="width:44px;height:44px;font-size:18px">VS</div>
+            <div><div class="t" id="capt"></div><div class="tags" id="tags">#서면역 #부산리프팅 #레이저리프팅 #밴스의원</div></div></div>
+          <div class="cmt" id="cmt"><div class="av" style="width:44px;height:44px;font-size:18px">VS</div>
+            <div>효과와 만족도는 개인차가 있으며, 시술 후 붓기·홍조 같은 일시적 반응이 나타날 수 있습니다.</div></div>
+        </div>
+        <p class="likes">게시 예약 · 내일 오전 10:00</p>
+        <div class="bar"><span>♡</span><span>◯</span><span>↻</span><span>➤</span><span class="sv">⌑</span></div>
+      </div>
+
+      <!-- B. 피드 -->
+      <div class="win feed" id="feed">
+        <div class="ph2"><div class="av">VS</div><div><b>vands_busan</b><p>밴스의원 부산점 · 서면역 7번 출구 · 평일 20시까지</p></div></div>
+        <div class="grid" id="grid">
+          <div class="tile"><img class="ph" src="../assets/sns/room3.jpg" alt="" /><div class="shade"></div><div class="ov"><p class="k">#의료진 직접 상담</p><p class="lab">레이저 리프팅, 깊이부터 설계</p></div></div>
+          <div class="tile mag"><img class="ph" src="../assets/sns/room2.jpg" alt="" /><div class="shade"></div><div class="ov"><p class="k">VANDS MAGAZINE</p><p class="h">얼굴에<br>볼륨감이 필요할 때.</p></div></div>
+          <div class="tile"><div class="typo"><p class="k">Q &amp; A</p><p class="h">보톡스와<br>윤곽주사,<br>무엇이 다를까?</p><p class="s">밴스의원 부산점</p></div></div>
+          <div class="tile"><img class="ph" src="../assets/sns/room1.jpg" alt="" /><div class="shade"></div><div class="ov"><p class="k">VISIT</p><p class="h">서면역 7번 출구<br>평일 20시까지</p></div></div>
+          <div class="tile"><div class="dark"><p class="h">리프팅 후<br>세안은<br>언제부터?</p><p class="s">시술 후 관리 안내</p></div></div>
+          <div class="tile mag"><img class="ph" src="../assets/sns/room2.jpg" alt="" style="transform:scaleX(-1)" /><div class="shade"></div><div class="ov"><p class="k">SEASON CARE</p><p class="h">환절기,<br>보습부터.</p></div></div>
+          <div class="tile"><div class="typo" style="background:linear-gradient(160deg,#eae9e7,#d1ceca)"><p class="k">GUIDE</p><p class="h">처음 오시는<br>분께</p><p class="s">상담 · 예약 순서</p></div></div>
+          <div class="tile"><img class="ph" src="../assets/sns/room1.jpg" alt="" style="transform:scaleX(-1)" /><div class="shade"></div><div class="ov"><p class="k">WEEKEND</p><p class="h">토·일에도<br>진료합니다</p></div></div>
+        </div>
+      </div>
+
+      <!-- C. 블로그 -->
+      <div class="win blog" id="blog">
+        <div class="top"><b>blog</b>밴스의원 부산점 · 글쓰기<span class="pub" id="pub">예약 발행</span></div>
+        <div class="body">
+          <p class="cat">시술 이야기</p>
+          <h2 id="bt"></h2>
+          <p class="meta">밴스의원 부산점 · AI 초안 → 담당자 검수</p>
+          <div class="cover"><img class="ph" src="../assets/sns/room3.jpg" alt="" style="object-position:center 60%" /></div>
+          <h5 id="bh">1. 피부 두께와 처짐 정도부터</h5>
+          <p id="bp"></p>
+          <div class="tg" id="btg"><span>#서면역</span><span>#부산리프팅</span><span>#레이저리프팅</span></div>
+        </div>
+        <div class="done" id="done">✓ 발행 예약됨 · 내일 10:00</div>
+      </div>
+
+      <span class="stamp" id="chk" style="left:-40px;top:40px">✓ 의료광고 기준 점검</span>
+      <span class="stamp" id="apv" style="left:-40px;top:110px">✓ 담당자 승인</span>
+    </div>
+
+    <p class="caption" id="cap">확인된 정보로 인스타그램·블로그 글을 만들고, 점검·승인된 것만 예약 게시합니다<small>가상 시연 · 실제 계정·게시가 아닙니다</small></p>
+  </div>
+  <script src="vendor/gsap.min.js"></script>
+  <script src="motion-kit.js"></script>
+  <script>
+  (async () => {
+    const $ = (s) => document.querySelector(s);
+    await motionKit.ready();
+    const tl = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } });
+    const step = (id, at) => tl.to(`${id} .on`, { opacity: 1, duration: .3 }, at).to(id, { color: "#fcfbf9", duration: .3 }, at)
+      .to(`${id} i`, { backgroundColor: "#c9aa7b", borderColor: "#c9aa7b", color: "#f3efe9", duration: .3 }, at);
+    gsap.set(["#feed", "#blog"], { autoAlpha: 0 });
+    tl.from("#src", { x: -50, autoAlpha: 0, duration: .5 }, 0)
+      .from(".st", { x: -30, autoAlpha: 0, duration: .35, stagger: .1 }, .2)
+      .from("#cap", { autoAlpha: 0, duration: .5 }, .3);
+    // A. 게시물: 사진이 크게 들어와 칸에 앉고, 글씨가 얹힌 뒤 캡션이 써진다
+    step("#s1", .6);
+    tl.from("#ig", { scale: .7, autoAlpha: 0, duration: .7, ease: "back.out(1.3)" }, .6)
+      .fromTo("#igph", { scale: 1.35 }, { scale: 1, duration: 2.4, ease: "power2.out" }, .6)
+      .from("#o1", { y: 20, autoAlpha: 0, duration: .4 }, 1.3)
+      .from("#o2", { clipPath: "inset(0 100% 0 0)", duration: .6, ease: "power2.inOut" }, 1.5)
+      .from("#o3", { y: 16, autoAlpha: 0, duration: .4 }, 2.0);
+    motionKit.typeText(tl, $("#capt"), "레이저 리프팅, 어떤 에너지를 어디에?\n피부 두께와 처짐 정도를 보고\n부위별로 따로 설계합니다.", 1.8, 1.8);
+    tl.from("#tags span, #tags", { autoAlpha: 0, y: 10, duration: .3 }, 3.6)
+      .from("#cmt", { autoAlpha: 0, y: 14, duration: .35 }, 3.9);
+    step("#s2", 4.3); tl.from("#chk", { scale: .5, autoAlpha: 0, duration: .4, ease: "back.out(2)" }, 4.3);
+    step("#s3", 5.0); tl.from("#apv", { scale: .5, autoAlpha: 0, duration: .4, ease: "back.out(2)" }, 5.0);
+    step("#s4", 5.8);
+    // B. 피드로 줄어들며 들어가고, 다른 게시물들이 채워진다
+    tl.to(["#chk", "#apv"], { autoAlpha: 0, duration: .3 }, 6.2)
+      .to("#ig", { scale: .24, x: -470, y: -150, autoAlpha: 0, duration: .7, ease: "power2.in" }, 6.4)
+      .to("#feed", { autoAlpha: 1, duration: .4 }, 6.6)
+      .from(".tile", { scale: .6, autoAlpha: 0, duration: .4, stagger: .12, ease: "back.out(1.6)" }, 6.8);
+    // C. 블로그 글이 올라와 써지고, 예약 발행
+    tl.to("#feed", { scale: .92, autoAlpha: 0, duration: .5 }, 9.9)
+      .fromTo("#blog", { y: 120, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .6 }, 9.9);
+    motionKit.typeText(tl, $("#bt"), "레이저 리프팅, 받기 전에 알아두면 좋은 3가지", 10.4, 1.6);
+    tl.from(".blog .cover", { autoAlpha: 0, scale: .95, duration: .5 }, 11.6).from("#bh", { autoAlpha: 0, x: -20, duration: .4 }, 12.1);
+    motionKit.typeText(tl, $("#bp"), "같은 리프팅이라도 피부 상태에 따라 에너지와 깊이가 달라집니다. 상담에서 먼저 확인하는 것들을 정리했습니다.", 12.3, 1.8);
+    tl.from("#btg span", { autoAlpha: 0, y: 10, duration: .3, stagger: .12 }, 14.0)
+      .to("#pub", { scale: .9, duration: .12, yoyo: true, repeat: 1 }, 14.6)
+      .from("#done", { autoAlpha: 0, y: -16, duration: .45, ease: "back.out(2)" }, 14.9);
+    motionKit.start(tl, 17);
+  })();
+  </script>
+</body>
+</html>
