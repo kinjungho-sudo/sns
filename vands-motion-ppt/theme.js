@@ -13,6 +13,11 @@
   addEventListener("DOMContentLoaded", () => {
     const sel = document.getElementById("theme-select"); if (!sel) return;
     sel.innerHTML = Object.entries(THEMES).map(([k, v]) => `<option value="${k}"${k === theme ? " selected" : ""}>${v}</option>`).join("");
-    sel.onchange = () => { const u = new URL(location.href); u.searchParams.set("theme", sel.value); location.href = u.toString(); };
+    // 고른 테마를 저장하고 다시 불러온다 (주소의 ?theme= 은 지운다: 공유 화면 등 질의 문자열을 못 쓰는 곳에서도 동작)
+    sel.onchange = () => {
+      try { localStorage.setItem("vands-theme", sel.value); } catch {}
+      if (new URLSearchParams(location.search).has("theme")) { const u = new URL(location.href); u.searchParams.set("theme", sel.value); location.href = u.toString(); }
+      else location.reload();
+    };
   });
 })();
