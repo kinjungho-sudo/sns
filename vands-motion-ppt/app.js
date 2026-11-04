@@ -49,7 +49,7 @@ const DEFAULT_STOPS=[0,2.8,5.7,8];
 const dur=()=>scenes[sceneIndex].duration||8, stops=()=>scenes[sceneIndex].stops||DEFAULT_STOPS;
 const clamp=x=>Math.min(1,Math.max(0,x)), easeOut=x=>1-Math.pow(1-x,3), easeInOut=x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2, easeOutBack=x=>{const c=1.45;return 1+(c+1)*Math.pow(x-1,3)+c*Math.pow(x-1,2)};
 const video=()=>scenes[sceneIndex].video?document.querySelector('#scene video, .player.big video'):null;   // 영상 장면(3부 시연)
-function resize(){const scale=Math.min(innerWidth/1600,(innerHeight-30)/900);$('#shell').style.transform=`scale(${scale})`;$('#shell').style.left=(innerWidth-1600*scale)/2+'px';$('#shell').style.top=Math.max(0,(innerHeight-30-900*scale)/2)+'px'}
+function resize(){const scale=Math.min(innerWidth/1600,(innerHeight-34)/900);$('#shell').style.transform=`scale(${scale})`;$('#shell').style.left=(innerWidth-1600*scale)/2+'px';$('#shell').style.top=Math.max(0,(innerHeight-34-900*scale)/2)+'px'}
 function syncVo(){const va=$('#voa'),f=(window.VO_FILES||{})[scenes[sceneIndex].key];if(!f){va.pause();va.removeAttribute('src');return}   // 장면 내레이션(있으면)
  if(!va.src.endsWith(f)){va.src=f}if(Math.abs(va.currentTime-time)>.4)va.currentTime=Math.min(time,va.duration||time);if(playing&&audioOn&&!muted)va.play().catch(()=>{});else va.pause()}
 function syncVideo(){syncVo();const v=video();if(!v)return;if(Math.abs(v.currentTime-time)>.25)v.currentTime=Math.min(time,dur());if(playing&&!reduced.matches)v.play().catch(()=>{});else v.pause()}
