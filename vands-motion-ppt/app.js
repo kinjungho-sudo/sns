@@ -37,6 +37,9 @@ const chars=(t,d0,cls='')=>`<span class="cv-line ${cls}">${[...t].map((c,i)=>c==
    html:`<div class="cover-card"><p class="cv-kicker">${k}</p>${chars(a,.15)}${chars(b,.15+a.length*.045+.15,'gold')}</div>`});
   all.filter(s=>s.part===p&&KEEP[p](s)).forEach((s,i)=>{s.key=`${p}-${i+1}`;scenes.push(s)});}}
 scenes.forEach(s=>s.vo=VO[s.key]||'');
+// 내레이션이 끝나기 전에 장면이 넘어가지 않도록, 음성 길이(초)+여유만큼 장면 길이를 늘린다
+const VO_LEN={'1-0':4.6,'1-1':8,'1-2':6.3,'1-3':10.5,'1-4':7.1,'2-0':5.4,'2-1':9.8,'2-2':6.1,'2-3':6.7,'3-0':4,'3-1':9.1,'3-2':4.8,'3-3':4.5};
+scenes.forEach(s=>{const need=(VO_LEN[s.key]||0)+1.2,d=s.duration||8;if(need>d){const st=(s.stops||[0,2.8,5.7,8]).slice();st[st.length-1]=need;s.stops=st;s.duration=need}});
 
 const chapterStarts=[0,1,2,3].map(p=>scenes.findIndex(s=>s.part===p)),chapterCounts=[0,1,2,3].map(p=>scenes.filter(s=>s.part===p).length),partName=['','1부','2부','3부'];   // 인덱스 = 부 번호
 let sceneIndex=0,time=0,playing=false,last=0;const $=s=>document.querySelector(s);const reduced=matchMedia('(prefers-reduced-motion: reduce)');
@@ -138,7 +141,7 @@ addEventListener('keydown',e=>{if(e.target.matches('input,textarea,select')||e.a
  else if(k.toLowerCase()==='f')fullscreen();
  if(k==='Escape'){$('#keys').classList.remove('show');document.querySelectorAll('#scene .zoomable').forEach(z=>{if(z._zoom>.5)toggleZoom(z)})}});
 /* 소리: 배경음악은 첫 키 입력·클릭 뒤 재생(브라우저 규칙), 내레이션 자막 중엔 작게 */
-const bgm=$('#bgm');let muted=false,audioOn=false;function startAudio(){if(audioOn)return;audioOn=true;bgm.volume=.22;bgm.play().catch(()=>{audioOn=false})}
+const bgm=$('#bgm');let muted=false,audioOn=false;function startAudio(){if(audioOn)return;audioOn=true;bgm.volume=.22;bgm.play().catch(()=>{})}   // 배경음악이 실패해도 내레이션은 계속
 addEventListener('click',startAudio);
 addEventListener('hashchange',()=>{const n=(parseInt(location.hash.slice(1))||1)-1;if(n!==sceneIndex){playing=false;show(n)}});addEventListener('resize',()=>{resize();measureZooms();draw()});reduced.addEventListener('change',draw);let touchX;$('#scene').addEventListener('touchstart',e=>touchX=e.changedTouches[0].clientX,{passive:true});$('#scene').addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-touchX;if(Math.abs(dx)>60)goPart(partOf()+(dx<0?1:-1))},{passive:true});document.addEventListener('visibilitychange',()=>{if(document.hidden){playing=false;syncVideo();draw()}});
 resize();document.fonts.ready.then(()=>{show((parseInt(location.hash.slice(1))||1)-1,reduced.matches?8:0);document.body.dataset.ready='1'});requestAnimationFrame(frame);

@@ -100,7 +100,7 @@ for (const [w, h] of [[1920, 1080], [1366, 768]]) {
   const T = () => page.evaluate(() => +document.querySelector("#seek").value), H = () => page.evaluate(() => location.hash);
   const ui = await page.evaluate(() => ["footer", "#rail", "#theme-select"].map((q) => { const e = document.querySelector(q); return e ? getComputedStyle(e).display : "없음"; }));
   log(ui[0] === "none" && ui[1] === "none" && ui[2] === "없음", "하단 조작 막대·좌측 번호 숨김, 테마 선택 없음", ui.join(" / "));
-  await page.keyboard.press("Space"); await wait(5600); const auto = await H();   // 표지(4.6초) 뒤 다음 장면으로 자동 진행
+  await page.keyboard.press("Space"); await wait(6600); const auto = await H();   // 표지(내레이션 길이에 맞춰 약 5.8초) 뒤 다음 장면으로 자동 진행
   await page.keyboard.press("Space");
   log(auto === "#2", "Space 재생: 부 안에서 다음 장면으로 자동 진행", auto);
   await page.keyboard.press("."); const dot = await H();

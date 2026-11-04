@@ -1,3 +1,2 @@
-/* 장면별 내레이션 음성 파일. 타입캐스트에서 받은 파일을 이 폴더에 넣고 아래에 적으면 그 장면에서 재생된다.
-   예: "1-0": "assets/audio/narration/1-0.mp3"  (키 = 부-순서, narration-script.txt 참고) */
-window.VO_FILES = {};
+// 장면별 내레이션 음성 (키 = 부-순서). 파일이 있으면 장면이 시작될 때 자동 재생된다.
+window.VO_FILES = Object.fromEntries(["1-0","1-1","1-2","1-3","1-4","2-0","2-1","2-2","2-3","3-0","3-1","3-2","3-3"].map(k => [k, `assets/audio/narration/${k}.mp3`]));
