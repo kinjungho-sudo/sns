@@ -18,7 +18,7 @@ scenes.forEach(s=>s.part=1);
 scenes.push(...getNextScenes(), ...getRoadmapScenes());
 
 /* ───────── 간추림: 부마다 핵심 장면만, 부를 여는 큰 글씨 장면 하나 ─────────
-   한 부 = 영상 한 편처럼 이어서 재생된다 (부 끝에서 멈춤). 수치·문구는 기존 장면 그대로. */
+   1부부터 3부까지 영상처럼 이어서 재생된다 (마지막 장면에서 멈추고 배경음악도 꺼짐). 수치·문구는 기존 장면 그대로. */
 const KEEP={1:s=>['홈페이지','Dr.GEO 진단','진단 결과','확인된 과제'].includes(s.title),
  2:s=>/^(GEO 관점으로 준비한|시술 안내|확인 후 홈페이지 납품)/.test(s.sub),
  3:s=>/^(SNS 콘텐츠|원장님 세컨드 브레인|동시 통역|보이스 차트)/.test(s.sub)};
@@ -28,10 +28,10 @@ const VO={'1-0':'밴스의원 부산점 홈페이지를, AI는 어떻게 읽고 
  '1-4':'확인된 과제는 네 가지입니다. 항목별로 고치고, 같은 질문으로 다시 측정합니다.',
  '2-0':'그래서 GEO 관점으로, 새 홈페이지 시안을 준비했습니다.','2-1':'신규 시안의 AI 검색 준비도는 83점, 양호 단계입니다. 조건이 달라 이전과 직접 비교하지는 않습니다.',
  '2-2':'시술 안내와 진료시간, 위치를 AI가 읽을 수 있는 화면으로 만들었습니다.','2-3':'진단과 시안 전달은 마쳤고, 요구사항을 반영해 고객 확인 후 납품합니다.',
- '3-0':'다음 단계로 함께 검토할 수 있는 네 가지 선택지입니다.','3-1':'SNS 자동화입니다. 확인된 병원 정보로 인스타그램 게시물과 블로그 글을 만들고, 의료광고 기준 점검과 담당자 승인을 거쳐 예약 게시합니다.',
+ '3-0':'끝으로, 참고용으로 저희가 만들 수 있는 것들을 간단히 보여드립니다. 이번 제안 범위는 아닙니다.','3-1':'SNS 자동화입니다. 확인된 병원 정보로 인스타그램 게시물과 블로그 글을 만들고, 의료광고 기준 점검과 담당자 승인을 거쳐 예약 게시합니다.',
  '3-2':'원장님의 세컨드 브레인입니다. 원장님의 노트와 강의, 상담 기준을 기억해서, 직원이 물으면 원장님 방식으로 출처와 함께 답합니다.',
  '3-3':'동시 통역입니다. 외국인 환자와 원장님의 대화를, 양쪽 언어 자막으로 실시간 통역합니다.','3-4':'보이스 차트입니다. 진료 대화를 말하면 차트 초안으로 정리되고, 의사가 확인해 저장합니다.'};
-const COVER={1:['AI는 이 홈페이지를','어떻게 읽을까?','1부 · 진단'],2:['GEO 관점으로','다시 만든 홈페이지','2부 · 이번 제공 범위'],3:['다음 단계,','함께 검토할 선택지','3부 · 향후 로드맵']};
+const COVER={1:['AI는 이 홈페이지를','어떻게 읽을까?','1부 · 진단'],2:['GEO 관점으로','다시 만든 홈페이지','2부 · 이번 제공 범위'],3:['참고로 보여드리는','만들 수 있는 것들','3부 · 참고 예시 · 제안 범위 아님']};
 const chars=(t,d0,cls='')=>`<span class="cv-line ${cls}">${[...t].map((c,i)=>c===' '?' ':`<span class="ch" data-d="${(d0+i*.045).toFixed(3)}">${c}</span>`).join('')}</span>`;
 {const all=scenes.splice(0);for(const p of [1,2,3]){const [a,b,k]=COVER[p];
   scenes.push({part:p,cover:true,title:k,sub:'',duration:4.6,stops:[0,4.6],source:'',url:'#',key:`${p}-0`,
@@ -39,7 +39,7 @@ const chars=(t,d0,cls='')=>`<span class="cv-line ${cls}">${[...t].map((c,i)=>c==
   all.filter(s=>s.part===p&&KEEP[p](s)).forEach((s,i)=>{s.key=`${p}-${i+1}`;scenes.push(s)});}}
 scenes.forEach(s=>s.vo=VO[s.key]||'');
 // 내레이션이 끝나기 전에 장면이 넘어가지 않도록, 음성 길이(초)+여유만큼 장면 길이를 늘린다
-const VO_LEN={'1-0':4.6,'1-1':8,'1-2':6.3,'1-3':10.5,'1-4':7.1,'2-0':5.4,'2-1':9.8,'2-2':6.1,'2-3':6.7,'3-0':4.3,'3-1':12.8,'3-2':11.6,'3-3':9,'3-4':7.8};
+const VO_LEN={'1-0':4.6,'1-1':8,'1-2':6.3,'1-3':10.5,'1-4':7.1,'2-0':5.4,'2-1':9.8,'2-2':6.1,'2-3':6.7,'3-1':12.8,'3-2':11.6,'3-3':9,'3-4':7.8};
 scenes.forEach(s=>{const need=(VO_LEN[s.key]||0)+1.2,d=s.duration||8;if(need>d){const st=(s.stops||[0,2.8,5.7,8]).slice();st[st.length-1]=need;s.stops=st;s.duration=need}});
 
 const chapterStarts=[0,1,2,3].map(p=>scenes.findIndex(s=>s.part===p)),chapterCounts=[0,1,2,3].map(p=>scenes.filter(s=>s.part===p).length),partName=['','1부','2부','3부'];   // 인덱스 = 부 번호
@@ -103,7 +103,8 @@ function draw(){
  document.querySelectorAll('#scene .ch').forEach(c=>{const q=reduced.matches?1:clamp((time-+c.dataset.d)/.6),b=easeOutBack(q);c.style.opacity=Math.min(1,q*2);c.style.transform=`translateY(${(1-b)*105}%) rotate(${(1-q)*8}deg)`});
  document.body.classList.toggle('is-cover',!!scenes[sceneIndex].cover);
  const cap=$('#cap'),vo=scenes[sceneIndex].vo||'';if(cap.textContent!==vo)cap.textContent=vo;
- if(audioOn)bgm.volume+=((muted?0:!$('#voa').paused||document.body.classList.contains('caps')&&vo?.1:.22)-bgm.volume)*.1;   // 내레이션 중엔 배경음악을 낮춤
+ if(audioOn&&finished&&$('#voa').paused){bgm.volume=Math.max(0,bgm.volume-.004);if(bgm.volume<.01&&!bgm.paused)bgm.pause()}   // 마지막 내레이션이 끝나면 배경음악이 천천히 꺼짐
+ else if(audioOn)bgm.volume+=((muted?0:!$('#voa').paused||document.body.classList.contains('caps')&&vo?.1:.22)-bgm.volume)*.1;   // 내레이션 중엔 배경음악을 낮춤
  const s=scenes[sceneIndex],st=stops(),D=dur();
  $('#seek').value=time;$('#clock').textContent=time.toFixed(1)+' / '+D+'s';
  const stage=st.filter(x=>x<=time+1e-6).length;
@@ -112,10 +113,10 @@ function draw(){
  $('#progress').style.width=((sceneIndex+time/D)/scenes.length*100)+'%';$('#prev').disabled=sceneIndex===0&&time===0;$('#next').disabled=sceneIndex===scenes.length-1&&time>=D;
 }
 function step(dir){playing=false;const st=stops();if(dir>0){const next=st.find(s=>s>time+.05);if(next!==undefined)time=next;else if(sceneIndex<scenes.length-1)return show(sceneIndex+1,.7);}else{const prev=st.filter(s=>s<time-.05).pop();if(prev!==undefined)time=prev;else if(sceneIndex>0)return show(sceneIndex-1,8);}syncVideo();draw()}
-function toggle(){startAudio();if(!playing&&time>=dur()-.05){const nx=scenes[sceneIndex+1];if(nx){goPart(nx.part);return}show(0,0)}   // 부가 끝난 뒤 Space = 다음 부
+let finished=false;function toggle(){startAudio();if(finished&&!playing){finished=false;bgm.volume=.22;bgm.play().catch(()=>{})}if(!playing&&time>=dur()-.05){const nx=scenes[sceneIndex+1];if(nx){goPart(nx.part);return}show(0,0)}   // 부가 끝난 뒤 Space = 다음 부
  playing=!playing;last=performance.now();syncVideo();draw()}
-function advance(){const nx=scenes[sceneIndex+1];if(nx&&nx.part===scenes[sceneIndex].part)show(sceneIndex+1,0);else{time=dur();playing=false;draw()}}   // 부 안에서만 이어서 재생
-function goPart(p){p=Math.max(1,Math.min(3,p));playing=!reduced.matches;last=performance.now();show(chapterStarts[p],0)}
+function advance(){const nx=scenes[sceneIndex+1];if(nx)show(sceneIndex+1,0);else{time=dur();playing=false;finished=true;draw()}}   // 1부 → 2부 → 3부 끝까지 이어서 재생, 마지막에서 멈춤
+function goPart(p){p=Math.max(1,Math.min(3,p));if(finished){finished=false;if(audioOn&&!muted){bgm.volume=.22;bgm.play().catch(()=>{})}}playing=!reduced.matches;last=performance.now();show(chapterStarts[p],0)}
 function partOf(){return scenes[sceneIndex].part}
 function frame(now){if(playing){const v=video();
   if(v&&!v.paused&&v.readyState>=2)time=v.currentTime;   // 영상 장면은 영상 시간이 기준
@@ -126,7 +127,7 @@ function frame(now){if(playing){const v=video();
 $('#prev').onclick=()=>step(-1);$('#next').onclick=()=>step(1);$('#play').onclick=toggle;$('#restart').onclick=()=>{playing=false;time=scenes[sceneIndex].video?0:.7;syncVideo();draw()};$('#seek').oninput=e=>{playing=false;time=+e.target.value;syncVideo();draw()};$('#rail').onclick=e=>{const b=e.target.closest('button');if(b){playing=false;show(+b.dataset.scene)}};
 async function fullscreen(el=document.documentElement){try{if(document.fullscreenElement)await document.exitFullscreen();else await el.requestFullscreen()}catch{}}
 $('#chapters').onclick=e=>{const b=e.target.closest('[data-part]');if(b)goPart(+b.dataset.part)};
-addEventListener('keydown',e=>{if(e.target.matches('input,textarea,select')||e.altKey||e.ctrlKey||e.metaKey)return;if(e.target.matches('button,a')&&(e.code==='Space'||e.key==='Enter'))return;startAudio();
+addEventListener('keydown',e=>{if(e.target.matches('input,textarea,select')||e.altKey||e.ctrlKey||e.metaKey)return;if(!begun){begin();if(e.code==='Space'||e.key==='Enter'){e.preventDefault();return}}if(e.target.matches('button,a')&&(e.code==='Space'||e.key==='Enter'))return;startAudio();
  const k=e.key;if(['ArrowRight','ArrowLeft','PageDown','PageUp','Home','End',' '].includes(k))e.preventDefault();
  if(k==='ArrowRight'||k==='PageDown')goPart(partOf()+1);           // 다음 부(영상 한 편)
  else if(k==='ArrowLeft'||k==='PageUp')goPart(partOf()-1);
@@ -143,6 +144,9 @@ addEventListener('keydown',e=>{if(e.target.matches('input,textarea,select')||e.a
  if(k==='Escape'){$('#keys').classList.remove('show');document.querySelectorAll('#scene .zoomable').forEach(z=>{if(z._zoom>.5)toggleZoom(z)})}});
 /* 소리: 배경음악은 첫 키 입력·클릭 뒤 재생(브라우저 규칙), 내레이션 자막 중엔 작게 */
 const bgm=$('#bgm');let muted=false,audioOn=false;function startAudio(){if(audioOn)return;audioOn=true;bgm.volume=.22;bgm.play().catch(()=>{})}   // 배경음악이 실패해도 내레이션은 계속
-addEventListener('click',startAudio);
+// 처음 화면: '발표 시작' 버튼. 클릭·Space 한 번으로 소리와 재생을 함께 시작 (브라우저는 사용자 동작 전 소리 재생을 막음)
+let begun=new URLSearchParams(location.search).has('nostart');if(begun)$('#start').classList.add('gone');   // ?nostart: 시작 버튼 없이 (검사용)
+function begin(){if(begun)return;begun=true;$('#start').classList.add('gone');startAudio();if(!playing&&!scenes[sceneIndex].video)toggle()}
+addEventListener('click',e=>{if(!begun){begin();return}startAudio()});
 addEventListener('hashchange',()=>{const n=(parseInt(location.hash.slice(1))||1)-1;if(n!==sceneIndex){playing=false;show(n)}});addEventListener('resize',()=>{resize();measureZooms();draw()});reduced.addEventListener('change',draw);let touchX;$('#scene').addEventListener('touchstart',e=>touchX=e.changedTouches[0].clientX,{passive:true});$('#scene').addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-touchX;if(Math.abs(dx)>60)goPart(partOf()+(dx<0?1:-1))},{passive:true});document.addEventListener('visibilitychange',()=>{if(document.hidden){playing=false;syncVideo();draw()}});
 resize();document.fonts.ready.then(()=>{show((parseInt(location.hash.slice(1))||1)-1,reduced.matches?8:0);document.body.dataset.ready='1'});requestAnimationFrame(frame);

@@ -36,7 +36,7 @@ async function open(ctx, root, hash = 1) {
   const page = await ctx.newPage(), errors = [];
   page.on("console", (m) => m.type() === "error" && errors.push(m.text()));
   page.on("pageerror", (e) => errors.push("pageerror: " + e.message));
-  await page.goto(pathToFileURL(join(root, "index.html")).href + "#" + hash);
+  await page.goto(pathToFileURL(join(root, "index.html")).href + "?nostart#" + hash);   // 검사에선 첫 화면 '발표 시작' 버튼을 건너뜀
   await page.waitForFunction(() => document.body.dataset.ready);
   return { page, errors };
 }
@@ -56,7 +56,7 @@ const N = 13;   // 부마다 표지 1 + 1부 4 + 2부 3 + 3부 3
   log(Math.abs(deckT - st.v.t) < 1, "시연 영상: 장면 진행 막대가 영상 시간을 따라감", `막대 ${deckT.toFixed(2)}s`);
   await page.keyboard.press("."); await wait(300);
   const paused = await page.evaluate(() => [location.hash, document.querySelector("#title").textContent]);
-  log(paused[0] === "#12" && paused[1] === "향후 로드맵", ". 키: 시연 영상 장면 → 다음 장면", paused.join(" "));
+  log(paused[0] === "#12" && paused[1] === "참고 · 만들 수 있는 것들", ". 키: 시연 영상 장면 → 다음 장면", paused.join(" "));
   // 이미지 누락
   let broken = [];
   for (let n = 1; n <= N; n++) { await page.evaluate((n) => (location.hash = String(n)), n); await wait(150);
@@ -136,7 +136,7 @@ for (const [w, h] of [[1920, 1080], [1366, 768]]) {
     const ctx = await browser.newContext({ viewport: { width: 1600, height: 930 } });
     const page = await ctx.newPage(), errors = [];
     page.on("console", (m) => m.type() === "error" && errors.push(m.text())); page.on("pageerror", (e) => errors.push(e.message));
-    await page.goto(pathToFileURL(join(ROOT, "index.html")).href + `?theme=${th}#11`); await page.waitForFunction(() => document.body.dataset.ready);
+    await page.goto(pathToFileURL(join(ROOT, "index.html")).href + `?theme=${th}&nostart#11`); await page.waitForFunction(() => document.body.dataset.ready);
     const src = await page.evaluate(() => [document.querySelector("#theme-css").getAttribute("href"), document.querySelector("#scene video").getAttribute("src")]);
     const vidOk = existsSync(join(ROOT, src[1]));
     for (const n of [1, 4, 8, 11]) {

@@ -1,10 +1,10 @@
-// 3부 향후 로드맵: 시연 영상 4편 + 피부과 SNS 참고 1장. 모두 향후 도입 가상 예시 · 별도 협의 옵션.
+// 3부 참고 예시: 이런 것도 만들 수 있다는 참고용 시연 영상 4편 (+ 피부과 SNS 참고 1장, 간추린 발표에선 뺌). 솔루션 제안이 아니다.
 // 영상 소스는 motion/sns.html · brain.html · interpret.html · voice.html (node tools/render-video.mjs 로 다시 만듦)
 function getRoadmapScenes(){
- const badges='<div class="scene-badges"><span>향후 도입 가상 예시</span><span>별도 협의 옵션</span></div>';
+ const badges='<div class="scene-badges"><span>참고 예시</span><span>이번 제안 범위 아님</span></div>';
  const player=(name,label)=>`<div class="player demo-player"><video src="${vid(name)}" poster="${vid(name+'-poster','.jpg')}" muted playsinline preload="auto" aria-label="${label}"></video><button class="player-fs" aria-label="영상 전체 화면">⤢ 전체 화면</button></div>`;
  const side=(title,points,similar,simNote)=>`<div class="demo-side">${R(.6,`<h2>${title}</h2><ul class="demo-points">${points.map(p=>`<li>${p}</li>`).join('')}</ul>`)}${R(1.8,`<div class="similar"><span class="eyebrow">비슷한 일을 하는 제품</span><div class="prods">${similar.map(([n,d])=>`<div><b>${n}</b><span>${d}</span></div>`).join('')}</div>${simNote?`<p class="sim-note">${simNote}</p>`:''}</div>`)}</div>`;
- const demo=(sub,name,dur,label,sideHtml,source,url)=>({part:3,title:'향후 로드맵',sub,duration:dur,stops:[0,dur],video:true,source,url,
+ const demo=(sub,name,dur,label,sideHtml,source,url)=>({part:3,title:'참고 · 만들 수 있는 것들',sub,duration:dur,stops:[0,dur],video:true,source,url,
   html:badges+`<div class="demo body-offset">${R(0,player(name,label))}${sideHtml}</div>`});
  return [
   demo('SNS 콘텐츠 자동화 · 시연','sns',17,'SNS 콘텐츠 자동화 시연 영상',
