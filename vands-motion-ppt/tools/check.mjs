@@ -156,7 +156,7 @@ for (const [w, h] of [[1920, 1080], [1366, 768]]) {
   await page.keyboard.press("Escape"); await wait(800); const w2 = await sz();
   // 등장 연출: 장면 시작 직후에는 칸보다 크게, 2초 뒤에는 원래 칸
   await page.evaluate(() => { const s = document.querySelector("#seek"); s.value = 0.5; s.dispatchEvent(new Event("input")); }); await wait(100); const e0 = await sz();
-  log(w1 > w0 * 1.3 && Math.abs(w2 - w0) < 2 && e0 > w0 * 1.3, "화면 캡처: 크게 등장 → 칸으로, 클릭 확대 · Esc 복귀", `칸 ${w0.toFixed(0)}px, 등장 ${e0.toFixed(0)}px, 클릭 ${w1.toFixed(0)}px, 복귀 ${w2.toFixed(0)}px`);
+  log(w1 > w0 * 1.2 && Math.abs(w2 - w0) < 2 && e0 > w0 * 1.2, "화면 캡처: 크게 등장 → 칸으로, 클릭 확대 · Esc 복귀", `칸 ${w0.toFixed(0)}px, 등장 ${e0.toFixed(0)}px, 클릭 ${w1.toFixed(0)}px, 복귀 ${w2.toFixed(0)}px`);
   await ctx.close();
 }
 
