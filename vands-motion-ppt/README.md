@@ -73,3 +73,5 @@
 - **테마 파일과 영상**
   - 테마 CSS와 모션그래픽 사본은 `python3 tools/make-themes.py` 가 원본(`style.css`, `motion/*.html`)에서 자동으로 만듭니다. 색을 고칠 때는 원본을 고친 뒤 다시 실행합니다.
   - 테마별 영상: `node tools/render-video.mjs --theme ivory` → `assets/video/ivory/`
+
+- **기본 테마**: 2026-11-04에 블랙 · 샴페인 골드(`noir`)로 정했습니다. 다른 테마는 상단 "테마"에서 그대로 고를 수 있습니다.

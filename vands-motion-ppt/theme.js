@@ -1,9 +1,10 @@
-// 테마: 주소의 ?theme= → 지난번 선택 → 기본(violet). 테마마다 themes/<이름>.css와 assets/video/<이름>/ 영상을 쓴다.
+// 테마: 주소의 ?theme= → 지난번 선택 → 기본(noir, 블랙 · 샴페인 골드). 테마마다 themes/<이름>.css와 assets/video/<이름>/ 영상을 쓴다.
 (function () {
   const THEMES = { violet: "바이올렛 (원본)", noir: "블랙 · 샴페인 골드", ivory: "아이보리 · 골드", blush: "누드 · 로즈골드" };
   let saved = null; try { saved = localStorage.getItem("vands-theme"); } catch {}
   const q = new URLSearchParams(location.search).get("theme");
-  const theme = THEMES[q] ? q : THEMES[saved] ? saved : "violet";
+  const DEFAULT = "noir";   // 선택된 시안: 블랙 · 샴페인 골드
+  const theme = THEMES[q] ? q : THEMES[saved] ? saved : DEFAULT;
   try { localStorage.setItem("vands-theme", theme); } catch {}
   window.THEME = theme; window.THEMES = THEMES;
   document.documentElement.dataset.theme = theme;
