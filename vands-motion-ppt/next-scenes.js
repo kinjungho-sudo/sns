@@ -1,0 +1,18 @@
+// 2부 이번 제공 범위 6장. 3부 향후 로드맵은 roadmap-scenes.js
+function getNextScenes(){
+ const nextReport='sources/'+encodeURIComponent('밴스의원 AI 검색 진단_New 홈피_2026. 11. 3_.pdf');
+ const website='https://vands-eight.vercel.app/';
+ const draft='<div class="scene-badges"><span>현재 홈페이지 시안</span><span>최종 확정 전</span></div>';
+ const geo=(sub,html,source,url=website)=>({part:2,title:'이번 제공 범위',sub,html:draft+html,source,url});
+ const arrow=()=>'<span class="flow-arrow" aria-hidden="true">→</span>';
+ return [
+ geo('GEO 관점으로 준비한 홈페이지 · 신규 시안 진단',`<div class="grid two body-offset">${R(0,screen('new-homepage','vands-eight.vercel.app · 고객 전달 시안'))}<div class="stack">${metric(1.8,'홈페이지 AI 검색 준비도','83','/100','양호 단계','신규 시안 · 2026.11.03')}${R(4.1,'<div class="note compact">AI 추천·노출률과 다른 지표입니다.<br>기존 진단과 조건이 달라 전후 성과로 비교하지 않습니다.</div>')}</div></div>`,'신규 보고서 p.1 · 대상 vands-eight.vercel.app · 보고서 기반 재현',nextReport+'#page=1'),
+ geo('고객에게 전달한 실제 홈페이지 시안',`<div class="hero-demo body-offset">${R(0,screen('new-homepage-hero','vands-eight.vercel.app'),'hero-screen')}${R(1.8,'<div class="floating-label">고객 전달 시안</div>','hero-label')}${R(4.1,'<div class="note">최종 납품 전 고객 요구사항을 확인하고 협의한 내용을 반영합니다.</div>','hero-bottom')}</div>`,'실제 고객 전달 시안 화면 캡처 · 2026.11.03 · 최종 승인·납품 완료를 의미하지 않음'),
+ geo('시술 안내 · 진료시간 · 위치를 읽을 수 있는 화면으로',`<div class="grid equal body-offset short-body">${R(0,`<div class="detail-shot">${screen('new-treatments','vands-eight.vercel.app/treatments/')}<span>시술 안내</span></div>`)}${R(1.8,`<div class="detail-shot location-shot">${screen('new-location','vands-eight.vercel.app/#location')}<span>진료시간 · 위치</span></div>`)}</div>${R(4.1,'<div class="note">표시된 정보는 고객 확인 후 반영 · 실제 페이지 영역을 보여주는 시안입니다.</div>','bottom-note')}`,'현재 시안 실제 화면 캡처 · 2026.11.03 · 고객 정보 확인 후 확정'),
+ geo('진단 근거로 보완할 항목 확인',`<div class="grid equal body-offset"><div class="side">${R(0,'<div class="eyebrow">NEW REPORT · P.3</div><div class="quote">“진료과가 공식 분류 코드로 적혀 있지 않습니다.”<small>신규 보고서 · 홈페이지 문제점</small></div>')}${R(1.8,'<div class="flow-note">진단 근거 <span>→</span> 보완 예정 항목</div>')}</div>${R(4.1,'<div class="panel pending-card"><span class="state-label">반영 예정</span><h2>공식 진료과 코드<br>검토 · 수정</h2><img src="assets/new-location.png" alt="수정 대상 홈페이지의 위치 영역 예시"><p class="muted">홈페이지 썸네일은 수정 대상 설명입니다.<br>수정 완료 증거가 아닙니다.</p></div>')}</div>`,'신규 보고서 p.3 문제점·개선점 · 공식 진료과 코드 보완 예정',nextReport+'#page=3'),
+ geo('GEO 진단과 고객 요구사항을 함께 반영',`<div class="requirements body-offset"><div class="input-stack">${R(0,'<div class="input-card"><span>01</span><h3>GEO 진단 항목</h3><p>보고서로 확인한 보완점</p></div>')}${R(1.1,'<div class="input-card"><span>02</span><h3>고객 요구사항</h3><p>고객과 협의한 변경 내용</p></div>')}</div>${R(1.8,arrow(),'connector')}${R(1.8,screen('new-homepage','반영 대상 · 고객 전달 시안'),'requirements-screen')}${R(4.1,arrow(),'connector')}${R(4.1,'<div class="confirmation-card"><span class="state-label">협의 후 진행</span><h2>고객 확인</h2><p>수정 내용 검토<br>확정 범위 확인</p></div>')}</div>${R(4.1,'<div class="note">세부 수정 범위는 협의 후 확정합니다.</div>','bottom-note')}`,'GEO 진단 항목 + 고객 요구사항 → 협의한 내용 반영 → 고객 확인'),
+ geo('확인 후 홈페이지 납품 · 이번 제공 범위',`<div class="delivery body-offset">${[
+ ['GEO 진단','수행','기존·신규 보고서 확인'],['시안 전달','전달','고객 전달 홈페이지 시안'],['요구사항 반영','예정','협의한 수정 범위 반영'],['홈페이지 납품','고객 확인 후','검수·승인 뒤 전달']
+ ].map((s,i)=>R([0,1.1,1.8,4.1][i],`<div class="delivery-card ${i<2?'done':'pending'}"><span class="step-no">0${i+1}</span><h2>${s[0]}</h2><span class="state-label">${s[1]}</span><p>${s[2]}</p></div>`)).join('')}</div>${R(4.1,'<div class="note">GEO 관점의 홈페이지 개선 · 세부 범위 협의<br>SNS 콘텐츠 자동화·AX는 향후 별도 협의 옵션입니다.</div>','bottom-note')}`,'수행·전달 상태와 예정·고객 확인 후 상태를 구분 · 최종 납품 완료 아님')
+ ];
+}

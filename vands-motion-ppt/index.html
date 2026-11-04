@@ -1,37 +1,3 @@
 <!doctype html>
-<html lang="ko">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>밴스의원 부산점 · GEO 제안</title>
-  <link rel="stylesheet" href="deck.css" />
-</head>
-<body>
-  <div id="stage">
-    <section class="slide" data-n="1" aria-label="1부 진단"></section>
-    <section class="slide" data-n="2" aria-label="2부 이번 제공 범위"></section>
-    <section class="slide" data-n="3" aria-label="3부 향후 로드맵"></section>
-    <div id="cap" aria-live="polite"></div>
-    <div id="hud"></div>
-    <div id="bar"></div>
-  </div>
-  <div id="start" role="button" tabindex="0" aria-label="발표 시작">
-    <div><b>Dr.GEO × CoMindWorks</b><h1>밴스의원 부산점 · GEO 제안</h1>
-      <p>클릭하거나 <kbd>Space</kbd>를 눌러 시작 · 단축키 <kbd>?</kbd></p></div>
-  </div>
-  <div id="help" role="dialog" aria-label="단축키">
-    <kbd>→</kbd> 다음 장 · <kbd>←</kbd> 이전 장<br />
-    <kbd>Space</kbd> 재생 / 일시정지 · <kbd>R</kbd> 처음부터<br />
-    <kbd>.</kbd> <kbd>,</kbd> 장면 안에서 앞뒤로 건너뛰기<br />
-    <kbd>M</kbd> 소리 끄기 · <kbd>C</kbd> 자막 · <kbd>F</kbd> 전체 화면<br />
-    <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> 장 바로 가기 · <kbd>?</kbd> 이 도움말
-  </div>
-  <audio id="bgm" src="assets/audio/bgm.m4a" loop preload="auto"></audio>
-  <audio id="vo" preload="auto"></audio>
-  <script src="vendor/gsap.min.js"></script>
-  <script src="narration.js"></script>
-  <script src="assets/audio/narration/timing.js" onerror="this.remove()"></script>
-  <script src="slides.js"></script>
-  <script src="deck.js"></script>
-</body>
-</html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>밴스의원 부산점 · GEO 제안</title><link id="theme-css" rel="stylesheet" href="style.css"><script src="theme.js"></script></head>
+<body><div id="shell"><header><div class="brand">Dr.GEO <span>×</span> CoMindWorks</div><div class="client">밴스의원 부산점</div><div id="chapters" role="navigation" aria-label="부 선택"><button data-part="1">1부 · 진단</button><button data-part="2">2부 · 이번 제공 범위</button><button data-part="3">3부 · 향후 로드맵</button></div></header><div class="workspace"><nav id="rail" aria-label="장면 선택"></nav><main><div class="heading"><div><span id="number"></span><h1 id="title"></h1></div><p id="subtitle"></p></div><div id="scene" aria-label="발표 장면"></div><div class="source"><span id="source"></span><a id="evidence" target="_blank" rel="noopener">원문 보기 ↗</a></div></main></div><footer><span id="status" aria-live="polite"></span><div class="controls"><button id="prev" aria-label="이전 단계 (왼쪽 화살표)">← 이전 단계</button><button id="play" aria-label="재생 (Space)">재생</button><button id="next" aria-label="다음 단계 (오른쪽 화살표)">다음 단계 →</button><button id="restart">장면 다시 보기</button></div><label>장면 진행 <input id="seek" type="range" min="0" max="8" step="0.01" value="0"></label><span id="clock"></span></footer><div id="progress"></div><div id="cap" aria-live="polite"></div></div><div id="keys"><kbd>→</kbd> <kbd>←</kbd> 다음·이전 부 · <kbd>Space</kbd> 재생/정지 · <kbd>.</kbd> <kbd>,</kbd> 장면 이동 · <kbd>R</kbd> 처음부터 · <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> 부 바로 가기 · <kbd>M</kbd> 소리 · <kbd>C</kbd> 자막 · <kbd>F</kbd> 전체 화면</div><audio id="bgm" src="assets/audio/bgm.m4a" loop preload="auto"></audio><audio id="voa" preload="auto"></audio><p class="help">← → 단계 이동 · PageUp / PageDown 장면 이동 · Space 재생 / 일시정지 · Home / End · F 전체 화면</p><script src="next-scenes.js"></script><script src="roadmap-scenes.js"></script><script src="assets/audio/narration/files.js"></script><script src="app.js"></script></body></html>
