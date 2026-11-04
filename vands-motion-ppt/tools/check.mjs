@@ -15,7 +15,7 @@ const exe = process.env.CHROMIUM_PATH || (() => { const d = existsSync("/opt/pw-
 const browser = await chromium.launch({ executablePath: exe, args: ["--autoplay-policy=no-user-gesture-required"] });
 
 /* 영상 사양 */
-for (const [name, sec] of [["sns", 14], ["knowledge", 10], ["voice", 11]]) {
+for (const [name, sec] of [["sns", 17], ["brain", 15], ["interpret", 15], ["voice", 11]]) {
   const p = JSON.parse(execFileSync("ffprobe", ["-v", "error", "-show_streams", "-show_format", "-of", "json", join(ROOT, `assets/video/${name}.mp4`)]).toString());
   const v = p.streams.find((s) => s.codec_type === "video"), audio = p.streams.some((s) => s.codec_type === "audio");
   log(v.codec_name === "h264" && v.width === 1920 && v.height === 1080 && v.r_frame_rate === "30/1" && Math.abs(+p.format.duration - sec) < .05 && !audio,
@@ -29,7 +29,7 @@ for (const [name, sec] of [["sns", 14], ["knowledge", 10], ["voice", 11]]) {
 // 검사 브라우저(Playwright Chromium)는 H.264를 재생하지 못한다. 재생 동작은 같은 영상을 VP9(.mp4)로 바꾼 임시 사본에서 확인한다.
 const PLAY = mkdtempSync(join(tmpdir(), "vands-play-"));
 for (const f of readdirSync(ROOT)) if (!["node_modules", "review", "verification-original"].includes(f)) cpSync(join(ROOT, f), join(PLAY, f), { recursive: true });
-for (const dir of ["", "noir/", "ivory/", "blush/"]) for (const name of ["sns", "knowledge", "voice"]) execFileSync("ffmpeg", ["-v", "error", "-y", "-i", join(ROOT, `assets/video/${dir}${name}.mp4`), "-c:v", "libvpx-vp9", "-b:v", "2M", "-deadline", "realtime", "-cpu-used", "8", "-an", join(PLAY, `assets/video/${dir}${name}.mp4`)]);   // 기본 테마(noir)를 포함해 모든 테마 영상
+for (const dir of ["", "noir/", "ivory/", "blush/"]) for (const name of ["sns", "brain", "interpret", "voice"]) execFileSync("ffmpeg", ["-v", "error", "-y", "-i", join(ROOT, `assets/video/${dir}${name}.mp4`), "-c:v", "libvpx-vp9", "-b:v", "2M", "-deadline", "realtime", "-cpu-used", "8", "-an", join(PLAY, `assets/video/${dir}${name}.mp4`)]);   // 기본 테마(noir)를 포함해 모든 테마 영상
 note("재생 검사는 VP9 임시 사본으로 함 (검사 브라우저가 H.264 미지원, 크롬은 H.264 재생)");
 
 async function open(ctx, root, hash = 1) {
@@ -111,8 +111,8 @@ for (const [w, h] of [[1920, 1080], [1366, 768]]) {
   await page.click('[data-part="3"]'); const c3 = await page.evaluate(() => [location.hash, document.querySelectorAll("#rail button").length]);
   await page.keyboard.press("End"); const end = await H();
   await page.reload(); await page.waitForFunction(() => document.body.dataset.ready); const kept = await H();
-  log(dot === "#3" && p2 === "#6" && p3 === "#10" && pb === "#6" && k1 === "#1" && c3[0] === "#10" && c3[1] === 4, ". 장면 이동, → ← 부 이동, 숫자·탭으로 부 바로 가기", `. ${dot} → ${p2} → ${p3} ← ${pb} 1 ${k1} 탭3 ${c3.join("/")}`);
-  log(end === "#13" && kept === "#13", "End, 새로고침 후 장면 유지", `${end} ${kept}`);
+  log(dot === "#3" && p2 === "#6" && p3 === "#10" && pb === "#6" && k1 === "#1" && c3[0] === "#10" && c3[1] === 5, ". 장면 이동, → ← 부 이동, 숫자·탭으로 부 바로 가기", `. ${dot} → ${p2} → ${p3} ← ${pb} 1 ${k1} 탭3 ${c3.join("/")}`);
+  log(end === "#14" && kept === "#14", "End, 새로고침 후 장면 유지", `${end} ${kept}`);
   // 시연 영상 장면을 떠나면 영상 정지
   await page.evaluate(() => (location.hash = "11")); await wait(1200);
   const before = await page.evaluate(() => !document.querySelector("#scene video").paused);
@@ -120,7 +120,7 @@ for (const [w, h] of [[1920, 1080], [1366, 768]]) {
   await page.keyboard.press("."); await wait(300);
   const after = await vid.evaluate((v) => v.paused);
   log(before && after, "시연 영상: 다른 장면으로 가면 영상 정지");
-  for (const n of [11, 12, 13]) {
+  for (const n of [11, 12, 13, 14]) {
     await page.evaluate((n) => (location.hash = String(n)), n); await wait(1300);
     const st = await page.evaluate(() => { const v = document.querySelector("#scene video"); return v ? [v.paused, v.currentTime, v.getAttribute("src")] : null; });
     log(st && !st[0] && st[1] > .5, `3부 #${n}: 시연 영상 자동 재생`, st ? `${st[2]} ${st[1].toFixed(2)}s` : "영상 없음");

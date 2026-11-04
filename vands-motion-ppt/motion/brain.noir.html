@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <title>brain · 시연 영상 소스</title>
+  <!-- 3부 원장님 세컨드 브레인 AI 에이전트 시연 (15초). 가상 예시: 노트·답변 내용은 설명용이며 실제 원장님 자료가 아니다. -->
+  <link rel="stylesheet" href="base.noir.css" />
+  <style>
+    #net { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; }
+    .node { fill:#e3c996; }
+    .link { stroke:#ead7b0; stroke-width: 2.2; }
+    .core { position: absolute; left: 610px; top: 440px; width: 700px; text-align: center; }
+    .core b { display: block; font-size: 64px; font-weight: 800; letter-spacing: -1px; text-shadow:0 0 40px #e3c996aa; }
+    .core small { display: block; margin-top: 8px; font-size: 28px; color:#f8f1e3; letter-spacing: .1em; }
+    .src { position: absolute; display: flex; align-items: center; gap: 14px; padding: 16px 24px; border-radius: 16px; background: var(--paper); color: var(--paper-ink); font-size: 27px; font-weight: 800; box-shadow: 0 12px 30px #0008; white-space: nowrap; }
+    .src i { font-style: normal; font-size: 30px; }
+    .chat { position: absolute; left: 1060px; top: 170px; width: 780px; height: 680px; padding: 0; overflow: hidden; }
+    .chat .top { height: 80px; display: flex; align-items: center; gap: 16px; padding: 0 30px; border-bottom:1px solid #625947; font-size: 26px; font-weight: 800; }
+    .chat .top i { width: 16px; height: 16px; border-radius: 50%; background: var(--ok); }
+    .msgs { padding: 28px 30px; display: flex; flex-direction: column; gap: 18px; }
+    .who { font-size: 20px; color: var(--muted); }
+    .q { align-self: flex-end; max-width: 620px; padding: 20px 26px; border-radius: 24px 24px 6px 24px; background:#9a8355; font-size: 28px; line-height: 1.45; min-height: 84px; }
+    .a { align-self: flex-start; max-width: 700px; padding: 22px 28px; border-radius: 24px 24px 24px 6px; background: var(--paper); color: var(--paper-ink); font-size: 28px; line-height: 1.5; min-height: 190px; white-space: pre-line; }
+    .cites { display: flex; gap: 10px; flex-wrap: wrap; }
+    .memo { display: flex; align-items: center; gap: 16px; padding: 16px 22px; border-radius: 16px; border:2px dashed #c9ba9d; background:#38312a; font-size: 24px; }
+    .memo .w { display: flex; gap: 5px; align-items: center; height: 36px; } .memo .w i { width: 6px; border-radius: 4px; background: var(--accent); }
+    .saved { color: var(--ok); font-weight: 800; margin-left: auto; white-space: nowrap; }
+    .final { position: absolute; left: 1060px; top: 935px; font-size: 22px; color: var(--muted); }
+  </style>
+</head>
+<body>
+  <div id="frame">
+    <div class="badge"><span>향후 도입 가상 예시</span><span>원장님 세컨드 브레인</span></div>
+    <svg id="net" viewBox="0 0 1920 1080"><defs><filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter><radialGradient id="halo"><stop offset="0" stop-color="#e3c996" stop-opacity=".35"/><stop offset="1" stop-color="#e3c996" stop-opacity="0"/></radialGradient></defs><ellipse id="haloE" cx="960" cy="520" rx="520" ry="400" fill="url(#halo)"/><g id="links"></g><g id="nodes" filter="url(#glow)"></g><path id="path" fill="none" stroke="#f7f0e1" stroke-width="7" stroke-linecap="round" filter="url(#glow)" /></svg>
+    <div class="core" id="core"><b>원장님의 지식</b><small>SECOND BRAIN · AI 에이전트</small></div>
+    <div class="src" id="c1" style="left:120px;top:210px"><i>📒</i>진료 노트</div>
+    <div class="src" id="c2" style="left:90px;top:400px"><i>💬</i>상담 기록</div>
+    <div class="src" id="c3" style="left:130px;top:590px"><i>🎤</i>세미나 · 강의</div>
+    <div class="src" id="c4" style="left:1460px;top:260px"><i>🧪</i>시술 프로토콜</div>
+    <div class="src" id="c5" style="left:1480px;top:500px"><i>❓</i>자주 받는 질문</div>
+    <div class="src" id="c6" style="left:1430px;top:720px"><i>🎙️</i>음성 메모</div>
+
+    <div class="card chat" id="chat"><div class="top"><i></i>원장님 지식 에이전트</div>
+      <div class="msgs">
+        <p class="who" id="who">상담실장</p>
+        <div class="q" id="q"></div>
+        <div class="a" id="a"></div>
+        <div class="cites" id="cites"><span class="chip">📒 원장님 상담 노트</span><span class="chip">🎤 10월 원내 강의</span></div>
+        <div class="memo" id="memo"><span>🎙️ 원장님</span><div class="w" id="mw"></div><span>“사진으로 먼저 설명해 주세요”</span><span class="saved" id="sv">✓ 기억에 추가</span></div>
+        <p class="who" id="final">진료 판단은 원장님이 최종 확인합니다</p>
+      </div></div>
+    
+    <p class="caption" id="cap">원장님의 노트·강의·상담 기준을 기억해, 직원 질문에 원장님 방식으로 답합니다<small>가상 시연 · 내용은 설명용 예시입니다</small></p>
+  </div>
+  <script src="vendor/gsap.min.js"></script>
+  <script src="motion-kit.js"></script>
+  <script>
+  (async () => {
+    const $ = (s) => document.querySelector(s), NS = "http://www.w3.org/2000/svg";
+    // 뇌 모양 신경망: 타원 안에 고정 시드로 점을 뿌리고 가까운 점끼리 잇는다
+    let seed = 5; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+    const CX = 960, CY = 520, RX = 430, RY = 320, N = 92, pts = [];
+    while (pts.length < N) { const x = (rnd() * 2 - 1), y = (rnd() * 2 - 1); if (x * x + y * y < 1) pts.push({ x: CX + x * RX, y: CY + y * RY, ph: rnd() * 6.28, r: 4 + rnd() * 6 }); }
+    const links = [];
+    pts.forEach((a, i) => pts.forEach((b, j) => { if (j > i && Math.hypot(a.x - b.x, a.y - b.y) < 120) links.push([i, j]); }));
+    $("#links").innerHTML = links.map(([i, j]) => `<line class="link" x1="${pts[i].x}" y1="${pts[i].y}" x2="${pts[j].x}" y2="${pts[j].y}"/>`).join("");
+    $("#nodes").innerHTML = pts.map((p) => `<circle class="node" cx="${p.x}" cy="${p.y}" r="${p.r}"/>`).join("");
+    const L = [...document.querySelectorAll(".link")], C = [...document.querySelectorAll(".node")];
+    // 질문에 답할 때 불이 들어오는 길: 가장 왼쪽 점 → 가장 오른쪽 점 (가까운 점을 따라)
+    const order = [...pts.keys()].sort((a, b) => pts[a].x - pts[b].x), route = [order[0]];
+    while (pts[route.at(-1)].x < CX + RX * .8 && route.length < 12) { const cur = pts[route.at(-1)]; const nx = [...pts.keys()].filter((k) => pts[k].x > cur.x + 30 && Math.hypot(pts[k].x - cur.x, pts[k].y - cur.y) < 170).sort((a, b) => Math.abs(pts[a].y - CY) - Math.abs(pts[b].y - CY))[0]; if (nx == null) break; route.push(nx); }
+    $("#path").setAttribute("d", "M" + route.map((k) => `${pts[k].x} ${pts[k].y}`).join(" L"));
+    const plen = $("#path").getTotalLength(); gsap.set("#path", { strokeDasharray: plen, strokeDashoffset: plen, autoAlpha: 0 });
+    $("#mw").innerHTML = [14, 26, 34, 20, 30, 16, 28, 22, 12].map((h) => `<i style="height:${h}px"></i>`).join("");
+    await motionKit.ready();
+    const tl = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } });
+    const grow = { v: 0 };   // 지식이 쌓이는 정도 (0~1): 점·선이 차례로 켜진다
+    tl.from("#cap", { autoAlpha: 0, duration: .5 }, .3)
+      .to(grow, { v: .35, duration: .8, ease: "none" }, .2)
+      .from("#core", { scale: .6, autoAlpha: 0, duration: .7, ease: "back.out(1.6)" }, .5);
+    // 자료 카드가 하나씩 뇌로 빨려 들어간다
+    ["#c1", "#c2", "#c3", "#c4", "#c5", "#c6"].forEach((id, i) => {
+      const at = 1.0 + i * .5;
+      tl.from(id, { autoAlpha: 0, scale: .7, duration: .35, ease: "back.out(2)" }, at)
+        .to(id, { left: 860, top: 500, scale: .2, autoAlpha: 0, duration: .6, ease: "power2.in" }, at + .55)
+        .to(grow, { v: .35 + (i + 1) * .108, duration: .4, ease: "none" }, at + .9);
+    });
+    // 뇌가 왼쪽으로 물러나고 질문 창이 열린다
+    tl.to(["#net", "#core"], { x: -390, scale: .82, transformOrigin: "960px 520px", duration: .8, ease: "power2.inOut" }, 4.6)
+      .from("#chat", { x: 80, autoAlpha: 0, duration: .6 }, 4.9)
+      .from(["#who", "#q"], { autoAlpha: 0, y: 16, duration: .35 }, 5.3);
+    motionKit.typeText(tl, $("#q"), "리프팅 상담 때 원장님은 뭘 먼저 보세요?", 5.4, 1.3);
+    tl.to("#path", { autoAlpha: 1, duration: .1 }, 6.8).to("#path", { strokeDashoffset: 0, duration: .9, ease: "power1.inOut" }, 6.8)
+      .to("#path", { autoAlpha: .25, duration: .5 }, 8.6)
+      .from("#a", { autoAlpha: 0, y: 16, duration: .35 }, 7.5);
+    motionKit.typeText(tl, $("#a"), "원장님 기준으로는\n① 피부 두께  ② 처짐 정도\n③ 이전 시술 이력을 먼저 확인합니다.", 7.6, 2.0);
+    tl.from("#cites .chip", { autoAlpha: 0, y: 12, duration: .3, stagger: .15 }, 9.7)
+      .from("#memo", { autoAlpha: 0, y: 16, duration: .4 }, 10.6)
+      .from("#sv", { autoAlpha: 0, scale: .6, duration: .35, ease: "back.out(2)" }, 12.0)
+      .to(grow, { v: 1.08, duration: .5 }, 12.0)
+      .from("#final", { autoAlpha: 0, duration: .4 }, 12.6);
+    // 매 프레임: 켜진 정도·시각으로 점과 선의 밝기를 계산 (seek 어느 시점이든 같은 화면)
+    const draw = (t) => {
+      const g = grow.v;
+      C.forEach((c, i) => { const on = i / N < g ? 1 : 0, pulse = .55 + .45 * Math.sin(t * 2.4 + pts[i].ph); c.style.opacity = on ? .35 + .65 * pulse : .06; c.setAttribute("r", pts[i].r * (on ? .8 + .4 * pulse : .6)); });
+      L.forEach((l, k) => { const [i, j] = links[k], on = Math.max(i, j) / N < g; l.style.opacity = on ? .22 + .3 * (.5 + .5 * Math.sin(t * 1.6 + k)) : .02; });
+      document.querySelectorAll("#mw i").forEach((b, i) => (b.style.transform = `scaleY(${t > 10.6 && t < 12 ? .35 + .65 * Math.abs(Math.sin(t * 8 + i)) : .4})`));
+    };
+    motionKit.start(tl, 15, draw);
+  })();
+  </script>
+</body>
+</html>
