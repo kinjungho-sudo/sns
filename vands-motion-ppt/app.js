@@ -54,7 +54,7 @@ const DEFAULT_STOPS=[0,2.8,5.7,8];
 const dur=()=>scenes[sceneIndex].duration||8, stops=()=>scenes[sceneIndex].stops||DEFAULT_STOPS;
 const clamp=x=>Math.min(1,Math.max(0,x)), easeOut=x=>1-Math.pow(1-x,3), easeInOut=x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2, easeOutBack=x=>{const c=1.45;return 1+(c+1)*Math.pow(x-1,3)+c*Math.pow(x-1,2)};
 const video=()=>scenes[sceneIndex].video?document.querySelector('#scene video, .player.big video'):null;   // 영상 장면(3부 시연)
-function resize(){const W=document.documentElement.clientWidth||innerWidth,H=document.documentElement.clientHeight||innerHeight;const scale=Math.min(W/1600,(H-48)/900);$('#shell').style.transform=`scale(${scale})`;$('#shell').style.left=(W-1600*scale)/2+'px';$('#shell').style.top=Math.max(0,(H-48-900*scale)/2)+'px'}
+function resize(){const W=document.documentElement.clientWidth||innerWidth,H=document.documentElement.clientHeight||innerHeight;const R0=document.body.classList.contains('fs')?0:48,scale=Math.min(W/1600,(H-R0)/900);$('#shell').style.transform=`scale(${scale})`;$('#shell').style.left=(W-1600*scale)/2+'px';$('#shell').style.top=Math.max(0,(H-R0-900*scale)/2)+'px'}
 function syncVo(){const va=$('#voa');va.defaultPlaybackRate=va.playbackRate=SPEED;va.preservesPitch=true;const f=(window.VO_FILES||{})[scenes[sceneIndex].key];if(!f){va.pause();va.removeAttribute('src');return}   // 장면 내레이션(있으면)
  if(!va.src.endsWith(f)){va.src=f}if(Math.abs(va.currentTime-time)>.4)va.currentTime=Math.min(time,va.duration||time);if(playing&&audioOn&&!muted)va.play().catch(()=>{});else va.pause()}
 function syncVideo(){syncVo();const v=video();if(!v)return;v.defaultPlaybackRate=v.playbackRate=SPEED;if(Math.abs(v.currentTime-time)>.25)v.currentTime=Math.min(time,dur());if(playing&&!reduced.matches)v.play().catch(()=>{});else v.pause()}
@@ -143,7 +143,9 @@ function unbigVideo(){const p=document.querySelector('.player.big');if(p)bigVide
 // 전체 화면 버튼 (모바일용, 화면 오른쪽 아래). 아이폰 사파리처럼 지원하지 않으면 숨김
 {const fb=$('#fsbtn'),de=document.documentElement;if(!(de.requestFullscreen||de.webkitRequestFullscreen))fb.hidden=true;
  fb.onclick=e=>{e.stopPropagation();if(!begun)begin();if(document.fullscreenElement||document.webkitFullscreenElement)(document.exitFullscreen||document.webkitExitFullscreen).call(document);else (de.requestFullscreen||de.webkitRequestFullscreen).call(de)};
- const lab=()=>{fb.querySelector('b').textContent=(document.fullscreenElement||document.webkitFullscreenElement)?'전체 화면 닫기':'전체 화면'};document.addEventListener('fullscreenchange',lab);document.addEventListener('webkitfullscreenchange',lab)}
+ $('#fsin').onclick=e=>{e.stopPropagation();(document.exitFullscreen||document.webkitExitFullscreen).call(document)};
+ const lab=()=>{const on=!!(document.fullscreenElement||document.webkitFullscreenElement);document.body.classList.toggle('fs',on);resize()};   // 전체 화면이면 바깥 버튼 대신 상단 오른쪽 '닫기', 아래 여백 없이 꽉 차게
+document.addEventListener('fullscreenchange',lab);document.addEventListener('webkitfullscreenchange',lab)}
 async function fullscreen(el=document.documentElement){try{if(document.fullscreenElement)await document.exitFullscreen();else await el.requestFullscreen()}catch{}}
 $('#chapters').onclick=e=>{const b=e.target.closest('[data-part]');if(b)goPart(+b.dataset.part)};
 addEventListener('keydown',e=>{if(e.target.matches('input,textarea,select')||e.altKey||e.ctrlKey||e.metaKey)return;if(!begun){begin();if(e.code==='Space'||e.key==='Enter'){e.preventDefault();return}}if(e.target.matches('button,a')&&(e.code==='Space'||e.key==='Enter'))return;startAudio();
