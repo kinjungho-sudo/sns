@@ -1,6 +1,6 @@
 // 자동 검사 → review/ 스크린샷 + check-report.txt     실행: node tools/check.mjs
 import { chromium } from "playwright";
-import { cpSync, mkdtempSync, writeFileSync, existsSync, readdirSync, rmSync } from "node:fs";
+import { cpSync, mkdtempSync, writeFileSync, existsSync, readdirSync, rmSync, mkdirSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -123,6 +123,40 @@ for (const [w, h] of [[1920, 1080], [1366, 768]]) {
     log(st && !st[0] && st[1] > .5, `3부 #${n}: 시연 영상 자동 재생`, st ? `${st[2]} ${st[1].toFixed(2)}s` : "영상 없음");
   }
   log(errors.length === 0, "이동·재생 중 콘솔 오류 0건", errors.join(" / "));
+  await ctx.close();
+}
+
+/* 테마: 4종 모두 오류 없이 열리고, 테마별 영상 경로를 쓴다 · 대표 장면 스크린샷 */
+{
+  mkdirSync(join(ROOT, "review/themes"), { recursive: true });
+  for (const th of ["violet", "noir", "ivory", "blush"]) {
+    const ctx = await browser.newContext({ viewport: { width: 1600, height: 930 } });
+    const page = await ctx.newPage(), errors = [];
+    page.on("console", (m) => m.type() === "error" && errors.push(m.text())); page.on("pageerror", (e) => errors.push(e.message));
+    await page.goto(pathToFileURL(join(ROOT, "index.html")).href + `?theme=${th}#1`); await page.waitForFunction(() => document.body.dataset.ready);
+    const src = await page.evaluate(() => [document.querySelector("#theme-css").getAttribute("href"), document.querySelector("#scene video").getAttribute("src")]);
+    const vidOk = existsSync(join(ROOT, src[1]));
+    for (const n of [1, 4, 11, 16]) {
+      await page.evaluate((n) => (location.hash = String(n)), n); await wait(200);
+      await page.evaluate(() => { const s = document.querySelector("#seek"); s.value = s.max; s.dispatchEvent(new Event("input")); }); await wait(250);
+      await page.screenshot({ path: join(ROOT, `review/themes/${th}-${String(n).padStart(2, "0")}.png`) });
+    }
+    log(errors.length === 0 && vidOk, `테마 ${th}: 오류 없이 열림, 영상 파일 있음`, `${src.join(" · ")}${errors.length ? " / " + errors.join(" / ") : ""}`);
+    await ctx.close();
+  }
+}
+
+/* 확대·축소: 화면 캡처 클릭 → 커짐, 다시 클릭(또는 Esc) → 원래 칸 */
+{
+  const ctx = await browser.newContext({ viewport: { width: 1600, height: 930 } });
+  const { page } = await open(ctx, ROOT, 2);
+  await page.evaluate(() => { const s = document.querySelector("#seek"); s.value = s.max; s.dispatchEvent(new Event("input")); }); await wait(200);
+  const sz = () => page.evaluate(() => document.querySelector("#scene .zoomable").getBoundingClientRect().width);
+  const w0 = await sz(); await page.click("#scene .zoomable"); await wait(800); const w1 = await sz();
+  await page.keyboard.press("Escape"); await wait(800); const w2 = await sz();
+  // 등장 연출: 장면 시작 직후에는 칸보다 크게, 2초 뒤에는 원래 칸
+  await page.evaluate(() => { const s = document.querySelector("#seek"); s.value = 0.5; s.dispatchEvent(new Event("input")); }); await wait(100); const e0 = await sz();
+  log(w1 > w0 * 1.3 && Math.abs(w2 - w0) < 2 && e0 > w0 * 1.3, "화면 캡처: 크게 등장 → 칸으로, 클릭 확대 · Esc 복귀", `칸 ${w0.toFixed(0)}px, 등장 ${e0.toFixed(0)}px, 클릭 ${w1.toFixed(0)}px, 복귀 ${w2.toFixed(0)}px`);
   await ctx.close();
 }
 

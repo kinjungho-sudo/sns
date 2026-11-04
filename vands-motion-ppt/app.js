@@ -19,18 +19,36 @@ scenes.push(...getNextScenes(), ...getRoadmapScenes());
 
 /* ───────── 오프닝: 15초 모션그래픽 (motion/opening.html을 렌더한 영상) ─────────
    1부 8장 · 2부 6장 · 3부 7장은 그대로 두고, 맨 앞에 오프닝 장면 하나를 더한다. */
-scenes.unshift({part:0,title:'오프닝',sub:'15초 모션그래픽 · 1부 진단에서 2부 이번 제공 범위까지',duration:15,stops:[0,15],video:'assets/video/opening.mp4',
+scenes.unshift({part:0,title:'오프닝',sub:'15초 모션그래픽 · 1부 진단에서 2부 이번 제공 범위까지',duration:15,stops:[0,15],video:true,
  source:'모션그래픽: motion/opening.html 렌더 · 수치는 기존 진단 보고서 p.1 (2026.11.03) · 신규 시안 점수와 전후 비교하지 않음',url:report+'#page=1',
- html:`<div class="opening">${R(0,`<div class="player"><video src="assets/video/opening.mp4" poster="assets/video/opening-poster.jpg" muted playsinline preload="auto"></video><button class="player-fs" aria-label="영상 전체 화면">⤢ 영상 전체 화면</button></div>`)}<div class="side">${R(.6,'<div class="eyebrow">MOTION SUMMARY · 15s</div><div class="bigtext">AI가 읽는 홈페이지,<br><span class="emphasis">진단에서 납품까지</span></div>')}${R(1.6,'<div class="note">영상 속 수치는 기존 홈페이지 보고서 기준입니다.<br>두 지표는 따로 보며, 더하거나 평균 내지 않습니다.</div>')}${R(2.6,'<div class="chapters-mini"><span>1부 · 진단 8장</span><span>2부 · 이번 제공 범위 6장</span><span>3부 · 향후 로드맵 4장 (시연 영상 3편)</span></div>')}</div></div>`});
+ html:`<div class="opening">${R(0,`<div class="player"><video src="${vid('opening')}" poster="${vid('opening-poster','.jpg')}" muted playsinline preload="auto"></video><button class="player-fs" aria-label="영상 전체 화면">⤢ 영상 전체 화면</button></div>`)}<div class="side">${R(.6,'<div class="eyebrow">MOTION SUMMARY · 15s</div><div class="bigtext">AI가 읽는 홈페이지,<br><span class="emphasis">진단에서 납품까지</span></div>')}${R(1.6,'<div class="note">영상 속 수치는 기존 홈페이지 보고서 기준입니다.<br>두 지표는 따로 보며, 더하거나 평균 내지 않습니다.</div>')}${R(2.6,'<div class="chapters-mini"><span>1부 · 진단 8장</span><span>2부 · 이번 제공 범위 6장</span><span>3부 · 향후 로드맵 4장 (시연 영상 3편)</span></div>')}</div></div>`});
 
 const chapterStarts=[0,1,9,15],chapterCounts=[1,8,6,4],partName=['오프닝','1부','2부','3부'];
 let sceneIndex=0,time=0,playing=false,last=0;const $=s=>document.querySelector(s);const reduced=matchMedia('(prefers-reduced-motion: reduce)');
 const DEFAULT_STOPS=[0,2.8,5.7,8];
 const dur=()=>scenes[sceneIndex].duration||8, stops=()=>scenes[sceneIndex].stops||DEFAULT_STOPS;
-const clamp=x=>Math.min(1,Math.max(0,x)), easeOut=x=>1-Math.pow(1-x,3);
+const clamp=x=>Math.min(1,Math.max(0,x)), easeOut=x=>1-Math.pow(1-x,3), easeInOut=x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2, easeOutBack=x=>{const c=1.45;return 1+(c+1)*Math.pow(x-1,3)+c*Math.pow(x-1,2)};
 const video=()=>scenes[sceneIndex].video?document.querySelector('#scene video'):null;   // 영상 장면(오프닝 · 3부 시연)
 function resize(){const scale=Math.min(innerWidth/1600,(innerHeight-30)/900);$('#shell').style.transform=`scale(${scale})`;$('#shell').style.left=(innerWidth-1600*scale)/2+'px';$('#shell').style.top=Math.max(0,(innerHeight-30-900*scale)/2)+'px'}
 function syncVideo(){const v=video();if(!v)return;if(Math.abs(v.currentTime-time)>.25)v.currentTime=Math.min(time,dur());if(playing&&!reduced.matches)v.play().catch(()=>{});else v.pause()}
+/* ───────── 확대·축소: 칸 안의 화면 캡처를 장면 전체 크기로 키우는 변환 ─────────
+   z._entry(등장 연출)와 z._zoom(클릭 확대) 중 큰 값만큼 장면 크기 쪽으로 커진다. 0이면 원래 칸. */
+function measureZooms(){const area=$('#scene').getBoundingClientRect(),sc=area.width/$('#scene').offsetWidth||1;
+ document.querySelectorAll('#scene .zoomable').forEach(z=>{const prev=z.style.transform;z.style.transform='none';const r=z.getBoundingClientRect();z.style.transform=prev;
+  const w=r.width/sc,h=r.height/sc,x=(r.left-area.left)/sc,y=(r.top-area.top)/sc,AW=$('#scene').offsetWidth,AH=$('#scene').offsetHeight;
+  const s=Math.max(1,Math.min((AW-16)/w,(AH+150)/h,2.4));z._fit={s,tx:(AW-w*s)/2-x,ty:Math.max(-150,(AH-h*s)/2-y)};z._entry=z._entry??0;z._zoom=z._zoom??0;});}
+function placeZoom(z){if(!z._fit)return;const a=Math.max(z._entry||0,z._zoom||0),f=z._fit;
+ z.style.transform=a>0?`translate(${f.tx*a}px,${f.ty*a}px) scale(${1+(f.s-1)*a})`:'';z.style.zIndex=a>0?20:'';z.classList.toggle('lifted',a>.02);const rv=z.closest('.reveal');if(rv)rv.style.zIndex=a>0?20:'';   // 부모(reveal)도 함께 올려야 어둡게 깐 배경 위로 나온다
+ const dim=$('#scene .zoom-dim');if(dim){const m=Math.max(0,...[...document.querySelectorAll('#scene .zoomable')].map(x=>x._zoom||0));dim.style.opacity=(m*.62).toFixed(3);dim.style.pointerEvents=m>.5?'auto':'none'}}
+let zoomAnim=null;
+function toggleZoom(z){const from=z._zoom||0,to=from>.5?0:1;document.querySelectorAll('#scene .zoomable').forEach(o=>{if(o!==z&&o._zoom){o._zoom=0;placeZoom(o)}});
+ if(reduced.matches){z._zoom=to;placeZoom(z);return}const t0=performance.now();cancelAnimationFrame(zoomAnim);
+ const tick=now=>{const k=easeInOut(clamp((now-t0)/550));z._zoom=from+(to-from)*k;placeZoom(z);if(k<1)zoomAnim=requestAnimationFrame(tick)};zoomAnim=requestAnimationFrame(tick)}
+function wireZooms(){const scene=$('#scene');scene.insertAdjacentHTML('beforeend','<div class="zoom-dim" aria-hidden="true"></div>');
+ scene.querySelectorAll('.screen').forEach(z=>{if(z.closest('.player'))return;const rv=z.closest('.reveal');if(rv&&getComputedStyle(rv).position==='static')rv.style.position='relative';z.classList.add('zoomable');z.tabIndex=0;z.setAttribute('role','button');z.setAttribute('aria-label','화면 크게 보기 / 원래대로');
+  z.addEventListener('click',()=>toggleZoom(z));z.addEventListener('keydown',ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();ev.stopPropagation();toggleZoom(z)}})});
+ scene.querySelector('.zoom-dim').onclick=()=>scene.querySelectorAll('.zoomable').forEach(z=>{if(z._zoom>.5)toggleZoom(z)});
+ measureZooms();}
 function show(index,t=.7){
  const leaving=video();if(leaving)leaving.pause();
  sceneIndex=Math.max(0,Math.min(scenes.length-1,index));const s=scenes[sceneIndex];time=s.video?0:Math.min(t,dur());
@@ -38,7 +56,7 @@ function show(index,t=.7){
  $('#number').textContent=part===0?'00':String(part===1?local+1:part).padStart(2,'0');
  $('#rail').innerHTML=scenes.map((item,i)=>item.part===part?`<button aria-label="${partName[part]} ${i-chapterStarts[part]+1}장 ${item.sub}" data-scene="${i}">${part===0?'00':String(i-chapterStarts[part]+1).padStart(2,'0')}</button>`:'').join('');
  document.querySelectorAll('[data-part]').forEach(b=>b.setAttribute('aria-current',String(+b.dataset.part===part)));
- $('#title').textContent=s.title;$('#subtitle').textContent=s.sub;$('#source').textContent=s.source;$('#evidence').href=s.url;$('#scene').innerHTML=s.html;
+ $('#title').textContent=s.title;$('#subtitle').textContent=s.sub;$('#source').textContent=s.source;$('#evidence').href=s.url;$('#scene').innerHTML=s.html;wireZooms();
  document.querySelectorAll('[data-scene]').forEach(b=>b.setAttribute('aria-current',String(+b.dataset.scene===sceneIndex)));
  $('#seek').max=dur();history.replaceState(null,'','#'+(sceneIndex+1));
  if(s.video){const v=video();v.addEventListener('ended',()=>{time=dur();draw()});document.querySelector('#scene .player-fs').onclick=()=>fullscreen(v.parentElement);playing=!reduced.matches;last=performance.now();syncVideo()}   // 영상 장면은 들어오면 무음 자동 재생
@@ -46,7 +64,7 @@ function show(index,t=.7){
 }
 function draw(){
  document.querySelectorAll('.reveal').forEach(e=>{const at=+e.dataset.at;const raw=clamp((time-at)/.65);const p=reduced.matches?(time>=at?1:0):easeOut(raw);
-  e.style.opacity=p;e.style.transform=`translateY(${(1-p)*20}px)`;e.style.visibility=p===0?'hidden':'visible';e.inert=p===0;
+  const q=reduced.matches?p:easeOutBack(raw);e.style.opacity=p;e.style.transform=`translateY(${(1-q)*38}px) scale(${.93+.07*q})`;e.style.filter=p<1?`blur(${((1-p)*7).toFixed(1)}px)`:'';e.style.visibility=p===0?'hidden':'visible';e.inert=p===0;
   const ellipse=e.querySelector('ellipse');
   if(ellipse){const rp=reduced.matches?(time>=at?1:0):clamp((time-at-.55)/.85);ellipse.style.strokeDashoffset=700*(1-rp);const num=e.querySelector('strong');const ringBox=e.querySelector('.ring');
    if(e.closest('.body-offset'))ringBox.style.top=(num.offsetTop+num.offsetHeight/2-ringBox.clientHeight/2)+'px';
@@ -54,6 +72,8 @@ function draw(){
    // 점수 카운트업: 원래 숫자(data-v)까지 1.1초 동안 올라간다. 다른 점수와 이어서 올리지 않는다.
    const tn=num.firstChild;if(!num.dataset.v)num.dataset.v=tn.textContent.trim();const target=+num.dataset.v;
    const cp=reduced.matches?(time>=at?1:0):easeOut(clamp((time-at)/1.1));tn.textContent=String(Math.round(target*cp));}
+  // 실제 화면 캡처: 먼저 장면을 가득 채우며 등장했다가 제자리 칸으로 줄어들어 들어간다 (줌 인 → 아웃)
+  e.querySelectorAll('.zoomable').forEach(z=>{const k=reduced.matches?1:easeInOut(clamp((time-at-.45)/1.0));z._entry=1-k;placeZoom(z)});
   // 실제 화면 캡처: 장면 동안 아주 천천히 확대·이동 (켄 번스)
   e.querySelectorAll('.screen .viewport img').forEach(img=>{const kp=reduced.matches?0:Math.sin(Math.PI/2*clamp((time-at)/7.5));img.style.transform=`scale(${1+.05*kp}) translateY(${-1.5*kp}%)`});
   e.querySelectorAll('[data-wave]').forEach(w=>{const phase=(time-at)*6+(+w.dataset.wave)*.65;const amp=reduced.matches?1:.5+.5*Math.sin(phase)**2;w.style.transform=`scaleY(${amp})`;});
@@ -76,6 +96,6 @@ function frame(now){if(playing){const v=video();
 $('#prev').onclick=()=>step(-1);$('#next').onclick=()=>step(1);$('#play').onclick=toggle;$('#restart').onclick=()=>{playing=false;time=scenes[sceneIndex].video?0:.7;syncVideo();draw()};$('#seek').oninput=e=>{playing=false;time=+e.target.value;syncVideo();draw()};$('#rail').onclick=e=>{const b=e.target.closest('button');if(b){playing=false;show(+b.dataset.scene)}};
 async function fullscreen(el=document.documentElement){try{if(document.fullscreenElement)await document.exitFullscreen();else await el.requestFullscreen()}catch{}}
 $('#chapters').onclick=e=>{const b=e.target.closest('[data-part]');if(b){playing=false;show(chapterStarts[+b.dataset.part]);}};
-$('#fullscreen').onclick=()=>fullscreen();addEventListener('keydown',e=>{if(e.target.matches('input,textarea,select')||e.altKey||e.ctrlKey||e.metaKey)return;if(e.target.matches('button,a')&&(e.code==='Space'||e.key==='Enter'))return;if(['ArrowRight','ArrowLeft','PageDown','PageUp','Home','End',' '].includes(e.key))e.preventDefault();if(e.key==='ArrowRight')step(1);if(e.key==='ArrowLeft')step(-1);if(e.code==='Space')toggle();if(e.key==='PageDown'){playing=false;show(sceneIndex+1)}if(e.key==='PageUp'){playing=false;show(sceneIndex-1)}if(e.key==='Home'){playing=false;show(0)}if(e.key==='End'){playing=false;show(scenes.length-1,8)}if(e.key.toLowerCase()==='f')fullscreen()});
-addEventListener('hashchange',()=>{const n=(parseInt(location.hash.slice(1))||1)-1;if(n!==sceneIndex){playing=false;show(n)}});addEventListener('resize',resize);reduced.addEventListener('change',draw);let touchX;$('#scene').addEventListener('touchstart',e=>touchX=e.changedTouches[0].clientX,{passive:true});$('#scene').addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-touchX;if(Math.abs(dx)>60)step(dx<0?1:-1)},{passive:true});document.addEventListener('visibilitychange',()=>{if(document.hidden){playing=false;syncVideo();draw()}});
+$('#fullscreen').onclick=()=>fullscreen();addEventListener('keydown',e=>{if(e.target.matches('input,textarea,select')||e.altKey||e.ctrlKey||e.metaKey)return;if(e.target.matches('button,a')&&(e.code==='Space'||e.key==='Enter'))return;if(['ArrowRight','ArrowLeft','PageDown','PageUp','Home','End',' '].includes(e.key))e.preventDefault();if(e.key==='ArrowRight')step(1);if(e.key==='ArrowLeft')step(-1);if(e.code==='Space')toggle();if(e.key==='PageDown'){playing=false;show(sceneIndex+1)}if(e.key==='PageUp'){playing=false;show(sceneIndex-1)}if(e.key==='Home'){playing=false;show(0)}if(e.key==='End'){playing=false;show(scenes.length-1,8)}if(e.key.toLowerCase()==='f')fullscreen();if(e.key==='Escape')document.querySelectorAll('#scene .zoomable').forEach(z=>{if(z._zoom>.5)toggleZoom(z)})});
+addEventListener('hashchange',()=>{const n=(parseInt(location.hash.slice(1))||1)-1;if(n!==sceneIndex){playing=false;show(n)}});addEventListener('resize',()=>{resize();measureZooms();draw()});reduced.addEventListener('change',draw);let touchX;$('#scene').addEventListener('touchstart',e=>touchX=e.changedTouches[0].clientX,{passive:true});$('#scene').addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-touchX;if(Math.abs(dx)>60)step(dx<0?1:-1)},{passive:true});document.addEventListener('visibilitychange',()=>{if(document.hidden){playing=false;syncVideo();draw()}});
 resize();document.fonts.ready.then(()=>{show((parseInt(location.hash.slice(1))||1)-1,reduced.matches?8:.7);document.body.dataset.ready='1'});requestAnimationFrame(frame);

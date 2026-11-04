@@ -2,7 +2,7 @@
 // 영상 소스는 motion/sns.html · knowledge.html · voice.html (node tools/render-video.mjs 로 다시 만듦)
 function getRoadmapScenes(){
  const badges='<div class="scene-badges"><span>향후 도입 가상 예시</span><span>별도 협의 옵션</span></div>';
- const player=(name,label)=>`<div class="player demo-player"><video src="assets/video/${name}.mp4" poster="assets/video/${name}-poster.jpg" muted playsinline preload="auto" aria-label="${label}"></video><button class="player-fs" aria-label="영상 전체 화면">⤢ 전체 화면</button></div>`;
+ const player=(name,label)=>`<div class="player demo-player"><video src="${vid(name)}" poster="${vid(name+'-poster','.jpg')}" muted playsinline preload="auto" aria-label="${label}"></video><button class="player-fs" aria-label="영상 전체 화면">⤢ 전체 화면</button></div>`;
  const side=(title,points,similar,simNote)=>`<div class="demo-side">${R(.6,`<h2>${title}</h2><ul class="demo-points">${points.map(p=>`<li>${p}</li>`).join('')}</ul>`)}${R(1.8,`<div class="similar"><span class="eyebrow">비슷한 일을 하는 제품</span><div class="prods">${similar.map(([n,d])=>`<div><b>${n}</b><span>${d}</span></div>`).join('')}</div>${simNote?`<p class="sim-note">${simNote}</p>`:''}</div>`)}</div>`;
  const demo=(sub,name,dur,label,sideHtml,source,url)=>({part:3,title:'향후 로드맵',sub,duration:dur,stops:[0,dur],video:true,source,url,
   html:badges+`<div class="demo body-offset">${R(0,player(name,label))}${sideHtml}</div>`});

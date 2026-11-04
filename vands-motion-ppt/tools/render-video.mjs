@@ -2,13 +2,18 @@
 // 프레임마다 window.seek(n/30)을 부르고 스크린샷을 ffmpeg로 넘긴다. 같은 소스는 항상 같은 영상이 된다.
 import { chromium } from "playwright";
 import { spawn } from "node:child_process";
-import { existsSync, readdirSync } from "node:fs";
+import { existsSync, readdirSync, mkdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { serve } from "./server.mjs";
 
 const ROOT = fileURLToPath(new URL("..", import.meta.url)), FPS = 30;
 // 사용: node tools/render-video.mjs [이름 ...]  (기본: opening sns knowledge voice)
-const NAMES = process.argv.slice(2).length ? process.argv.slice(2) : ["opening", "sns", "knowledge", "voice"];
+// 테마: --theme noir|ivory|blush (기본 violet = 원본 motion/<이름>.html)
+const argv = process.argv.slice(2), ti = argv.indexOf("--theme"), THEME = ti >= 0 ? argv.splice(ti, 2)[1] : "violet";
+const NAMES = argv.length ? argv : ["opening", "sns", "knowledge", "voice"];
+const SRC = (n) => THEME === "violet" ? `motion/${n}.html` : `motion/${n}.${THEME}.html`;
+const DIR = THEME === "violet" ? "assets/video/" : `assets/video/${THEME}/`;
+mkdirSync(`${ROOT}${DIR}`, { recursive: true });
 const POSTER_AT = { opening: 2.9, sns: 3.9, knowledge: 6.8, voice: 8.9 };
 const chromiumPath = () => {
   if (process.env.CHROMIUM_PATH) return process.env.CHROMIUM_PATH;
@@ -20,11 +25,11 @@ const browser = await chromium.launch({ executablePath: chromiumPath() });
 const page = await browser.newPage({ viewport: { width: 1920, height: 1080 }, deviceScaleFactor: 1 });
 page.on("pageerror", (e) => { console.error("page error:", e.message); process.exitCode = 1; });
 for (const name of NAMES) {
-  await page.goto(`${url}/motion/${name}.html?render=1`);
+  await page.goto(`${url}/${SRC(name)}?render=1`);
   await page.waitForFunction(() => window.__ready === true);
   const frame = page.locator("#frame");
   const DURATION = await page.evaluate(() => window.DURATION), total = Math.round(DURATION * FPS);
-  const out = `${ROOT}assets/video/${name}.mp4`;
+  const out = `${ROOT}${DIR}${name}.mp4`;
   const ff = spawn("ffmpeg", ["-y", "-v", "error", "-f", "image2pipe", "-framerate", String(FPS), "-i", "-",
     "-c:v", "libx264", "-preset", "slow", "-crf", "18", "-pix_fmt", "yuv420p", "-r", String(FPS), "-an", "-movflags", "+faststart", out], { stdio: ["pipe", "inherit", "inherit"] });
   const done = new Promise((ok, no) => ff.on("close", (c) => (c ? no(new Error("ffmpeg " + c)) : ok())));
@@ -37,7 +42,7 @@ for (const name of NAMES) {
   ff.stdin.end(); await done;
   // 포스터: 장면 내용이 다 보이는 순간
   await page.evaluate((t) => window.seek(t), POSTER_AT[name] ?? 2);
-  await frame.screenshot({ path: `${ROOT}assets/video/${name}-poster.jpg`, type: "jpeg", quality: 88 });
-  console.log(`✔ assets/video/${name}.mp4 (${total} frames, ${((Date.now() - t0) / 1000).toFixed(0)}s)  + ${name}-poster.jpg`);
+  await frame.screenshot({ path: `${ROOT}${DIR}${name}-poster.jpg`, type: "jpeg", quality: 88 });
+  console.log(`✔ ${DIR}${name}.mp4 (${total} frames, ${((Date.now() - t0) / 1000).toFixed(0)}s)  + ${name}-poster.jpg`);
 }
 await browser.close(); srv.close();

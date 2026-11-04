@@ -38,3 +38,14 @@ body,button,input{font-family:"Pretendard","Malgun Gothic","Segoe UI",sans-serif
 .res{height:100%;padding:26px 26px}.res h2{font-size:28px;margin:12px 0 16px}
 .res ul{margin:0;padding:0;list-style:none;display:grid;gap:14px;font-size:17px;line-height:1.5;color:#d9d2ea}.res li b{display:block;font-size:19px;color:#fff;margin-bottom:2px}
 .res.warn{border-color:#c58bff;background:#241a3c}
+
+/* ───────── 추가: 테마 선택 ───────── */
+.theme-pick{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--muted)}
+.theme-pick select{font:inherit;font-size:14px;color:var(--ink);background:#211c3a;border:1px solid #655481;border-radius:8px;padding:8px 10px}
+
+/* ───────── 추가: 확대·축소 ───────── */
+.zoomable{position:relative;transform-origin:0 0;cursor:zoom-in;transition:box-shadow .3s}
+.zoomable.lifted{box-shadow:0 30px 80px #000a,0 0 0 2px #b77aff}
+.zoomable:focus-visible{outline:3px solid #e8bdff;outline-offset:4px}
+.zoom-dim{position:absolute;inset:-200px -60px -60px -140px;background:#050511;opacity:0;z-index:15;pointer-events:none;cursor:zoom-out}
+.reveal{will-change:transform,opacity,filter}
