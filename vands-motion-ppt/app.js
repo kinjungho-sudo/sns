@@ -17,18 +17,12 @@ const scenes=[
 scenes.forEach(s=>s.part=1);
 scenes.push(...getNextScenes(), ...getRoadmapScenes());
 
-/* ───────── 오프닝: 15초 모션그래픽 (motion/opening.html을 렌더한 영상) ─────────
-   1부 8장 · 2부 6장 · 3부 7장은 그대로 두고, 맨 앞에 오프닝 장면 하나를 더한다. */
-scenes.unshift({part:0,title:'오프닝',sub:'15초 모션그래픽 · 1부 진단에서 2부 이번 제공 범위까지',duration:15,stops:[0,15],video:true,
- source:'모션그래픽: motion/opening.html 렌더 · 수치는 기존 진단 보고서 p.1 (2026.11.03) · 신규 시안 점수와 전후 비교하지 않음',url:report+'#page=1',
- html:`<div class="opening">${R(0,`<div class="player"><video src="${vid('opening')}" poster="${vid('opening-poster','.jpg')}" muted playsinline preload="auto"></video><button class="player-fs" aria-label="영상 전체 화면">⤢ 영상 전체 화면</button></div>`)}<div class="side">${R(.6,'<div class="eyebrow">MOTION SUMMARY · 15s</div><div class="bigtext">AI가 읽는 홈페이지,<br><span class="emphasis">진단에서 납품까지</span></div>')}${R(1.6,'<div class="note">영상 속 수치는 기존 홈페이지 보고서 기준입니다.<br>두 지표는 따로 보며, 더하거나 평균 내지 않습니다.</div>')}${R(2.6,'<div class="chapters-mini"><span>1부 · 진단 8장</span><span>2부 · 이번 제공 범위 6장</span><span>3부 · 향후 로드맵 4장 (시연 영상 3편)</span></div>')}</div></div>`});
-
-const chapterStarts=[0,1,9,15],chapterCounts=[1,8,6,4],partName=['오프닝','1부','2부','3부'];
+const chapterStarts=[0,0,8,14],chapterCounts=[0,8,6,4],partName=['','1부','2부','3부'];   // 인덱스 = 부 번호 (0번은 비움)
 let sceneIndex=0,time=0,playing=false,last=0;const $=s=>document.querySelector(s);const reduced=matchMedia('(prefers-reduced-motion: reduce)');
 const DEFAULT_STOPS=[0,2.8,5.7,8];
 const dur=()=>scenes[sceneIndex].duration||8, stops=()=>scenes[sceneIndex].stops||DEFAULT_STOPS;
 const clamp=x=>Math.min(1,Math.max(0,x)), easeOut=x=>1-Math.pow(1-x,3), easeInOut=x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2, easeOutBack=x=>{const c=1.45;return 1+(c+1)*Math.pow(x-1,3)+c*Math.pow(x-1,2)};
-const video=()=>scenes[sceneIndex].video?document.querySelector('#scene video'):null;   // 영상 장면(오프닝 · 3부 시연)
+const video=()=>scenes[sceneIndex].video?document.querySelector('#scene video'):null;   // 영상 장면(3부 시연)
 function resize(){const scale=Math.min(innerWidth/1600,(innerHeight-30)/900);$('#shell').style.transform=`scale(${scale})`;$('#shell').style.left=(innerWidth-1600*scale)/2+'px';$('#shell').style.top=Math.max(0,(innerHeight-30-900*scale)/2)+'px'}
 function syncVideo(){const v=video();if(!v)return;if(Math.abs(v.currentTime-time)>.25)v.currentTime=Math.min(time,dur());if(playing&&!reduced.matches)v.play().catch(()=>{});else v.pause()}
 /* ───────── 확대·축소: 칸 안의 화면 캡처를 장면 전체 크기로 키우는 변환 ─────────
@@ -53,8 +47,8 @@ function show(index,t=.7){
  const leaving=video();if(leaving)leaving.pause();
  sceneIndex=Math.max(0,Math.min(scenes.length-1,index));const s=scenes[sceneIndex];time=s.video?0:Math.min(t,dur());
  const part=s.part,local=sceneIndex-chapterStarts[part];
- $('#number').textContent=part===0?'00':String(part===1?local+1:part).padStart(2,'0');
- $('#rail').innerHTML=scenes.map((item,i)=>item.part===part?`<button aria-label="${partName[part]} ${i-chapterStarts[part]+1}장 ${item.sub}" data-scene="${i}">${part===0?'00':String(i-chapterStarts[part]+1).padStart(2,'0')}</button>`:'').join('');
+ $('#number').textContent=String(part===1?local+1:part).padStart(2,'0');
+ $('#rail').innerHTML=scenes.map((item,i)=>item.part===part?`<button aria-label="${partName[part]} ${i-chapterStarts[part]+1}장 ${item.sub}" data-scene="${i}">${String(i-chapterStarts[part]+1).padStart(2,'0')}</button>`:'').join('');
  document.querySelectorAll('[data-part]').forEach(b=>b.setAttribute('aria-current',String(+b.dataset.part===part)));
  $('#title').textContent=s.title;$('#subtitle').textContent=s.sub;$('#source').textContent=s.source;$('#evidence').href=s.url;$('#scene').innerHTML=s.html;wireZooms();
  document.querySelectorAll('[data-scene]').forEach(b=>b.setAttribute('aria-current',String(+b.dataset.scene===sceneIndex)));
@@ -81,7 +75,7 @@ function draw(){
  const s=scenes[sceneIndex],st=stops(),D=dur();
  $('#seek').value=time;$('#clock').textContent=time.toFixed(1)+' / '+D+'s';
  const stage=st.filter(x=>x<=time+1e-6).length;
- $('#status').textContent=s.part===0?`오프닝 · 모션그래픽 ${time.toFixed(0)}s`:s.video?`${s.part}부 · ${sceneIndex-chapterStarts[s.part]+1} / ${chapterCounts[s.part]} · 시연 ${time.toFixed(0)}s`:`${s.part}부 · ${sceneIndex-chapterStarts[s.part]+1} / ${chapterCounts[s.part]} · 단계 ${Math.min(3,Math.max(1,time<1.8?1:time<4.1?2:3))}/3`;
+ $('#status').textContent=s.video?`${s.part}부 · ${sceneIndex-chapterStarts[s.part]+1} / ${chapterCounts[s.part]} · 시연 ${time.toFixed(0)}s`:`${s.part}부 · ${sceneIndex-chapterStarts[s.part]+1} / ${chapterCounts[s.part]} · 단계 ${Math.min(3,Math.max(1,time<1.8?1:time<4.1?2:3))}/3`;
  $('#play').textContent=playing?'일시정지':'재생';$('#play').setAttribute('aria-label',playing?'일시정지 (Space)':'재생 (Space)');
  $('#progress').style.width=((sceneIndex+time/D)/scenes.length*100)+'%';$('#prev').disabled=sceneIndex===0&&time===0;$('#next').disabled=sceneIndex===scenes.length-1&&time>=D;
 }

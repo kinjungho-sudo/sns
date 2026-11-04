@@ -15,7 +15,7 @@ const exe = process.env.CHROMIUM_PATH || (() => { const d = existsSync("/opt/pw-
 const browser = await chromium.launch({ executablePath: exe, args: ["--autoplay-policy=no-user-gesture-required"] });
 
 /* 영상 사양 */
-for (const [name, sec] of [["opening", 15], ["sns", 14], ["knowledge", 10], ["voice", 11]]) {
+for (const [name, sec] of [["sns", 14], ["knowledge", 10], ["voice", 11]]) {
   const p = JSON.parse(execFileSync("ffprobe", ["-v", "error", "-show_streams", "-show_format", "-of", "json", join(ROOT, `assets/video/${name}.mp4`)]).toString());
   const v = p.streams.find((s) => s.codec_type === "video"), audio = p.streams.some((s) => s.codec_type === "audio");
   log(v.codec_name === "h264" && v.width === 1920 && v.height === 1080 && v.r_frame_rate === "30/1" && Math.abs(+p.format.duration - sec) < .05 && !audio,
@@ -29,7 +29,7 @@ for (const [name, sec] of [["opening", 15], ["sns", 14], ["knowledge", 10], ["vo
 // 검사 브라우저(Playwright Chromium)는 H.264를 재생하지 못한다. 재생 동작은 같은 영상을 VP9(.mp4)로 바꾼 임시 사본에서 확인한다.
 const PLAY = mkdtempSync(join(tmpdir(), "vands-play-"));
 for (const f of readdirSync(ROOT)) if (!["node_modules", "review", "verification-original"].includes(f)) cpSync(join(ROOT, f), join(PLAY, f), { recursive: true });
-for (const name of ["opening", "sns", "knowledge", "voice"]) execFileSync("ffmpeg", ["-v", "error", "-y", "-i", join(ROOT, `assets/video/${name}.mp4`), "-c:v", "libvpx-vp9", "-b:v", "2M", "-deadline", "realtime", "-cpu-used", "8", "-an", join(PLAY, `assets/video/${name}.mp4`)]);
+for (const dir of ["", "noir/", "ivory/", "blush/"]) for (const name of ["sns", "knowledge", "voice"]) execFileSync("ffmpeg", ["-v", "error", "-y", "-i", join(ROOT, `assets/video/${dir}${name}.mp4`), "-c:v", "libvpx-vp9", "-b:v", "2M", "-deadline", "realtime", "-cpu-used", "8", "-an", join(PLAY, `assets/video/${dir}${name}.mp4`)]);   // 기본 테마(noir)를 포함해 모든 테마 영상
 note("재생 검사는 VP9 임시 사본으로 함 (검사 브라우저가 H.264 미지원, 크롬은 H.264 재생)");
 
 async function open(ctx, root, hash = 1) {
@@ -40,23 +40,23 @@ async function open(ctx, root, hash = 1) {
   await page.waitForFunction(() => document.body.dataset.ready);
   return { page, errors };
 }
-const N = 19;   // 오프닝 1 + 1부 8 + 2부 6 + 3부 4
+const N = 18;   // 1부 8 + 2부 6 + 3부 4
 
-/* 1. 오프라인 더블클릭: 외부 요청 전부 차단, 폰트 로드, 이미지 누락 없음, 오프닝 자동 재생 */
+/* 1. 오프라인 더블클릭: 외부 요청 전부 차단, 폰트 로드, 이미지 누락 없음, 3부 시연 영상 자동 재생 */
 {
   const ctx = await browser.newContext({ viewport: { width: 1920, height: 1080 } });
   await ctx.route("**/*", (r) => (r.request().url().startsWith("file:") ? r.continue() : r.abort()));
-  const { page, errors } = await open(ctx, PLAY, 1);
+  const { page, errors } = await open(ctx, PLAY, 15);
   await wait(1600);
   const st = await page.evaluate(() => ({ fonts: [...document.fonts].filter((f) => f.family.replace(/"/g, "") === "Pretendard").map((f) => `${f.weight}:${f.status}`),
     v: (() => { const v = document.querySelector("#scene video"); return { paused: v.paused, t: v.currentTime, muted: v.muted }; })() }));
   log(["400", "700", "800"].every((w) => st.fonts.includes(`${w}:loaded`)), "오프라인: 내장 폰트 로드", st.fonts.join(" "));
-  log(!st.v.paused && st.v.t > .5 && st.v.muted, "오프닝: 들어오면 무음 자동 재생", `${st.v.t.toFixed(2)}s`);
+  log(!st.v.paused && st.v.t > .5 && st.v.muted, "오프라인: 3부 시연 영상 무음 자동 재생", `${st.v.t.toFixed(2)}s`);
   const deckT = await page.evaluate(() => +document.querySelector("#seek").value);
-  log(Math.abs(deckT - st.v.t) < 1, "오프닝: 장면 진행 막대가 영상 시간을 따라감", `막대 ${deckT.toFixed(2)}s`);
+  log(Math.abs(deckT - st.v.t) < 1, "시연 영상: 장면 진행 막대가 영상 시간을 따라감", `막대 ${deckT.toFixed(2)}s`);
   await page.keyboard.press("PageDown"); await wait(300);
   const paused = await page.evaluate(() => [location.hash, document.querySelector("#title").textContent]);
-  log(paused[0] === "#2" && paused[1] === "홈페이지", "오프닝 → 1부 1장 이동", paused.join(" "));
+  log(paused[0] === "#16" && paused[1] === "향후 로드맵", "시연 영상 장면 → 다음 장 이동", paused.join(" "));
   // 이미지 누락
   let broken = [];
   for (let n = 1; n <= N; n++) { await page.evaluate((n) => (location.hash = String(n)), n); await wait(150);
@@ -96,7 +96,7 @@ for (const [w, h] of [[1920, 1080], [1366, 768]]) {
 /* 3. 이동·재생 */
 {
   const ctx = await browser.newContext({ viewport: { width: 1600, height: 930 } });
-  const { page, errors } = await open(ctx, PLAY, 2);
+  const { page, errors } = await open(ctx, PLAY, 1);
   const T = () => page.evaluate(() => +document.querySelector("#seek").value);
   await page.keyboard.press("ArrowRight"); const s1 = await T();
   await page.keyboard.press("ArrowRight"); const s2 = await T();
@@ -108,16 +108,16 @@ for (const [w, h] of [[1920, 1080], [1366, 768]]) {
   await page.keyboard.press("End"); const end = await page.evaluate(() => location.hash);
   await page.reload(); await page.waitForFunction(() => document.body.dataset.ready); const kept = await page.evaluate(() => [location.hash, document.querySelector("#title").textContent]);
   log(s1 === 2.8 && s2 === 5.7 && playing > 6, "→ 단계 이동(2.8 → 5.7초)과 Space 재생", `${s1} → ${s2}, 재생 후 ${playing.toFixed(1)}s`);
-  log(h2[0] === "#10" && h2[1] === "이번 제공 범위" && h3[0] === "#16" && h3[1] === "향후 로드맵" && h3[2] === 4, "부 선택: 2부 #10, 3부 #16 (레일 4장)", `${h2.join(" ")} / ${h3.join(" ")}`);
-  log(home === "#1" && end === "#19" && kept[0] === "#19", "Home/End, 새로고침 후 장면 유지", `${home} ${end} ${kept.join(" ")}`);
-  // 오프닝을 떠나면 영상 정지
-  await page.keyboard.press("Home"); await wait(1200);
+  log(h2[0] === "#9" && h2[1] === "이번 제공 범위" && h3[0] === "#15" && h3[1] === "향후 로드맵" && h3[2] === 4, "부 선택: 2부 #9, 3부 #15 (레일 4장)", `${h2.join(" ")} / ${h3.join(" ")}`);
+  log(home === "#1" && end === "#18" && kept[0] === "#18", "Home/End, 새로고침 후 장면 유지", `${home} ${end} ${kept.join(" ")}`);
+  // 시연 영상 장면을 떠나면 영상 정지
+  await page.evaluate(() => (location.hash = "15")); await wait(1200);
   const before = await page.evaluate(() => !document.querySelector("#scene video").paused);
   const vid = await page.evaluateHandle(() => document.querySelector("#scene video"));
   await page.keyboard.press("PageDown"); await wait(300);
   const after = await vid.evaluate((v) => v.paused);
-  log(before && after, "오프닝: 다른 장면으로 가면 영상 정지");
-  for (const n of [16, 18, 19]) {
+  log(before && after, "시연 영상: 다른 장면으로 가면 영상 정지");
+  for (const n of [15, 17, 18]) {
     await page.evaluate((n) => (location.hash = String(n)), n); await wait(1300);
     const st = await page.evaluate(() => { const v = document.querySelector("#scene video"); return v ? [v.paused, v.currentTime, v.getAttribute("src")] : null; });
     log(st && !st[0] && st[1] > .5, `3부 #${n}: 시연 영상 자동 재생`, st ? `${st[2]} ${st[1].toFixed(2)}s` : "영상 없음");
@@ -133,10 +133,10 @@ for (const [w, h] of [[1920, 1080], [1366, 768]]) {
     const ctx = await browser.newContext({ viewport: { width: 1600, height: 930 } });
     const page = await ctx.newPage(), errors = [];
     page.on("console", (m) => m.type() === "error" && errors.push(m.text())); page.on("pageerror", (e) => errors.push(e.message));
-    await page.goto(pathToFileURL(join(ROOT, "index.html")).href + `?theme=${th}#1`); await page.waitForFunction(() => document.body.dataset.ready);
+    await page.goto(pathToFileURL(join(ROOT, "index.html")).href + `?theme=${th}#15`); await page.waitForFunction(() => document.body.dataset.ready);
     const src = await page.evaluate(() => [document.querySelector("#theme-css").getAttribute("href"), document.querySelector("#scene video").getAttribute("src")]);
     const vidOk = existsSync(join(ROOT, src[1]));
-    for (const n of [1, 4, 11, 16]) {
+    for (const n of [3, 10, 15, 16]) {
       await page.evaluate((n) => (location.hash = String(n)), n); await wait(200);
       await page.evaluate(() => { const s = document.querySelector("#seek"); s.value = s.max; s.dispatchEvent(new Event("input")); }); await wait(250);
       await page.screenshot({ path: join(ROOT, `review/themes/${th}-${String(n).padStart(2, "0")}.png`) });
@@ -149,7 +149,7 @@ for (const [w, h] of [[1920, 1080], [1366, 768]]) {
 /* 확대·축소: 화면 캡처 클릭 → 커짐, 다시 클릭(또는 Esc) → 원래 칸 */
 {
   const ctx = await browser.newContext({ viewport: { width: 1600, height: 930 } });
-  const { page } = await open(ctx, ROOT, 2);
+  const { page } = await open(ctx, ROOT, 1);
   await page.evaluate(() => { const s = document.querySelector("#seek"); s.value = s.max; s.dispatchEvent(new Event("input")); }); await wait(200);
   const sz = () => page.evaluate(() => document.querySelector("#scene .zoomable").getBoundingClientRect().width);
   const w0 = await sz(); await page.click("#scene .zoomable"); await wait(800); const w1 = await sz();
@@ -160,15 +160,15 @@ for (const [w, h] of [[1920, 1080], [1366, 768]]) {
   await ctx.close();
 }
 
-/* 4. 동작 줄이기: 처음부터 완성 상태, 오프닝 자동 재생 안 함 */
+/* 4. 동작 줄이기: 처음부터 완성 상태, 시연 영상 자동 재생 안 함 */
 {
   const ctx = await browser.newContext({ viewport: { width: 1600, height: 930 }, reducedMotion: "reduce" });
-  const { page } = await open(ctx, PLAY, 4);
+  const { page } = await open(ctx, PLAY, 3);
   await wait(200);
   const st = await page.evaluate(() => ({ nums: [...document.querySelectorAll(".metric strong")].map((s) => s.firstChild.textContent), op: [...document.querySelectorAll("#scene .reveal")].every((e) => e.style.opacity === "1") }));
-  await page.keyboard.press("Home"); await wait(800);
+  await page.evaluate(() => (location.hash = "15")); await wait(800);
   const v = await page.evaluate(() => document.querySelector("#scene video").paused);
-  log(st.nums.join(",") === "65,19,96" && st.op && v, "동작 줄이기: 점수·요소가 바로 완성, 오프닝 자동 재생 안 함", `${st.nums.join(",")} 영상 정지 ${v}`);
+  log(st.nums.join(",") === "65,19,96" && st.op && v, "동작 줄이기: 점수·요소가 바로 완성, 시연 영상 자동 재생 안 함", `${st.nums.join(",")} 영상 정지 ${v}`);
   await ctx.close();
 }
 

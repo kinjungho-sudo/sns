@@ -7,14 +7,14 @@ import { fileURLToPath } from "node:url";
 import { serve } from "./server.mjs";
 
 const ROOT = fileURLToPath(new URL("..", import.meta.url)), FPS = 30;
-// 사용: node tools/render-video.mjs [이름 ...]  (기본: opening sns knowledge voice)
+// 사용: node tools/render-video.mjs [이름 ...]  (기본: sns knowledge voice)
 // 테마: --theme noir|ivory|blush (기본 violet = 원본 motion/<이름>.html)
 const argv = process.argv.slice(2), ti = argv.indexOf("--theme"), THEME = ti >= 0 ? argv.splice(ti, 2)[1] : "violet";
-const NAMES = argv.length ? argv : ["opening", "sns", "knowledge", "voice"];
+const NAMES = argv.length ? argv : ["sns", "knowledge", "voice"];
 const SRC = (n) => THEME === "violet" ? `motion/${n}.html` : `motion/${n}.${THEME}.html`;
 const DIR = THEME === "violet" ? "assets/video/" : `assets/video/${THEME}/`;
 mkdirSync(`${ROOT}${DIR}`, { recursive: true });
-const POSTER_AT = { opening: 2.9, sns: 3.9, knowledge: 6.8, voice: 8.9 };
+const POSTER_AT = { sns: 3.9, knowledge: 6.8, voice: 8.9 };
 const chromiumPath = () => {
   if (process.env.CHROMIUM_PATH) return process.env.CHROMIUM_PATH;
   const d = existsSync("/opt/pw-browsers") && readdirSync("/opt/pw-browsers").find((x) => /^chromium-\d+$/.test(x));
