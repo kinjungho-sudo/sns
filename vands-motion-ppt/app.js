@@ -6,25 +6,25 @@ const metric=(at,title,value,den,desc,tag)=>R(at,`<h2>${title}</h2><strong>${val
 const chart=(title,values,labels,suffix)=>`<div class="panel white chartpanel"><h2>${title}</h2><svg viewBox="0 0 600 270" role="img" aria-label="${labels.map((d,i)=>d+' '+values[i]+suffix).join(', ')}">${[0,50,100].map(v=>`<line x1="55" y1="${220-v*1.6}" x2="560" y2="${220-v*1.6}" stroke="#e5e2ea"/><text x="10" y="${226-v*1.6}">${v}</text>`).join('')}<path class="chartline" d="${values.map((v,i)=>(i?'L':'M')+(70+i*155)+','+(220-v*1.6)).join(' ')}"/>${values.map((v,i)=>`<circle class="chartdot" cx="${70+i*155}" cy="${220-v*1.6}" r="5"/><text class="value" text-anchor="middle" x="${70+i*155}" y="${200-v*1.6}">${v}${suffix}</text><text text-anchor="middle" x="${70+i*155}" y="256">${labels[i]}</text>`).join('')}</svg></div>`;
 const scenes=[
 {title:'홈페이지',sub:'진단의 출발점 · 현재 운영 중인 밴스의원 부산점 홈페이지',source:'실제 홈페이지 화면 캡처 · 2026.11.03 · 진단 수치는 기존 보고서 기준',url:'https://busan.vandsclinics.com/',html:`<div class="grid two">${R(0,screen('homepage','busan.vandsclinics.com'))}<div class="side">${R(1.8,'<div class="eyebrow">EXISTING WEBSITE</div><div class="bigtext">환자에게 보이는 홈페이지.<br><span class="emphasis">AI는 어떻게 읽고 있을까요?</span></div>')}${R(4.1,'<div class="note">화면의 인상과 AI 검색 준비 상태를 구분해서 확인합니다.</div>')}</div></div>`},
-{title:'이미지 위주 홈페이지',vokey:'1-img',sub:'사진·영상·이미지 배너 중심 · 필요한 정보가 글자로 없음',source:'기존 홈페이지 화면 캡처 2026.11.03 · 점수와 문장은 기존 진단 보고서 p.2–3 인용',url:report+'#page=2',html:`<div class="grid two">${R(0,`<div class="veil-host">${screen('homepage','busan.vandsclinics.com')}${R(1.8,'<div class="ai-veil"><span>AI가 보는 화면</span><b>이미지 · 영상</b><small>그림 속 글자는 근거로 쓰기 어렵습니다</small></div>','veil-r')}</div>`)}<div class="side">${R(1.2,'<div class="eyebrow">IMAGE-HEAVY</div><div class="bigtext">보기엔 화려하지만,<br><span class="emphasis">필요한 정보가 글자로 없습니다.</span></div>')}<div class="list tight">${[['진료시간','“AI가 읽을 수 있는 진료시간 정보가 없습니다.”'],['시술 · 가격 · 이벤트','이미지 속 글자 위주'],['AI가 읽는 병원 정보','8 / 14점'],['글이 잘 정리되어 있는가','9 / 14점']].map(([a,b],i)=>R(2.6+i*.5,`<div class="row"><b>${a}</b>${b}</div>`)).join('')}</div></div></div>`},
+{title:'이미지 위주 홈페이지',vokey:'1-1',sub:'사진·영상·이미지 배너 중심 · 필요한 정보가 글자로 없음',source:'기존 홈페이지 화면 캡처 2026.11.03 · 점수와 문장은 기존 진단 보고서 p.2–3 인용',url:report+'#page=2',html:`<div class="grid two">${R(0,`<div class="veil-host">${screen('homepage','busan.vandsclinics.com')}${R(1.8,'<div class="ai-veil"><span>AI가 보는 화면</span><b>이미지 · 영상</b><small>그림 속 글자는 근거로 쓰기 어렵습니다</small></div>','veil-r')}</div>`)}<div class="side">${R(1.2,'<div class="eyebrow">IMAGE-HEAVY</div><div class="bigtext">보기엔 화려하지만,<br><span class="emphasis">필요한 정보가 글자로 없습니다.</span></div>')}<div class="list tight">${[['진료시간','“AI가 읽을 수 있는 진료시간 정보가 없습니다.”'],['시술 · 가격 · 이벤트','이미지 속 글자 위주'],['AI가 읽는 병원 정보','8 / 14점'],['글이 잘 정리되어 있는가','9 / 14점']].map(([a,b],i)=>R(2.6+i*.5,`<div class="row"><b>${a}</b>${b}</div>`)).join('')}</div></div></div>`},
 {title:'Dr.GEO 진단',sub:'실제 도구 화면 → 기존 홈페이지 진단 보고서',source:'실제 Dr.GEO 첫 화면 캡처 · 결과는 2026.11.03 기존 보고서 기반 재현',url:'https://drgeo.vercel.app',html:`<div class="grid two">${R(0,screen('drgeo','drgeo.vercel.app'))}<div class="side">${R(1.8,'<div class="eyebrow">DIAGNOSIS</div><div class="bigtext">AI에게 직접 묻고,<br>홈페이지의<br><span class="emphasis">준비 상태를 확인합니다.</span></div>')}${R(4.1,'<div class="note">대상: 밴스의원 부산점<br>기존 홈페이지 · 측정일 2026.11.03<br>이 발표에서 진단을 새로 실행하지 않습니다.</div>')}</div></div>`},
-{title:'진단 결과',sub:'서로 다른 세 지표 · 더하거나 평균 내지 않습니다',source:'기존 진단 보고서 p.1 · 보고서 기반 재현 · 언급률 오차범위 7%–41%',url:report+'#page=1',html:`<div class="grid three">${metric(0,'홈페이지 준비 상태','65','/100','기초 단계','규칙 기반 준비도 점검')}${metric(1.8,'AI 답변에 나온 비율','19','%','54번 중 10번 언급','AI 언급 측정 · 59곳 중 공동 6위')}${metric(4.1,'병원 정보 정확도','96','%','정보를 답한 56건 중 틀림 2건','준비도·언급률과 별도 측정')}</div>`},
+{title:'진단 결과',vokey:'1-3',sub:'서로 다른 세 지표 · 더하거나 평균 내지 않습니다',source:'기존 진단 보고서 p.1 · 보고서 기반 재현 · 언급률 오차범위 7%–41%',url:report+'#page=1',html:`<div class="grid three">${metric(0,'홈페이지 준비 상태','65','/100','기초 단계','규칙 기반 준비도 점검')}${metric(1.8,'AI 답변에 나온 비율','19','%','54번 중 10번 언급','AI 언급 측정 · 59곳 중 공동 6위')}${metric(4.1,'병원 정보 정확도','96','%','정보를 답한 56건 중 틀림 2건','준비도·언급률과 별도 측정')}</div>`},
 {title:'점수와 그래프',sub:'준비도는 65점 유지 · 언급률 차이만으로 변화 단정 불가',source:'기존 진단 보고서 p.2 · 축 0–100 고정 · 실제 기록을 재현',url:report+'#page=2',html:`<div class="grid equal">${R(0,chart('AI 답변에 나온 비율',[24,20,20,19],['10.31.','11.2.','11.3.','11.3.'],'%'))}${R(1.8,chart('홈페이지 준비 상태',[65,65,65,65],['10.31.','11.1.','11.2.','11.3.'],'점'))}</div>${R(4.1,'<span class="pill">두 측정의 오차범위가 겹칩니다. 이 차이만으로 변화가 있었다고 단정할 수 없습니다.</span>','chartnote')}`},
 {title:'모두닥 정보 불일치',sub:'발견 01 · AI가 참고한 외부 정보와 공식 정보의 차이',source:'기존 진단 보고서 p.3 문제점 / p.4 개선점 · 보고서 기반 재현',url:report+'#page=3',html:`<div class="grid equal"><div class="side">${R(0,'<div class="quote">“모두닥 정보가 공식 정보와 다릅니다. AI가 14번 참고했습니다.”<small>기존 보고서 p.3 · 외부 채널</small></div>')}${R(1.8,'<div class="panel"><span class="eyebrow">OBSERVED REFERENCE</span><div style="font-size:85px;font-weight:800">14<span style="font-size:30px">번 참고</span></div><p class="muted">참고 횟수이며 오류 발생 횟수는 아닙니다.</p></div>')}</div>${R(4.1,'<div class="side" style="height:100%"><div class="eyebrow">FIRST ACTION</div><div class="bigtext">공식 정보와 대조하고<br><span class="emphasis">모두닥 정보 수정 요청</span></div><div class="note">정보 불일치가 AI 언급률에 미친 영향은 이 보고서만으로 단정하지 않습니다.</div></div>')}</div>`},
 {title:'진료과 정보 차이',sub:'발견 02 · 화면의 정보와 AI가 읽는 정보의 일치 여부',source:'기존 진단 보고서 p.3 홈페이지 문제 / p.4 개선점 · 보고서 기반 재현',url:report+'#page=3',html:`<div class="side" style="height:100%">${R(0,'<div class="comparison"><div>화면의 진료과</div><span class="neq">≠</span><div>AI가 읽는 진료과</div></div>')}${R(1.8,'<div class="quote">“화면과 AI가 읽는 정보의 진료과가 서로 다릅니다.”<small>기존 보고서 p.3 · 홈페이지</small></div>')}${R(4.1,'<div class="note">확인할 과제: AI가 읽는 진료과를 화면과 같게 수정<br>보고서에 특정 진료과 값은 제시되지 않아 임의로 추가하지 않았습니다.</div>')}</div>`},
 {title:'진료시간 · 접근',sub:'발견 03–04 · 읽을 수 있는 정보와 들어올 수 있는 경로',source:'기존 진단 보고서 p.3–4 · Perplexity 답변은 이번 언급률 측정에 포함되지 않음',url:report+'#page=3',html:`<div class="grid equal">${R(0,'<div class="panel stack" style="height:100%"><span class="eyebrow">03 · OPENING HOURS</span><h2>AI가 읽을 수 있는<br>진료시간 정보 없음</h2><div class="quote">“AI가 읽을 수 있는 진료시간 정보가 없습니다.”<small>보고서 p.3</small></div><p class="muted">개선점: 요일별 진료시간 정보 추가</p></div>')}${R(1.8,'<div class="panel stack" style="height:100%"><span class="eyebrow">04 · ACCESS</span><h2>Perplexity<br>홈페이지 접근 제한</h2><div class="quote">“AI 검색 서비스 Perplexity가 홈페이지에 들어오지 못합니다.”<small>보고서 p.3</small></div><p class="muted">개선점: 홈페이지 보안 설정에서 접속 허용</p></div>')}</div>${R(4.1,'<span class="pill">접근 문제와 AI 답변 언급률은 서로 다른 점검 항목입니다.</span>','chartnote')}`},
-{title:'확인된 과제',sub:'기존 홈페이지 → 진단 → 근거 → 개선 과제',source:'기존 진단 보고서 p.1–4 · 개선이 AI 언급 증가를 보장하지 않으며 같은 질문으로 재측정',url:report+'#page=4',html:`<div class="grid equal"><div class="side">${R(0,'<div class="overview"><img class="mini" src="assets/homepage.png" alt="기존 홈페이지"><div class="bigtext">기존 홈페이지<br>진단 결과</div></div><div class="summary-metrics" style="margin-top:28px"><div><small>홈페이지 준비도</small><strong>65<small>/100</small></strong></div><div><small>AI 언급</small><strong>10<small>/54회</small></strong></div></div>')}${R(4.1,'<div class="note">항목별로 개선하고, 같은 질문으로 다시 측정합니다.<br>홈페이지 전면 재구축이 필수라는 의미는 아닙니다.</div>')}</div><div class="list">${['모두닥 정보 불일치','화면 · AI 진료과 차이','AI가 읽을 수 있는 진료시간 정보 없음','Perplexity 접근 제한'].map((s,i)=>R(1.8+i*.5,`<div class="row"><b>0${i+1}</b>${s}</div>`)).join('')}</div></div>`}
+{title:'확인된 과제',vokey:'1-4',sub:'기존 홈페이지 → 진단 → 근거 → 개선 과제',source:'기존 진단 보고서 p.1–4 · 개선이 AI 언급 증가를 보장하지 않으며 같은 질문으로 재측정',url:report+'#page=4',html:`<div class="grid equal"><div class="side">${R(0,'<div class="overview"><img class="mini" src="assets/homepage.png" alt="기존 홈페이지"><div class="bigtext">기존 홈페이지<br>진단 결과</div></div><div class="summary-metrics" style="margin-top:28px"><div><small>홈페이지 준비도</small><strong>65<small>/100</small></strong></div><div><small>AI 언급</small><strong>10<small>/54회</small></strong></div></div>')}${R(4.1,'<div class="note">항목별로 개선하고, 같은 질문으로 다시 측정합니다.<br>홈페이지 전면 재구축이 필수라는 의미는 아닙니다.</div>')}</div><div class="list">${['모두닥 정보 불일치','화면 · AI 진료과 차이','AI가 읽을 수 있는 진료시간 정보 없음','Perplexity 접근 제한'].map((s,i)=>R(1.8+i*.5,`<div class="row"><b>0${i+1}</b>${s}</div>`)).join('')}</div></div>`}
 ];
 scenes.forEach(s=>s.part=1);
 scenes.push(...getNextScenes(), ...getRoadmapScenes());
 
 /* ───────── 간추림: 부마다 핵심 장면만, 부를 여는 큰 글씨 장면 하나 ─────────
    1부부터 3부까지 영상처럼 이어서 재생된다 (마지막 장면에서 멈추고 배경음악도 꺼짐). 수치·문구는 기존 장면 그대로. */
-const KEEP={1:s=>['홈페이지','이미지 위주 홈페이지','Dr.GEO 진단','진단 결과','확인된 과제'].includes(s.title),
+const KEEP={1:s=>['이미지 위주 홈페이지','진단 결과','확인된 과제'].includes(s.title),
  2:s=>/^(GEO 관점으로 준비한|텍스트로 적은 병원 정보|시술 안내|확인 후 홈페이지 납품)/.test(s.sub),
  3:s=>/^(SNS 콘텐츠|원장님 세컨드 브레인|동시 통역|보이스 차트)/.test(s.sub)};
 // 내레이션 대본 (Typecast 음성·자막 공용). 키 = 부-순서
-const VO={'1-img':'지금 홈페이지는 사진과 이미지가 중심이라, 진료시간 같은 필요한 정보가 글자로 적혀 있지 않습니다. AI는 글자로 적힌 정보를 근거로 답합니다.','2-txt':'새 시안은 진료시간, 위치, 자주 묻는 질문, 의료진 정보를 모두 글자로 적었습니다.','1-0':'밴스의원 부산점 홈페이지를, AI는 어떻게 읽고 있을까요?','1-1':'지금 운영 중인 홈페이지입니다. 사람에게 보이는 화면과 AI가 읽는 정보는 다를 수 있습니다.',
+const VO={'3-end':'감사합니다.','1-img':'지금 홈페이지는 사진과 이미지가 중심이라, 진료시간 같은 필요한 정보가 글자로 적혀 있지 않습니다. AI는 글자로 적힌 정보를 근거로 답합니다.','2-txt':'새 시안은 진료시간, 위치, 자주 묻는 질문, 의료진 정보를 모두 글자로 적었습니다.','1-0':'밴스의원 부산점 홈페이지를, AI는 어떻게 읽고 있을까요?','1-1':'지금 운영 중인 홈페이지입니다. 사람에게 보이는 화면과 AI가 읽는 정보는 다를 수 있습니다.',
  '1-2':'Dr.GEO로 AI에게 직접 묻고, 홈페이지의 준비 상태를 확인했습니다.','1-3':'준비도 65점, AI 답변 54번 중 10번 언급, 정보 정확도 96%. 서로 다른 세 지표입니다.',
  '1-4':'확인된 과제는 네 가지입니다. 항목별로 고치고, 같은 질문으로 다시 측정합니다.',
  '2-0':'그래서 GEO 관점으로, 새 홈페이지 시안을 준비했습니다.','2-1':'신규 시안의 AI 검색 준비도는 83점, 양호 단계입니다. 조건이 달라 이전과 직접 비교하지는 않습니다.',
@@ -38,10 +38,15 @@ const chars=(t,d0,cls='')=>`<span class="cv-line ${cls}">${[...t].map((c,i)=>c==
   scenes.push({part:p,cover:true,title:k,sub:'',duration:4.6,stops:[0,4.6],source:'',url:'#',key:`${p}-0`,
    html:`<div class="cover-card"><p class="cv-kicker">${k}</p>${chars(a,.15)}${chars(b,.15+a.length*.045+.15,'gold')}</div>`});
   let n=0;all.filter(s=>s.part===p&&KEEP[p](s)).forEach(s=>{s.key=s.vokey||`${p}-${++n}`;scenes.push(s)});}}
+// 마무리: 감사 인사 (3부 끝)
+scenes.push({part:3,cover:true,title:'감사합니다',sub:'',duration:7,stops:[0,7],source:'',url:'#',key:'3-end',
+ html:`<div class="cover-card end-card"><p class="cv-kicker">밴스의원 부산점 제안서</p>${chars('감사합니다',.2,'gold')}<p class="end-line">AI가 답할 때, 정확한 밴스의원 부산점으로</p><p class="end-sub">다음 단계는 병원과 함께 정합니다 · 다시 보기 <kbd>1</kbd></p></div>`});
 scenes.forEach(s=>s.vo=VO[s.key]||'');
 // 내레이션이 끝나기 전에 장면이 넘어가지 않도록, 음성 길이(초)+여유만큼 장면 길이를 늘린다
 const VO_LEN={'1-0':4.6,'1-1':8,'1-2':6.3,'1-3':10.5,'1-4':7.1,'2-0':5.4,'2-1':9.8,'2-2':6.1,'2-3':6.7,'3-1':12.8,'3-2':11.6,'3-3':9,'3-4':7.8};
-scenes.forEach(s=>{const need=(VO_LEN[s.key]||0)+1.2,d=s.duration||8;if(need>d){const st=(s.stops||[0,2.8,5.7,8]).slice();st[st.length-1]=need;s.stops=st;s.duration=need}});
+// 발표 속도: 장면·내레이션·시연 영상을 함께 1.25배로 (음성 높낮이는 그대로)
+const SPEED=1.25;
+scenes.forEach(s=>{const need=(VO_LEN[s.key]||0)+.6,d=s.duration||8;if(need>d){const st=(s.stops||[0,2.8,5.7,8]).slice();st[st.length-1]=need;s.stops=st;s.duration=need}});
 
 const chapterStarts=[0,1,2,3].map(p=>scenes.findIndex(s=>s.part===p)),chapterCounts=[0,1,2,3].map(p=>scenes.filter(s=>s.part===p).length),partName=['','1부','2부','3부'];   // 인덱스 = 부 번호
 let sceneIndex=0,time=0,playing=false,last=0;const $=s=>document.querySelector(s);const reduced=matchMedia('(prefers-reduced-motion: reduce)');
@@ -49,10 +54,10 @@ const DEFAULT_STOPS=[0,2.8,5.7,8];
 const dur=()=>scenes[sceneIndex].duration||8, stops=()=>scenes[sceneIndex].stops||DEFAULT_STOPS;
 const clamp=x=>Math.min(1,Math.max(0,x)), easeOut=x=>1-Math.pow(1-x,3), easeInOut=x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2, easeOutBack=x=>{const c=1.45;return 1+(c+1)*Math.pow(x-1,3)+c*Math.pow(x-1,2)};
 const video=()=>scenes[sceneIndex].video?document.querySelector('#scene video, .player.big video'):null;   // 영상 장면(3부 시연)
-function resize(){const scale=Math.min(innerWidth/1600,(innerHeight-34)/900);$('#shell').style.transform=`scale(${scale})`;$('#shell').style.left=(innerWidth-1600*scale)/2+'px';$('#shell').style.top=Math.max(0,(innerHeight-34-900*scale)/2)+'px'}
-function syncVo(){const va=$('#voa'),f=(window.VO_FILES||{})[scenes[sceneIndex].key];if(!f){va.pause();va.removeAttribute('src');return}   // 장면 내레이션(있으면)
+function resize(){const W=document.documentElement.clientWidth||innerWidth,H=document.documentElement.clientHeight||innerHeight;const scale=Math.min(W/1600,(H-48)/900);$('#shell').style.transform=`scale(${scale})`;$('#shell').style.left=(W-1600*scale)/2+'px';$('#shell').style.top=Math.max(0,(H-48-900*scale)/2)+'px'}
+function syncVo(){const va=$('#voa');va.defaultPlaybackRate=va.playbackRate=SPEED;va.preservesPitch=true;const f=(window.VO_FILES||{})[scenes[sceneIndex].key];if(!f){va.pause();va.removeAttribute('src');return}   // 장면 내레이션(있으면)
  if(!va.src.endsWith(f)){va.src=f}if(Math.abs(va.currentTime-time)>.4)va.currentTime=Math.min(time,va.duration||time);if(playing&&audioOn&&!muted)va.play().catch(()=>{});else va.pause()}
-function syncVideo(){syncVo();const v=video();if(!v)return;if(Math.abs(v.currentTime-time)>.25)v.currentTime=Math.min(time,dur());if(playing&&!reduced.matches)v.play().catch(()=>{});else v.pause()}
+function syncVideo(){syncVo();const v=video();if(!v)return;v.defaultPlaybackRate=v.playbackRate=SPEED;if(Math.abs(v.currentTime-time)>.25)v.currentTime=Math.min(time,dur());if(playing&&!reduced.matches)v.play().catch(()=>{});else v.pause()}
 /* ───────── 확대·축소: 칸 안의 화면 캡처를 장면 전체 크기로 키우는 변환 ─────────
    z._entry(등장 연출)와 z._zoom(클릭 확대) 중 큰 값만큼 장면 크기 쪽으로 커진다. 0이면 원래 칸. */
 function measureZooms(){const area=$('#scene').getBoundingClientRect(),sc=area.width/$('#scene').offsetWidth||1;
@@ -123,7 +128,7 @@ function audioTick(){if(!audioOn)return;const want=playing&&!muted;if(want&&bgm.
  bgm.volume=Math.max(0,Math.min(1,bgm.volume+(target-bgm.volume)*(want?.1:.15)));if(!want&&bgm.volume<.01&&!bgm.paused)bgm.pause()}
 function frame(now){audioTick();if(playing){const v=video();
   if(v&&!v.paused&&v.readyState>=2)time=v.currentTime;   // 영상 장면은 영상 시간이 기준
-  else time+=Math.min((now-last)/1000,.1);
+  else time+=Math.min((now-last)/1000,.1)*SPEED;
   if(time>=dur()-(v&&v.ended?0:.02)&&(!v||v.ended||v.paused)){advance()}
   else if(time>=dur()&&!v){advance()}
   draw()}last=now;requestAnimationFrame(frame)}
@@ -135,6 +140,10 @@ function bigVideo(p){const on=!p.classList.contains('big');
  else p.remove();
  p.classList.toggle('big',on);document.body.classList.toggle('video-big',on);if(on&&!begun)begin()}
 function unbigVideo(){const p=document.querySelector('.player.big');if(p)bigVideo(p)}
+// 전체 화면 버튼 (모바일용, 화면 오른쪽 아래). 아이폰 사파리처럼 지원하지 않으면 숨김
+{const fb=$('#fsbtn'),de=document.documentElement;if(!(de.requestFullscreen||de.webkitRequestFullscreen))fb.hidden=true;
+ fb.onclick=e=>{e.stopPropagation();if(!begun)begin();if(document.fullscreenElement||document.webkitFullscreenElement)(document.exitFullscreen||document.webkitExitFullscreen).call(document);else (de.requestFullscreen||de.webkitRequestFullscreen).call(de)};
+ const lab=()=>{fb.querySelector('b').textContent=(document.fullscreenElement||document.webkitFullscreenElement)?'전체 화면 닫기':'전체 화면'};document.addEventListener('fullscreenchange',lab);document.addEventListener('webkitfullscreenchange',lab)}
 async function fullscreen(el=document.documentElement){try{if(document.fullscreenElement)await document.exitFullscreen();else await el.requestFullscreen()}catch{}}
 $('#chapters').onclick=e=>{const b=e.target.closest('[data-part]');if(b)goPart(+b.dataset.part)};
 addEventListener('keydown',e=>{if(e.target.matches('input,textarea,select')||e.altKey||e.ctrlKey||e.metaKey)return;if(!begun){begin();if(e.code==='Space'||e.key==='Enter'){e.preventDefault();return}}if(e.target.matches('button,a')&&(e.code==='Space'||e.key==='Enter'))return;startAudio();

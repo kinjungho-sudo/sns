@@ -97,3 +97,18 @@ body.caps #cap { display: block; }
 .hint kbd{font:inherit;font-size:11px;line-height:1;padding:3px 6px;border:1px solid #4a4540;border-radius:5px;color:#d8d2c8;background:#ffffff0a}
 .hint kbd+kbd{margin-left:-2px}
 body.video-big .hint{display:none}
+/* 전체 화면 버튼: 화면 테두리 밖 오른쪽 아래, 손가락으로 누르기 쉬운 크기 */
+#fsbtn{position:fixed;right:14px;bottom:6px;z-index:45;display:flex;align-items:center;gap:8px;height:38px;padding:0 16px;border-radius:19px;border:1px solid #c9a96a99;background:#1d1915e6;color:#f0e2c4;font-size:15px;font-weight:700}
+#fsbtn svg{width:20px;height:20px}#fsbtn:hover{background:#3a3126}
+#fsbtn[hidden]{display:none}
+body.video-big #fsbtn{display:none}
+.hint{bottom:14px}
+@media (pointer:coarse),(max-width:900px){.hint{display:none}#fsbtn{left:50%;right:auto;transform:translateX(-50%);height:42px;font-size:16px}}
+/* 휴대폰: 1600px 슬라이드 때문에 페이지가 넓어지지 않게 (축소 계산이 실제 화면 기준이 되도록) */
+html,body{width:100%;height:100%;overflow:hidden}
+#shell{transform-origin:0 0}
+/* 마무리 감사 장면 */
+.end-card .cv-line{font-size:150px}
+.end-card .end-line{margin-top:34px;font-size:30px;font-weight:700;color:var(--ink);opacity:.9}
+.end-card .end-sub{margin-top:14px;font-size:19px;color:var(--muted)}
+.end-card .end-sub kbd{font:inherit;font-size:15px;padding:2px 8px;border:1px solid var(--line);border-radius:5px}
